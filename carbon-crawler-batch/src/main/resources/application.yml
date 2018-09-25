@@ -1,0 +1,16 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+rdb:
+  main:
+    url:
+    username:
+    password:
+    option:
+  history:
+    url:
+    username:
+    password:
+    option:

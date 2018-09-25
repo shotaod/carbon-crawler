@@ -1,0 +1,22 @@
+spring:
+  output.ansi.enabled: ALWAYS
+  batch:
+    initialize-schema: always
+
+rdb:
+  main:
+    url: jdbc:h2:mem:crawler_definition
+    username: carbon
+    password: carbonpw
+    option:
+      none:
+  history:
+    url: jdbc:h2:mem:batch_history
+    username: carbon
+    password: carbonpw
+    option:
+      none:
+
+driver:
+  hub:
+    url: http://driver.carbon-crawler.local:4444/wd/hub
