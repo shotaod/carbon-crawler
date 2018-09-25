@@ -1,0 +1,131 @@
+version: '3'
+services:
+  main_db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crawler_definition
+      MYSQL_USER: carbon
+      MYSQL_PASSWORD: carbonpw
+    ports:
+      - "43306:3306"
+    volumes:
+      - ./mysql_conf:/etc/mysql/conf.d
+  # history_db:
+  #   image: mysql:5.7
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: batch_history
+  #     MYSQL_USER: carbon
+  #     MYSQL_PASSWORD: carbonpw
+  #   ports:
+  #     - "53306:3306"
+  #   volumes:
+  #     - ./mysql_conf:/etc/mysql/conf.d
+  db_migration:
+    image: boxfuse/flyway:5.1
+    volumes:
+      - ./flyway_conf/conf:/flyway/conf
+      - ../carbon-crawler-model/schema/sql:/flyway/sql
+  selenium-hub:
+    image: selenium/hub:3.13.0-argon
+    ports:
+      - "4444:4444"
+    environment:
+        GRID_BROWSER_TIMEOUT: 30
+  chrome-node:
+    image: selenium/node-chrome:3.13.0-argon
+    depends_on:
+      - selenium-hub
+    environment:
+      HUB_HOST: selenium-hub
+      HUB_PORT: 4444
+  firefox-node:
+    image: selenium/node-firefox:3.13.0-argon
+    depends_on:
+      - selenium-hub
+    environment:
+      HUB_HOST: selenium-hub
+      HUB_PORT: 4444
+  # ==================================================
+  # kafka Orchestration
+  # ==================================================
+  # pause for network host
+  # see also
+  # - https://github.com/wurstmeister/kafka-docker/wiki/Connectivity
+  # - https://davidfrancoeur.com/post/kafka-on-docker-for-mac/
+  # ------------------------------
+  # for test compose-network(but not in pause-network)
+  # kafkacat:
+  #  image: solsson/kafkacat
+  # ------------------------------
+  pause:
+    image: gcr.io/google-containers/pause:3.1
+    ports:
+      - 2181:2181
+      - 9092-9102:9092-9102
+  zookeeper:
+    image: zookeeper:3.4
+    pid: service:pause
+    network_mode: service:pause
+    depends_on:
+      - pause
+  kafka-root:
+    image: wurstmeister/kafka:2.11-2.0.0
+    environment:
+      HOSTNAME_COMMAND: 'echo pause'
+      PORT_COMMAND: 'echo 9092'
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:_{PORT_COMMAND}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://_{HOSTNAME_COMMAND}:_{PORT_COMMAND}
+      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
+    pid: service:pause
+    network_mode: service:pause
+    depends_on:
+      - zookeeper
+  kafka-node:
+    image: wurstmeister/kafka:2.11-2.0.0
+    # -v docker.sock
+    # only for local, it is very !!dangerous!!
+    # local convenience for detecting free port
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      HOSTNAME_COMMAND: 'echo pause'
+      # find free port by diff using port vs docker port
+      PORT_COMMAND: "diff <(netstat -tl | awk 'NR>2 {print $$4}' | cut -d: -f2 | sort) <(hostname | xargs -IHOST docker port HOST  | cut -d: -f2 | sort) | grep -E '^\\+[0-9]' | shuf | head -n1 | cut -d+ -f2"
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:_{PORT_COMMAND}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://_{HOSTNAME_COMMAND}:_{PORT_COMMAND}
+      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
+      # TODO: JMX is not available... due to Competing port
+      # KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1099"
+      # JMX_PORT: 1099
+    pid: service:pause
+    network_mode: service:pause
+    depends_on:
+      - kafka-root
+  kafka-manager:
+    build: ./kafka-manager
+    ports:
+      - "9000:9000"
+    volumes:
+      # for cache, caz sbt dependency resolution take sooooo much time
+      - ./kafka-manager/build:/opt/kafka-manager
+      - ~/.sbt:/root/.sbt
+      - ~/.ivy2:/root/.ivy2
+    depends_on:
+      - kafka-root
+      - kafka-node
+    environment:
+      ZK_HOSTS: pause:2181
+  dataflow:
+    image: springcloud/spring-cloud-dataflow-server-local:1.6.1.RELEASE
+    volumes:
+      # making dataflow be able to access host's maven repository via maven:// schema
+      - ~/.m2:/root/.m2
+    ports:
+      - "9393:9393"
+    environment:
+      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.kafka.binder.brokers=pause:9092
+    depends_on:
+      - zookeeper
+      - kafka-root
