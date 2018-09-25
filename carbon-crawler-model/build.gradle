@@ -1,0 +1,15 @@
+version = '0.1.0-SNAPSHOT'
+
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
+}
+
+dependencies {
+    implementation "org.jetbrains.exposed:exposed:$versions.exposed"
+
+    testImplementation "org.flywaydb:flyway-core:$versions.flyway"
+    testImplementation "com.h2database:h2:$versions.h2"
+}
