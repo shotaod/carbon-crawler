@@ -1,0 +1,36 @@
+version = '0.1.0'
+
+subprojects {
+    group = 'org.carbon.crawler.stream'
+    apply plugin: 'maven'
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.springCloud"
+        }
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-stream-dependencies:$versions.springCloudStream"
+        }
+    }
+
+    // https://github.com/spring-projects/spring-boot/issues/13187
+    task bootInstall(group: 'application', type: Upload) {
+        configuration = project.configurations.bootArchives
+        // Install to the local Maven repository
+        repositories.mavenInstaller()
+        // It's a fat jar. Clear the scope mappings so that the pom has no dependencies
+        //noinspection GroovyAssignabilityCheck
+        repositories.withType(MavenResolver.class) { resolver ->
+            resolver.pom.scopeMappings.mappings.clear()
+        }
+    }
+
+    uploadBootArchives {
+        repositories {
+            //noinspection GroovyAssignabilityCheck
+            mavenDeployer {
+                repository url: "file:${System.getProperty('user.home')}/.m2/repository"
+            }
+        }
+    }
+}

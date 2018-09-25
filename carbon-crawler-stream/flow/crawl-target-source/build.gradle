@@ -1,0 +1,12 @@
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+
+    implementation 'org.springframework.cloud:spring-cloud-stream'
+    implementation project(':carbon-crawler-stream:core')
+    implementation project(':carbon-crawler-stream:message')
+    testImplementation project(':carbon-crawler-stream:test')
+    testImplementation "io.mockk:mockk:$versions.mockk"
+
+    boms.rdb delegate
+}

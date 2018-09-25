@@ -1,0 +1,38 @@
+@startuml
+
+cloud Kafka {
+    queue crawl_target_queue as q_target
+    file CrawlTargetPayload as p_target
+    q_target -d- p_target
+
+    queue crawl_order_queue as q_order
+    file CrawlOrderPayload as p_order
+    q_order -d- p_order
+
+    p_target -[hidden]d- q_order
+}
+
+database crawl_root_doc as db_rDoc
+database crawl_source as db_cs
+database crawl_source as db_cs2
+database page as db_pg
+
+agent CrawlTargetSource as src_target
+db_rDoc -r-> src_target
+src_target -r-> q_target
+
+
+agent CrawlTargetSink as sin_target
+q_target --r-> sin_target
+sin_target -r-> db_cs
+
+agent CrawlOrderSource as src_order
+db_cs2 -r-> src_order
+src_order -r-> q_order
+src_order -[hidden]u- src_target
+
+agent CrawlOrderSink as sin_order
+q_order -r-> sin_order
+sin_order -r-> db_pg
+
+@enduml

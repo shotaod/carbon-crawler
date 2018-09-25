@@ -1,0 +1,10 @@
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+    compile 'org.springframework.cloud:spring-cloud-stream'
+
+    compile 'org.springframework.boot:spring-boot-starter-test'
+    compile 'org.springframework.cloud:spring-cloud-stream-test-support'
+
+    compile "org.nanohttpd:nanohttpd:$versions.nanoHttpd"
+}
