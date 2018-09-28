@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import {Model, State} from "../../reducer/state"
 import {Action} from "../../action"
 import {compose, lifecycle, pure as renderOptimizeEffect} from "recompose"
-import {Pager, StrokeLoader} from "../parts"
+import {Pager, StrokeLoader} from "../../component/parts"
 import {Pages} from "../../route/page"
 import {render} from "../../utils";
 

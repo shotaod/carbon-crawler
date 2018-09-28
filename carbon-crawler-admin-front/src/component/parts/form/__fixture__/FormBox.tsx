@@ -11,8 +11,8 @@ type Value = {
   url: string
   number: number
 }
-type FormProps = FormBoxProps<{}, Value>
 type ViewProps = BaseProp<Value>
+type FormProps = FormBoxProps<ViewProps, Value>
 const props: ViewProps = {
   entries: {
     title: {
@@ -83,6 +83,6 @@ export default {
   component: withName('parts/form/FormBox')(FormBox),
   props,
   effect: [
-    formik
+    formik,
   ],
 };

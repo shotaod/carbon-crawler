@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from "styled-components"
 import {InjectedFormikProps} from "formik";
 
-import {PrimaryButton} from "../Button"
+import {PrimaryButton, Row} from "../"
 
 // ______________________________________________________
 //
@@ -60,18 +60,6 @@ export const FormBox = <Props, Values>(props: FormBoxProps<Props, Values>) => {
 const Box = styled.div`
   margin: 10px 20px
 `
-
-const Row = styled.div < {center? : boolean} > `
-  display: flex
-  margin-bottom: 10px
-  ${p => p.center ? 'justify-content: center' : ''}
-  label {
-    width: 100px
-    text-align: right
-    margin-right: 10px
-  }
-`
-
 const Col = styled.div`
   width: 80%
   input, textarea {

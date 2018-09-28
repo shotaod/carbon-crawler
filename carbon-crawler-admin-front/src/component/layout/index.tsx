@@ -1,21 +1,16 @@
-import * as React from "react"
-import {compose, pure as renderOptimizeEffect} from "recompose"
-import {connect} from "react-redux"
+import * as React from "react";
+import {Header, MainSection, SideBar} from './'
 
-import {State} from "../../reducer/state"
-import {Header} from "./header"
-import {SideBar} from "./sidebar"
-import {MainSection} from "./main"
+export * from './header'
+export * from './main'
+export * from './sidebar'
 
-type Props = { children: JSX.Element }
-
-type MappedState = {
+type ViewProp = {
   currentPath: string
+  children: JSX.Element | JSX.Element[]
 }
 
-type ViewProp = Props & MappedState
-
-export const View = (props: ViewProp) => (
+export const LayoutView = (props: ViewProp) => (
   <div>
     <Header/>
     <SideBar currentPath={props.currentPath}/>
@@ -24,18 +19,3 @@ export const View = (props: ViewProp) => (
     </MainSection>
   </div>
 )
-
-const mapState = (state: State.Root): MappedState => ({
-  currentPath: state.router.location ? state.router.location.pathname : ''
-})
-
-const connectEffect = connect(
-  mapState
-)
-
-const effect = compose<ViewProp, Props>(
-  connectEffect,
-  renderOptimizeEffect,
-)
-
-export const LayoutContainer = effect(View)

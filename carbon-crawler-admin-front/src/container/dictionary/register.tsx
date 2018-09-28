@@ -1,15 +1,15 @@
 import * as React from 'react'
 import {bindActionCreators, Dispatch} from 'redux'
 import {connect} from 'react-redux'
+
 import {compose, pure as renderOptimizeEffect} from "recompose"
-
-import {withFormik} from "formik"
-import {FormBox} from '../../../component/parts'
 import * as Yup from 'yup'
+import {withFormik} from "formik"
 
-import {Action} from "../../../action"
-import {State} from "../../../reducer/state"
-import {DefaultInput, DefaultTextarea, FormBoxProps} from "../../../component/parts/form";
+import {DefaultInput, DefaultTextarea, FormBox, FormBoxProps,} from '../../component/parts'
+
+import {Action} from "../../action"
+import {State} from "../../reducer/state"
 
 // ______________________________________________________
 //

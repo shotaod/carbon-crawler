@@ -1,8 +1,8 @@
 import * as React from "react"
-import {PrimaryLinkButton, Title} from "../parts"
+import {PrimaryLinkButton, Title} from "../../component/parts"
 import {Pages} from "../../route/page"
 
-export const Top = () => (
+export const TopContainer = () => (
   <div>
     <Title>Admin Home</Title>
     <ul>
