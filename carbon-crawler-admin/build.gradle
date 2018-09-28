@@ -1,0 +1,20 @@
+version = '0.0.1-SNAPSHOT'
+
+apply plugin: 'application'
+
+dependencies {
+    implementation "io.ktor:ktor-server-netty:$versions.ktor"
+    implementation "io.ktor:ktor-jackson:$versions.ktor"
+    implementation "io.ktor:ktor-locations:$versions.ktor"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$versions.jackson"
+
+    testImplementation "io.ktor:ktor-server-test-host:$versions.ktor"
+
+    boms.rdb delegate
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
