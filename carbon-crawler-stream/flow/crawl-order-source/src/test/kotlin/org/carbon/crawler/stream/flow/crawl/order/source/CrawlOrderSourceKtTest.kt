@@ -11,7 +11,8 @@ import org.carbon.crawler.model.extend.exposed.transactionL
 import org.carbon.crawler.stream.core.config.DataConfig
 import org.carbon.crawler.stream.core.config.PropertyConfig
 import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.junit.Before
 import org.junit.Test
@@ -58,8 +59,8 @@ class CrawlSourceSourceTest {
         // -----------------------------------------------------
         //                                               then
         //                                               -------
-        MatcherAssert.assertThat("message payload has correct dictionaryId", payload?.dictionaryId, CoreMatchers.equalTo(1L))
-        MatcherAssert.assertThat("message payload has correct page url", payload?.url, CoreMatchers.equalTo("http://localhost:58080/modules/carbon-core.html"))
+        assertThat("message payload has correct dictionaryId", payload?.dictionaryId, equalTo(1L))
+        assertThat("message payload has correct page url", payload?.url, equalTo("http://localhost:58080/modules/carbon-core.html"))
     }
 
     @Test
@@ -84,11 +85,11 @@ class CrawlSourceSourceTest {
         // -----------------------------------------------------
         //                                               then
         //                                               -------
-        MatcherAssert.assertThat("message payload has correct dictionaryId", payload1?.dictionaryId, CoreMatchers.equalTo(1L))
-        MatcherAssert.assertThat("message payload has correct page url", payload1?.url, CoreMatchers.equalTo("http://localhost:58080/modules/carbon-core.html"))
+        assertThat("message payload has correct dictionaryId", payload1?.dictionaryId, equalTo(1L))
+        assertThat("message payload has correct page url", payload1?.url, equalTo("http://localhost:58080/modules/carbon-core.html"))
 
-        MatcherAssert.assertThat("message payload has correct dictionaryId", payload2?.dictionaryId, CoreMatchers.equalTo(1L))
-        MatcherAssert.assertThat("message payload has correct page url", payload2?.url, CoreMatchers.equalTo("http://localhost:58080/modules/carbon-authentication.html"))
+        assertThat("message payload has correct dictionaryId", payload2?.dictionaryId, equalTo(1L))
+        assertThat("message payload has correct page url", payload2?.url, equalTo("http://localhost:58080/modules/carbon-authentication.html"))
     }
 
     @Test
@@ -104,7 +105,7 @@ class CrawlSourceSourceTest {
         // -----------------------------------------------------
         //                                               then
         //                                               -------
-        MatcherAssert.assertThat("if message crawlOrderSource is empty, then return null", message, CoreMatchers.nullValue())
+        assertThat("if message crawlOrderSource is empty, then return null", message, CoreMatchers.nullValue())
     }
 
     @Test
@@ -129,8 +130,8 @@ class CrawlSourceSourceTest {
         // -----------------------------------------------------
         //                                               then
         //                                               -------
-        MatcherAssert.assertThat("if data discrete, then Being able to handle", payload1?.url, CoreMatchers.equalTo("http://localhost:58080/modules/carbon-core.html"))
-        MatcherAssert.assertThat("if data discrete, then Being able to handle", payload2?.url, CoreMatchers.equalTo("http://localhost:58080/modules/carbon-authentication.html"))
+        assertThat("if data discrete, then Being able to handle", payload1?.url, equalTo("http://localhost:58080/modules/carbon-core.html"))
+        assertThat("if data discrete, then Being able to handle", payload2?.url, equalTo("http://localhost:58080/modules/carbon-authentication.html"))
     }
 
     @Test
@@ -156,7 +157,7 @@ class CrawlSourceSourceTest {
         // -----------------------------------------------------
         //                                               then
         //                                               -------
-        MatcherAssert.assertThat("iterate again successfully", payload1?.url, CoreMatchers.equalTo(payload3?.url))
+        assertThat("iterate again successfully", payload1?.url, equalTo(payload3?.url))
     }
 
     // ===================================================================================
