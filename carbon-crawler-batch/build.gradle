@@ -10,3 +10,5 @@ dependencies {
     compile "org.seleniumhq.selenium:selenium-chrome-driver:$versions.selenium"
     testCompile "org.nanohttpd:nanohttpd:$versions.nanoHttpd"
 }
+
+test.enabled = false
