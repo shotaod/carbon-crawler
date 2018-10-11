@@ -129,3 +129,9 @@ services:
     depends_on:
       - zookeeper
       - kafka-root
+  ci-master:
+    image: amazon/aws-codebuild-local:latest
+  ci-jvm:
+    build: ../../aws-codebuild-docker-images/ubuntu/java/openjdk-8
+  ci-node:
+    build: ../../aws-codebuild-docker-images/ubuntu/nodejs/10.1.0
