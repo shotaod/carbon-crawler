@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Row = styled.div < {center? : boolean} > `
   display: flex

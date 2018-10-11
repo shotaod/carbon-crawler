@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {PrimaryButton, StrokeLoader, Title} from '../'
-import {withName} from "../../../__cosmos__/helper";
+import {withName} from '../../../__cosmos__/helper';
 
 // noinspection JSUnusedGlobalSymbols
 export default [

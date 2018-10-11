@@ -2,14 +2,14 @@ import * as React from 'react'
 import {bindActionCreators, Dispatch} from 'redux'
 import {connect} from 'react-redux'
 
-import {compose, pure as renderOptimizeEffect} from "recompose"
+import {compose, pure as renderOptimizeEffect} from 'recompose'
 import * as Yup from 'yup'
-import {withFormik} from "formik"
+import {withFormik} from 'formik'
 
 import {DefaultInput, DefaultTextarea, FormBox, FormBoxProps,} from '../../component/parts'
 
-import {Action} from "../../action"
-import {State} from "../../reducer/state"
+import {Action} from '../../action'
+import {State} from '../../reducer/state'
 
 // ______________________________________________________
 //
@@ -42,8 +42,8 @@ const View = (props: ViewProps) => FormBox<ViewProps, Action.Dictionary.AddForm>
       input: prop => (
         <DefaultInput
           {...prop}
-          placeholder="page title..."
-          type="text"
+          placeholder='page title...'
+          type='text'
         />)
     }
     ,
@@ -52,8 +52,8 @@ const View = (props: ViewProps) => FormBox<ViewProps, Action.Dictionary.AddForm>
       input: prop => (
         <DefaultInput
           {...prop}
-          placeholder="page url..."
-          type="text"
+          placeholder='page url...'
+          type='text'
         />)
     }
     ,
@@ -63,8 +63,8 @@ const View = (props: ViewProps) => FormBox<ViewProps, Action.Dictionary.AddForm>
         <DefaultTextarea
           {...prop}
           rows={4}
-          name="memo"
-          placeholder="memo..."
+          name='memo'
+          placeholder='memo...'
         >
           {prop.value}
         </DefaultTextarea>

@@ -7,6 +7,7 @@ export namespace State {
   import CallState = Common.CallState;
 
   export type Root = {
+    auth: Auth
     remote: Remote<CallState>
     dictionary: Dictionary
     router: RouterState
@@ -18,15 +19,18 @@ export namespace State {
     }
   }
 
+  export type Auth = {
+    login: boolean
+  }
+
   export type Remote<V> = {
     dictionary: {
       [key in DictionaryRemotes]: V
       }
   }
 
-  export type DictionaryRemotes = 'fetch' | 'add'
-
-  export interface Dictionary {
+  type DictionaryRemotes = 'fetch' | 'add'
+  export type Dictionary = {
     data: {
       [key in number]: Model.Dictionary
       }
@@ -44,6 +48,9 @@ export namespace Model {
 }
 
 export const initialState: State.Root = {
+  auth: {
+    login: false,
+  },
   remote: {
     dictionary: correct({loading: false}, 'fetch', 'add')
   },

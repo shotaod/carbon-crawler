@@ -1,18 +1,9 @@
-import * as React from "react";
-import Amplify, {Auth} from 'aws-amplify'
-import {compose, withProps} from 'recompose'
-import {withFormik} from "formik";
-import * as Yup from "yup";
-import {BaseProp, DefaultInput, FormBox, FormBoxProps} from "../../component/parts";
-
-Amplify.configure({
-  Auth: {
-    region: 'ap-northeast-1',
-    // TODO add config file
-    userPoolId: '',
-    userPoolWebClientId: '',
-  }
-})
+import * as React from 'react';
+import {Auth} from 'aws-amplify'
+import {compose, pure, withProps} from 'recompose'
+import {withFormik} from 'formik';
+import * as Yup from 'yup';
+import {BaseProp, DefaultInput, FormBox, FormBoxProps} from '../../component/parts';
 
 type Value = {
   username: string,
@@ -44,16 +35,16 @@ const props: ViewProps = {
       label: 'password',
       input: prop => (
         <DefaultInput
-          type="password"
+          type='password'
           {...prop}
         />
       ),
     },
     passwordConfirm: {
-      label: 'confirmation',
+      label: 'confirm',
       input: prop => (
         <DefaultInput
-          type="password"
+          type='password'
           {...prop}
         />
       )
@@ -83,8 +74,8 @@ const formik = withFormik<FormProps, Value>({
       .required('required: password'),
   }),
   handleSubmit: async ({email, password}, {setSubmitting}) => {
-    console.log(email, password);
     try {
+      setSubmitting(true)
       const res = await Auth.signUp({
         username: email,
         password,
@@ -93,16 +84,14 @@ const formik = withFormik<FormProps, Value>({
       console.log(res);
     } catch (err) {
       console.warn(err)
-    }
-
-    setSubmitting(true)
-    setTimeout(() => {
+    } finally {
       setSubmitting(false)
-    }, 1000)
+    }
   },
 })
 
-export const AuthenticationContainer = compose<FormProps, {}>(
+export const SignUpContainer = compose<FormProps, {}>(
   formik,
-  withProps(props)
+  withProps(props),
+  pure,
 )(FormBox)

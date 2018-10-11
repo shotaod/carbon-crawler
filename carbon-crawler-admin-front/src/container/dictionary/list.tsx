@@ -4,12 +4,12 @@ import {bindActionCreators, Dispatch} from 'redux'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 
-import {Model, State} from "../../reducer/state"
-import {Action} from "../../action"
-import {compose, lifecycle, pure as renderOptimizeEffect} from "recompose"
-import {Pager, StrokeLoader} from "../../component/parts"
-import {Pages} from "../../route/page"
-import {render} from "../../utils";
+import {Model, State} from '../../reducer/state'
+import {Action} from '../../action'
+import {compose, lifecycle, pure as renderOptimizeEffect} from 'recompose'
+import {Pager, StrokeLoader} from '../../component/parts'
+import {routes} from '../../route/routes'
+import {render} from '../../utils';
 
 const PAGE_SIZE = 10
 
@@ -62,10 +62,10 @@ const View = (props: Props) => (
     <ListTable {...props} />
     {render(
       props.page ?
-        <Row align="flex-end">
+        <Row align='flex-end'>
           <Pager
             size={PAGE_SIZE}
-            path={Pages.DICTIONARY_LIST}
+            path={routes.dictionary.list}
             {...props.page!}
           />
         </Row>

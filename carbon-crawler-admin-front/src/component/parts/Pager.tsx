@@ -1,7 +1,7 @@
-import * as _ from "lodash"
-import * as React from "react"
-import {Link} from "react-router-dom"
-import styled from "styled-components"
+import * as _ from 'lodash'
+import * as React from 'react'
+import {Link} from 'react-router-dom'
+import styled from 'styled-components'
 
 /**
  * @param path: each page path to
@@ -33,8 +33,8 @@ const _Pager = (props: PagerProp) => {
   return (
     <ul className={className}>
       {(() => {
-        if (validIndex > 0) return <ClickListItem title="<" index={validIndex - 1}/>
-        else return <ListItem title="<"/>
+        if (validIndex > 0) return <ClickListItem title='<' index={validIndex - 1}/>
+        else return <ListItem title='<'/>
       })()}
       {(() => {
         let range
@@ -49,8 +49,8 @@ const _Pager = (props: PagerProp) => {
           })
       })()}
       {(() => {
-        if (validIndex < max - 1) return <ClickListItem title=">" index={validIndex + 1}/>
-        else return <ListItem title=">"/>
+        if (validIndex < max - 1) return <ClickListItem title='>' index={validIndex + 1}/>
+        else return <ListItem title='>'/>
       })()}
     </ul>
   )

@@ -2,9 +2,6 @@ import {HttpMethod, Request} from '../service/api'
 import {Page} from '../shared'
 import * as SharedAction from './shared'
 
-//___________________________________________
-//
-// @fetch
 export class FetchRequest extends SharedAction.FsaActionCreator<Types.DICTIONARY_FETCH_REQUEST, Request> {
   constructor(index: number, size: number) {
     super(Types.DICTIONARY_FETCH_REQUEST, {

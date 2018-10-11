@@ -1,6 +1,6 @@
-import * as React from "react";
-import {withName} from "../../../__cosmos__/helper";
-import {Pager} from "../";
+import * as React from 'react';
+import {withName} from '../../../__cosmos__/helper';
+import {Pager} from '../';
 
 const NamedPager = withName('parts/Pager')((props: any) => {
   if (!props.location.search) return <Pager {...props}/>

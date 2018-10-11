@@ -1,7 +1,7 @@
-import * as React from "react";
+import * as React from 'react';
 import {Header} from '../header'
 import {SideBar} from '../sidebar'
-import {withName} from "../../../__cosmos__/helper";
+import {withName} from '../../../__cosmos__/helper';
 
 // noinspection JSUnusedGlobalSymbols
 export default [

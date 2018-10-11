@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import {focus} from './styles'
 
 export const DefaultTextarea = styled.textarea`

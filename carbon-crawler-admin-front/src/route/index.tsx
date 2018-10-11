@@ -1,25 +1,25 @@
-import * as React from "react"
-import {History} from "history"
-import {Route, Switch} from "react-router"
-import {ConnectedRouter} from "react-router-redux"
+import * as React from 'react'
+import {History} from 'history'
+import {Route, Switch} from 'react-router'
+import {ConnectedRouter} from 'react-router-redux'
 
 import {
-  AuthenticationContainer, DictionaryAddContainer, DictionaryListContainer, LayoutContainer,
+  DictionaryAddContainer, DictionaryListContainer, LayoutContainer, SignUpContainer,
   TopContainer,
-} from "../container"
-import {Pages} from "./page"
+} from '../container'
+import {SignInContainer} from "../container/auth/signIn";
+import {routes} from "./routes";
 
-export const Routes = (props: { history: History }) => (
+export const RoutesContainer = (props: { history: History }) => (
   <ConnectedRouter history={props.history}>
-
     <Switch>
-      <Route exact path={Pages.AUTH} component={AuthenticationContainer}/>
       <LayoutContainer>
-        <Route exact path="/" component={TopContainer}/>
-        <Route exact path={Pages.DICTIONARY_LIST} component={DictionaryListContainer}/>
-        <Route exact path={Pages.DICTIONARY_REGISTER} component={DictionaryAddContainer}/>
+        <Route exact path='/' component={TopContainer}/>
+        <Route exact path={routes.auth.login} component={SignInContainer}/>
+        <Route exact path={routes.auth.signup} component={SignUpContainer}/>
+        <Route exact path={routes.dictionary.list} component={DictionaryListContainer}/>
+        <Route exact path={routes.dictionary.register} component={DictionaryAddContainer}/>
       </LayoutContainer>
     </Switch>
-
   </ConnectedRouter>
 )

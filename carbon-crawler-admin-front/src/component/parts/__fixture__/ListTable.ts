@@ -1,5 +1,5 @@
-import {ListTable} from "../ListTable";
-import {withName} from "../../../__cosmos__/helper";
+import {ListTable} from '../ListTable';
+import {withName} from '../../../__cosmos__/helper';
 
 // noinspection JSUnusedGlobalSymbols
 export default [

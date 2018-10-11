@@ -1,8 +1,8 @@
 import * as React from 'react'
-import styled from "styled-components"
-import {InjectedFormikProps} from "formik";
+import styled from 'styled-components'
+import {InjectedFormikProps} from 'formik';
 
-import {PrimaryButton, Row} from "../"
+import {PrimaryButton, Row} from '../'
 
 // ______________________________________________________
 //
@@ -49,7 +49,7 @@ export const FormBox = <Props, Values>(props: FormBoxProps<Props, Values>) => {
       <form onSubmit={handleSubmit}>
         {Rows}
         <Row center>
-          <PrimaryButton type="submit">
+          <PrimaryButton type='submit'>
             {buttonName || 'register'}
           </PrimaryButton>
         </Row>

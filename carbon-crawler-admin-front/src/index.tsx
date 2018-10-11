@@ -3,13 +3,15 @@ import * as ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
 import {createBrowserHistory} from 'history'
 
-import {rootSaga} from "./saga"
+import {rootSaga} from './saga'
+import {aws} from './service/aws'
 import {configureSagaStore} from './store'
-import {Application} from "./app"
+import {Application} from './app'
 
 const sagaStore = configureSagaStore()
 const history = createBrowserHistory()
 
+aws.configure()
 sagaStore.run(rootSaga)
 
 ReactDOM.render(

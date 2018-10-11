@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {compose} from "recompose";
+import {compose} from 'recompose';
 
 type CosmosDefault = {
   onComponentRef: () => void

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled, {keyframes} from "styled-components"
+import styled, {keyframes} from 'styled-components'
 
 const loader = (props: { className?: string }) => (
   <div className={props.className}>

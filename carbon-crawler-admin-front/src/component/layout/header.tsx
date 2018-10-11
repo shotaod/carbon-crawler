@@ -1,5 +1,5 @@
-import * as React from "react"
-import styled from "styled-components"
+import * as React from 'react'
+import styled from 'styled-components'
 
 export const Header = () => (
   <HeaderRow>
@@ -7,7 +7,7 @@ export const Header = () => (
   </HeaderRow>
 )
 
-const HeaderRow = styled.div`
+const HeaderRow = styled.header`
   display: flex
   background-color: gray
 `

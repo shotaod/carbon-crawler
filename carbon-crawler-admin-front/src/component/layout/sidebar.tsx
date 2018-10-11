@@ -1,34 +1,34 @@
 import * as React from 'react'
-import styled from "styled-components"
-import {Pages} from "../../route/page"
-import {Link} from "react-router-dom";
+import styled from 'styled-components'
+import {routes} from '../../route/routes'
+import {Link} from 'react-router-dom';
 
 export const width = '150px'
 
 const sideBarConfig = [
   {
-    title: "Dictionary",
+    title: 'Dictionary',
     items: [
       {
         title: 'list',
-        path: Pages.DICTIONARY_LIST,
+        path: routes.dictionary.list,
       },
       {
         title: 'register',
-        path: Pages.DICTIONARY_REGISTER
+        path: routes.dictionary.register,
       },
     ],
   },
   {
-    title: "Query",
+    title: 'Query',
     items: [
       {
         title: 'list',
-        path: Pages.QUERY_LIST,
+        path: routes.query.list,
       },
       {
         title: 'register',
-        path: Pages.QUERY_REGISTER,
+        path: routes.query.register,
       },
     ]
   }
@@ -62,7 +62,7 @@ type ListSectionProps = {
   title: string,
   items: {
     title: string,
-    path: Pages,
+    path: string,
   }[],
   default?: number,
   active?: boolean,

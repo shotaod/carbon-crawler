@@ -1,19 +1,21 @@
-import {compose, pure as renderOptimizeEffect} from "recompose"
-import {connect} from "react-redux"
+import {compose, pure as renderOptimizeEffect} from 'recompose'
+import {connect} from 'react-redux'
 
-import {State} from "../../reducer/state"
-import {LayoutView} from "../../component/layout"
+import {State} from '../../reducer/state'
+import {LayoutView} from '../../component/layout'
 
 type Props = { children: JSX.Element | JSX.Element[] }
 
 type MappedState = {
   currentPath: string
+  login: boolean
 }
 
 type ViewProp = Props & MappedState
 
 const mapState = (state: State.Root): MappedState => ({
-  currentPath: state.router.location ? state.router.location.pathname : ''
+  currentPath: state.router.location ? state.router.location.pathname : '',
+  login: state.auth.login,
 })
 
 const connectEffect = connect(

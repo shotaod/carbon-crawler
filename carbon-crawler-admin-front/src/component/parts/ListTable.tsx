@@ -1,6 +1,6 @@
 import * as React from 'react'
-import styled from "styled-components"
-import {StrokeLoader} from "./Loader"
+import styled from 'styled-components'
+import {StrokeLoader} from './Loader'
 
 export type ListTableProp = {
   className?: string
