@@ -2,14 +2,13 @@ package org.carbon.crawler.model.extend.exposed
 
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils.create
-import org.junit.Test
 import java.time.LocalDateTime
 
 /**
  * @author Soda 2018/08/17.
  */
 class OnDuplicateKtTest {
-    @Test
+    //@Test
     fun test_batchInsert() {
         val dataSource = setupDataSource()
         Database.connect(dataSource)

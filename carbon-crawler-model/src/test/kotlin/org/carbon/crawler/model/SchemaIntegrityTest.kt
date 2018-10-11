@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.intLiteral
 import org.junit.Assert.assertThat
+import org.junit.Before
 import org.junit.Test
 import java.nio.file.Paths
 
@@ -17,7 +18,12 @@ import java.nio.file.Paths
  * @author Soda 2018/08/09.
  */
 class SchemaIntegrityTest {
-    private val schemaDirectory = "../carbon-crawler-data/schema/sql"
+    private val schemaDirectory = "../carbon-crawler-model/schema/sql"
+
+    @Before
+    fun before() {
+        cleanDatabase()
+    }
 
     @Test
     fun test_schema_to_entity_class_integrity() {
@@ -31,6 +37,7 @@ class SchemaIntegrityTest {
             this.dataSource = dataSource
             val currentDir = System.getProperty("user.dir")
             val location = Paths.get(Location.FILESYSTEM_PREFIX, currentDir).resolve(schemaDirectory).normalize().toString()
+            println(location)
             setLocations(location)
         }
 
