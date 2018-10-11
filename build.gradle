@@ -64,11 +64,12 @@ ext {
             it.implementation "org.jetbrains.exposed:exposed:$versions.exposed"
             it.implementation "org.apache.tomcat:tomcat-jdbc:$versions.tomcat"
             it.implementation "mysql:mysql-connector-java:$versions.mysql"
+            it.testImplementation "com.h2database:h2:$versions.h2"
         }
         webdriver = {
-            it.compile "org.seleniumhq.selenium:selenium-java:$versions.selenium"
-            it.compile "org.seleniumhq.selenium:selenium-chrome-driver:$versions.selenium"
-            it.testCompile "org.nanohttpd:nanohttpd:$versions.nanoHttpd"
+            it.implementation "org.seleniumhq.selenium:selenium-java:$versions.selenium"
+            it.implementation "org.seleniumhq.selenium:selenium-chrome-driver:$versions.selenium"
+            it.testImplementation "org.nanohttpd:nanohttpd:$versions.nanoHttpd"
         }
     }
 }
@@ -80,6 +81,7 @@ subprojects {
     apply plugin: 'kotlin-spring'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
 
     sourceCompatibility = 1.8
 
@@ -110,6 +112,13 @@ subprojects {
         }
     }
 
+    // code coverage
+    jacocoTestReport {
+        additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+        additionalClassDirs = files(subprojects.sourceSets.main.output)
+        onlyIf { true }
+    }
+
     dependencies {
         kapt 'org.springframework.boot:spring-boot-configuration-processor'
 
@@ -124,4 +133,8 @@ subprojects {
     bootRun {
         environment SPRING_PROFILES_ACTIVE: environment.SPRING_PROFILES_ACTIVE ?: "local"
     }
+}
+
+task Hoge() {
+    println(subprojects.sourceSets.main.allSource)
 }
