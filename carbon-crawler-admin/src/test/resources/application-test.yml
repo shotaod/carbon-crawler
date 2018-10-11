@@ -10,12 +10,6 @@ rdb:
     password: carbonpw
     option:
       none:
-  history:
-    url: jdbc:h2:mem:batch_history
-    username: carbon
-    password: carbonpw
-    option:
-      none:
 
 driver:
   hub:

@@ -20,10 +20,10 @@ import io.ktor.locations.Locations
 import io.ktor.routing.Routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import org.carbon.crawler.admin.aservice.GetDictionarySchema
-import org.carbon.crawler.admin.aservice.PostDictionarySchema
-import org.carbon.crawler.admin.aservice.Validate
 import org.carbon.crawler.admin.aservice.dictionary.DictionaryAppService
+import org.carbon.crawler.admin.aservice.dictionary.GetDictionarySchema
+import org.carbon.crawler.admin.aservice.dictionary.PostDictionarySchema
+import org.carbon.crawler.admin.aservice.validation.Validated
 import org.carbon.crawler.admin.feature.installExposed
 import org.carbon.crawler.admin.www.v1.dictionary
 
@@ -31,10 +31,12 @@ import org.carbon.crawler.admin.www.v1.dictionary
  * @author Soda 2018/07/22.
  */
 @Location("/v1") class V1 {
-    @Location("/dictionaries") data class GetDictionary(val page: Int, val size: Int) : Validate<GetDictionary> by GetDictionarySchema
+    @Location("/dictionaries") data class GetDictionary(val page: Int, val size: Int)
+        : Validated<GetDictionary> by GetDictionarySchema
 
-    @Location("/dictionaries") interface PostDictionary {
-        data class Body(val url: String, val title: String, val memo: String) : Validate<Body> by PostDictionarySchema
+    @Location("/dictionaries") class PostDictionary {
+        data class Body(val url: String, val title: String, val memo: String)
+            : Validated<Body> by PostDictionarySchema
     }
 }
 
