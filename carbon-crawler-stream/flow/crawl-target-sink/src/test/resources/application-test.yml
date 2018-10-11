@@ -10,3 +10,6 @@ rdb:
     password: carbonpw
     option:
       none:
+driver:
+  hub:
+    url: http://driver.carbon-crawler.local:4444/wd/hub
