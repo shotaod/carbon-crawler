@@ -1,6 +1,12 @@
 # This is the build pipeline. Pipelines are the core of wercker
 # Read more about pipelines on our dev center
 # https://devcenter.wercker.com/development/pipelines/
+build:
+  steps:
+    - script:
+        name: noop
+        code: |
+          echo 'todo build script here'
 test-jvm:
   # This references an OpenJDK container from the
   # Docker Hub https://hub.docker.com/_/openjdk/
