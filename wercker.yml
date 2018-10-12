@@ -50,5 +50,5 @@ test-node:
       - script: 
         name: test
         code: |
-          carbon-crawler-admin-front
-          yarn test --cwd carbon-crawler-admin-front
+          cd carbon-crawler-admin-front
+          yarn test
