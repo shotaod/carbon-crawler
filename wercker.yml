@@ -37,7 +37,8 @@ test-node:
   # https://devcenter.wercker.com/development/steps/
   steps:
       # A step that executes `npm install` command
-      - npm-install
+      - npm-install:
+        cwd: carbon-crawler-front
       # A step that executes `npm test` command
       - npm-test
 
