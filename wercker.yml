@@ -37,6 +37,12 @@ test-node:
   # https://devcenter.wercker.com/development/steps/
   steps:
       - script:
+          name: add git
+          code: |
+            apk update && \
+            apk upgrade && \
+            apk add --no-cache git
+      - script:
         name: install
         code:  |
           cd carbon-crawler-admin-front
