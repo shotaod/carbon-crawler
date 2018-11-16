@@ -8,14 +8,14 @@ type Props = { children: JSX.Element | JSX.Element[] }
 
 type MappedState = {
   currentPath: string
-  login: boolean
+  signIn: boolean
 }
 
 type ViewProp = Props & MappedState
 
 const mapState = (state: State.Root): MappedState => ({
   currentPath: state.router.location ? state.router.location.pathname : '',
-  login: state.auth.login,
+  signIn: state.auth.signIn,
 })
 
 const connectEffect = connect(

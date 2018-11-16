@@ -11,11 +11,11 @@ export const authReducer: AuthReducer = (state: AuthState = initialState.auth, a
   switch (action.type) {
     case Types.AUTH_LOGIN:
       return {
-        login: true,
+        signIn: true,
       }
     case Types.AUTH_LOGOUT:
       return {
-        login: false,
+        signIn: false,
       }
     default:
       return state

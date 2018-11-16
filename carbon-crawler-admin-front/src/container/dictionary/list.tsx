@@ -79,7 +79,7 @@ const Box = styled.div`
 `
 
 //                            vvv ???
-const Row = styled.div < {align? : string} > `
+const Row = styled.div <{ align?: string }>`
   justify-content: ${p => p.align || 'center'}
   display: flex
 `

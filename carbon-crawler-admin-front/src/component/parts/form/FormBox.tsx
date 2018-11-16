@@ -7,20 +7,26 @@ import {PrimaryButton, Row} from '../'
 // ______________________________________________________
 //
 // @I/F
-export type FormBoxProps<Props, Values> = InjectedFormikProps<Props & BaseProp<Values>, Values>
-type InputProp<Value> = {
+export type FormBoxProps<Additions, Values>
+  = InjectedFormikProps<Additions & AsForm<Values>, Values>
+
+export type AsDefaultProps<FProps extends FormBoxProps<{}, {}>>
+  = Pick<FProps, 'entries'>
+  & Pick<FProps, 'buttonName'>
+
+type AsInput<Value> = {
   value: Value,
   onChange: (e: React.ChangeEvent<any>) => void,
   name: string,
 }
-export type BaseProp<Values> = {
+type AsForm<Values> = {
   buttonName?: string
   entries: {
     [k in keyof Required<Values>]: {
-    label: string,
-    input: (props: InputProp<Values[k]>) => JSX.Element
-  }
+      label: string,
+      input: (props: AsInput<Values[k]>) => JSX.Element
     }
+  }
 }
 
 // ______________________________________________________

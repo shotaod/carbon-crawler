@@ -1,7 +1,7 @@
 import {Action} from "../index";
 
 describe('auth action test', () => {
-  test('auth login action is valid', () => {
+  test('auth signin action is valid', () => {
     const authLoginActionCreator = new Action.Auth.AuthLogin();
     expect(authLoginActionCreator.create()).toEqual({
       type: 'AUTH_LOGIN',

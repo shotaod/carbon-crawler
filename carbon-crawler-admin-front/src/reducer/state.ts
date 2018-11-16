@@ -20,7 +20,7 @@ export namespace State {
   }
 
   export type Auth = {
-    login: boolean
+    signIn: boolean
   }
 
   export type Remote<V> = {
@@ -49,7 +49,7 @@ export namespace Model {
 
 export const initialState: State.Root = {
   auth: {
-    login: false,
+    signIn: false,
   },
   remote: {
     dictionary: correct({loading: false}, 'fetch', 'add')

@@ -1,17 +1,20 @@
-import * as React from 'react';
 import {Auth} from 'aws-amplify'
-import {compose, pure as renderOptimizeEffect, withProps} from 'recompose'
 import {withFormik} from 'formik';
 import * as Yup from 'yup';
-import {BaseProp, DefaultInput, FormBox, FormBoxProps} from '../../component/parts';
+
+import * as React from 'react';
+import {compose, pure, withProps} from 'recompose'
+
+import {AsDefaultProps, DefaultInput, FormBox, FormBoxProps, PrimaryLinkButton, Row} from '../../component/parts';
+import {routes} from "../../route/routes";
 
 type Value = {
-  email: string
-  password: string
+  email: string,
+  password: string,
 }
-type ViewProps = BaseProp<Value>
-type FormProps = FormBoxProps<ViewProps, Value>
-const props: ViewProps = {
+type FormProps = FormBoxProps<{}, Value>
+type DefaultProps = AsDefaultProps<FormProps>
+const defaultProps: DefaultProps = {
   entries: {
     email: {
       label: 'email',
@@ -59,8 +62,18 @@ const formik = withFormik<FormProps, Value>({
   },
 })
 
+const View = (props: FormProps) => (
+  <>
+    <FormBox {...props}/>
+    <Row center>
+      <PrimaryLinkButton to={routes.auth.signUp}>or sign up</PrimaryLinkButton>
+    </Row>
+  </>
+)
+
+
 export const SignInContainer = compose<FormProps, {}>(
   formik,
-  withProps(props),
-  renderOptimizeEffect
-)(FormBox)
+  withProps(defaultProps),
+  pure,
+)(View)

@@ -3,7 +3,7 @@ import {Auth} from 'aws-amplify'
 import {compose, pure, withProps} from 'recompose'
 import {withFormik} from 'formik';
 import * as Yup from 'yup';
-import {BaseProp, DefaultInput, FormBox, FormBoxProps} from '../../component/parts';
+import {AsDefaultProps, DefaultInput, FormBox, FormBoxProps} from '../../component/parts';
 
 type Value = {
   username: string,
@@ -11,9 +11,8 @@ type Value = {
   password: string
   passwordConfirm: string
 }
-type ViewProps = BaseProp<Value>
-type FormProps = FormBoxProps<ViewProps, Value>
-const props: ViewProps = {
+type ViewProps = FormBoxProps<{}, Value>
+const defaultProps: AsDefaultProps<ViewProps> = {
   entries: {
     username: {
       label: 'username',
@@ -53,7 +52,7 @@ const props: ViewProps = {
   buttonName: 'sign up'
 }
 
-const formik = withFormik<FormProps, Value>({
+const formik = withFormik<ViewProps, Value>({
   mapPropsToValues: () => ({username: '', email: '', password: '', passwordConfirm: ''}),
   validationSchema: Yup.object().shape({
     username: Yup.string()
@@ -90,8 +89,8 @@ const formik = withFormik<FormProps, Value>({
   },
 })
 
-export const SignUpContainer = compose<FormProps, {}>(
+export const SignUpContainer = compose<ViewProps, {}>(
   formik,
-  withProps(props),
+  withProps(defaultProps),
   pure,
 )(FormBox)

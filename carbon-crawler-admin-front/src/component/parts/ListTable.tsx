@@ -9,7 +9,6 @@ export type ListTableProp = {
   loading: boolean
 }
 
-//                            vvv ???
 const Row = styled.div < {align? : string} > `
   justify-content: ${p => p.align || 'center'}
   display: flex
