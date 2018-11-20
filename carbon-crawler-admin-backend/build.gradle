@@ -6,15 +6,13 @@ dependencies {
     implementation "io.ktor:ktor-server-netty:$versions.ktor"
     implementation "io.ktor:ktor-jackson:$versions.ktor"
     implementation "io.ktor:ktor-locations:$versions.ktor"
+
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$versions.jackson"
 
+    implementation "org.carbon.libs:carbon-validation:$versions.carbon.validation"
+
     testImplementation "io.ktor:ktor-server-test-host:$versions.ktor"
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:$versions.kotlintest"
 
     boms.rdb delegate
-}
-
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
 }
