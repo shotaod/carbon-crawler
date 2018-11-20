@@ -3,3 +3,8 @@ export type Page = {
   size: number,
   max: number,
 }
+
+export type AuthInfo = {
+  email: string,
+  password: string
+}

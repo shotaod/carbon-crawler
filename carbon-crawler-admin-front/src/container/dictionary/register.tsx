@@ -21,7 +21,7 @@ export type ValidationError = {
   [K in keyof Action.Dictionary.AddForm]: string
   } & NetworkError
 
-type ViewProps = FormBoxProps<MappedDispatch & MappedState, Action.Dictionary.AddForm>
+type ViewProps = FormBoxProps<Action.Dictionary.AddForm, MappedDispatch & MappedState>
 type MappedDispatch = {
   dispatchAddDictionary: (form: Action.Dictionary.AddForm) => void
 }

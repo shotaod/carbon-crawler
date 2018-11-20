@@ -1,7 +1,9 @@
 export const routes = {
+  home: '/',
   auth: {
     signIn: '/signIn',
     signUp: '/signUp',
+    signUpResult: '/signUp/success',
   },
   dictionary: {
     list: '/dictionary/list',

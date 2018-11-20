@@ -9,6 +9,6 @@ export const aws = {
         userPoolId: AWS.Cognito.poolID,
         userPoolWebClientId: AWS.Cognito.clientID,
       }
-    })
+    });
   }
 }

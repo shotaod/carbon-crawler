@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as Yup from 'yup'
 import {withFormik} from 'formik'
 
-import {AsDefaultProps, DefaultInput, DefaultTextarea, FormBox, FormBoxProps} from '../'
+import {DefaultInput, DefaultTextarea, FormBox, FormBoxProps, PickDefault} from '../'
 import {withName} from '../../../../__cosmos__/helper';
 
 type Value = {
@@ -11,8 +11,8 @@ type Value = {
   url: string
   number: number
 }
-type FormProps = FormBoxProps<{}, Value>
-const props: AsDefaultProps<FormProps> = {
+type FormProps = FormBoxProps<Value>
+const props: PickDefault<FormProps> = {
   entries: {
     title: {
       label: 'title',

@@ -21,6 +21,7 @@ export namespace State {
 
   export type Auth = {
     signIn: boolean
+    errorMsg?: string
   }
 
   export type Remote<V> = {

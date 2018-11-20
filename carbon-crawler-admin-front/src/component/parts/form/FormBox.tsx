@@ -7,12 +7,15 @@ import {PrimaryButton, Row} from '../'
 // ______________________________________________________
 //
 // @I/F
-export type FormBoxProps<Additions, Values>
+export type FormBoxProps<Values, Additions = {}>
   = InjectedFormikProps<Additions & AsForm<Values>, Values>
 
-export type AsDefaultProps<FProps extends FormBoxProps<{}, {}>>
+export type PickDefault<FProps extends FormBoxProps<{}, {}>>
   = Pick<FProps, 'entries'>
   & Pick<FProps, 'buttonName'>
+
+export type OmitFormik<FProps extends FormBoxProps<{}, {}>>
+  = Omit<FProps, keyof InjectedFormikProps<{}, {}>>
 
 type AsInput<Value> = {
   value: Value,
@@ -32,7 +35,7 @@ type AsForm<Values> = {
 // ______________________________________________________
 //
 // @ Component
-export const FormBox = <Props, Values>(props: FormBoxProps<Props, Values>) => {
+export const FormBox = <Props, Values>(props: FormBoxProps<Values, Props>) => {
   const {entries, values, buttonName, handleSubmit, handleChange} = props;
   // optionals
   const {touched, errors} = props;

@@ -9,15 +9,20 @@ export const authReducer: AuthReducer = (state: AuthState = initialState.auth, a
   const Types = Action.Auth.Types
 
   switch (action.type) {
-    case Types.AUTH_LOGIN:
+    case Types.AUTH_SIGN_IN_SUCCESS:
       return {
         signIn: true,
       }
-    case Types.AUTH_LOGOUT:
+    case Types.AUTH_SIGN_OUT_SUCCESS:
       return {
         signIn: false,
       }
+    case Types.AUTH_ERROR:
+      return {
+        errorMsg: action.payload.errorMsg,
+        signIn: false,
+      }
     default:
-      return state
+      return state;
   }
 }

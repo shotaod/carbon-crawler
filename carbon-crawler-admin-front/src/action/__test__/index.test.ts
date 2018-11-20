@@ -1,19 +1,25 @@
 import {Action} from "../index";
 
 describe('auth action test', () => {
-  test('auth signin action is valid', () => {
-    const authLoginActionCreator = new Action.Auth.AuthLogin();
+  test('auth sign in action is valid', () => {
+    const authLoginActionCreator = new Action.Auth.SignIn({
+      email: 'shota.oda@example.com',
+      password: 'password',
+    });
     expect(authLoginActionCreator.create()).toEqual({
-      type: 'AUTH_LOGIN',
-      payload: {},
+      type: 'AUTH_SIGN_IN',
+      payload: {
+        email: 'shota.oda@example.com',
+        password: 'password',
+      },
       error: false,
     })
   })
 
-  test('auth logout action is valid', () => {
-    const authLoginActionCreator = new Action.Auth.AuthLogout();
+  test('auth sign out action is valid', () => {
+    const authLoginActionCreator = new Action.Auth.SignOut();
     expect(authLoginActionCreator.create()).toEqual({
-      type: 'AUTH_LOGOUT',
+      type: 'AUTH_SIGN_OUT',
       payload: {},
       error: false,
     })
