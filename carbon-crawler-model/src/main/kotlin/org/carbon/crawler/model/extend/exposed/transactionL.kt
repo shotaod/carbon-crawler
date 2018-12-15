@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
  * @author Soda 2018/08/05.
  */
 internal val carbonLogger = object : SqlLogger {
-    val logger = LoggerFactory.getLogger("org.carbon.crawler.extend.exposed.logger")
+    val logger = LoggerFactory.getLogger("org.carbon.sql.logger")
     override fun log(context: StatementContext, transaction: Transaction) = logger.info(context.expandArgs(transaction))
 }
 
