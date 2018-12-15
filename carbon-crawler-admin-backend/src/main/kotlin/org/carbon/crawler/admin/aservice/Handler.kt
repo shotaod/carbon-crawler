@@ -40,6 +40,6 @@ class PersistentErrorHandler<T> : Composable<T>() {
             }
 }
 
-class LoggingTransaction<T> : Composable<T>() {
+class TransactionLogging<T> : Composable<T>() {
     override fun invoke(): T = transactionL { super.composable.invoke() }
 }
