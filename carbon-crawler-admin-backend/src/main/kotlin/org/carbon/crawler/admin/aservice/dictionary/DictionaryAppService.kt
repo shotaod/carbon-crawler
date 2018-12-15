@@ -1,7 +1,10 @@
 package org.carbon.crawler.admin.aservice.dictionary
 
 import org.carbon.crawler.admin.aservice.Pager
+import org.carbon.crawler.admin.aservice.PersistentErrorHandler
+import org.carbon.crawler.admin.aservice.TransactionLogging
 import org.carbon.crawler.admin.aservice.by
+import org.carbon.crawler.admin.aservice.compose
 import org.carbon.crawler.admin.aservice.toItem
 import org.carbon.crawler.admin.www.v1.dictionary.GetDictionaryParameter
 import org.carbon.crawler.admin.www.v1.dictionary.PostDictionaryBody
@@ -30,7 +33,9 @@ class DictionaryAppService {
         entities by Pager(page, count)
     }
 
-    fun saveDictionary(body: PostDictionaryBody) = transactionL {
+    fun saveDictionary(body: PostDictionaryBody) = compose(
+            PersistentErrorHandler(),
+            TransactionLogging()) {
         val entity = DictionaryEntity.new {
             url = body.url
             title = body.title
