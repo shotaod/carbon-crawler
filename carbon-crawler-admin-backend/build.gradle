@@ -2,6 +2,8 @@ version = '0.0.1-SNAPSHOT'
 
 apply plugin: 'application'
 
+mainClassName = 'org.carbon.crawler.admin.CarbonCrawlerAdminApplicationKt'
+
 dependencies {
     implementation "io.ktor:ktor-server-netty:$versions.ktor"
     implementation "io.ktor:ktor-jackson:$versions.ktor"
