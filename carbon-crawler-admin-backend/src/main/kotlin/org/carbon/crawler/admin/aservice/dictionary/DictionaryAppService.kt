@@ -10,14 +10,13 @@ import org.carbon.crawler.admin.www.v1.dictionary.GetDictionaryParameter
 import org.carbon.crawler.admin.www.v1.dictionary.PostDictionaryBody
 import org.carbon.crawler.model.DictionaryEntity
 import org.carbon.crawler.model.DictionaryTable
-import org.carbon.crawler.model.extend.exposed.transactionL
 import org.jetbrains.exposed.sql.selectAll
 
 /**
  * @author Soda 2018/08/06.
  */
 class DictionaryAppService {
-    fun fetchDictionaries(param: GetDictionaryParameter) = transactionL {
+    fun fetchDictionaries(param: GetDictionaryParameter) = compose(TransactionLogging()) {
         val (page, size) = param
         val entities = DictionaryTable.selectAll()
                 .limit(size, offset = page)

@@ -20,7 +20,7 @@ data class Items<T>(
 
 data class Pager(
         val index: Int,
-        val max: Int
+        val total: Int
 )
 
 data class Page<T>(
@@ -30,7 +30,6 @@ data class Page<T>(
 
 suspend infix fun Json.ok(call: ApplicationCall) = call.respond(HttpStatusCode.OK, this)
 suspend infix fun Json.bad(call: ApplicationCall) = call.respond(HttpStatusCode.BadRequest, this)
-
 
 fun <T> T.toItem() = Item(this)
 fun <T> List<T>.toItems() = Items(this)
