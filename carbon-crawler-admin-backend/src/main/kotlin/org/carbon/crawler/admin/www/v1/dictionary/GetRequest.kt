@@ -1,7 +1,7 @@
 package org.carbon.crawler.admin.www.v1.dictionary
 
-import org.carbon.crawler.admin.extend.carbon.validation.Max
-import org.carbon.crawler.admin.extend.carbon.validation.Min
+import org.carbon.crawler.admin.extend.carbon.validation.NumberMax
+import org.carbon.crawler.admin.extend.carbon.validation.NumberMin
 import org.carbon.crawler.admin.extend.carbon.validation.NumberString
 import org.carbon.objects.validation.Definition
 import org.carbon.objects.validation.Validated
@@ -29,7 +29,7 @@ object GetDictionaryParameterSchema : Validated<GetDictionaryParameter> {
         param._page.should {
             and(
                     it be NumberString,
-                    it.toIntOrNull() mayBe Min(0)
+                    it.toIntOrNull() mayBe NumberMin(0)
             )
         } otherwise "page".invalidate()
 
@@ -37,8 +37,8 @@ object GetDictionaryParameterSchema : Validated<GetDictionaryParameter> {
             val num = it.toIntOrNull()
             and(
                     it mayBe NumberString,
-                    num mayBe Min(0),
-                    num mayBe Max(99)
+                    num mayBe NumberMin(0),
+                    num mayBe NumberMax(99)
             )
         } otherwise "size".invalidate()
 
