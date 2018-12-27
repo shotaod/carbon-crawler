@@ -1,9 +1,16 @@
 export const routes = {
   home: '/',
   auth: {
-    signIn: '/signIn',
-    signUp: '/signUp',
-    signUpResult: '/signUp/success',
+    signIn: '/auth/signin',
+    signUp: '/auth/signup',
+    signUpResult: '/auth/signup/result',
+    trouble: {
+      index: '/auth/trouble/index',
+      changePassword: '/auth/trouble/changepw',
+      forgetPassword: '/auth/trouble/forgetpw',
+      forgetPasswordConfirm: '/auth/trouble/forgetpw/confirm',
+      resendConfirmMail: '/auth/trouble/resend',
+    }
   },
   dictionary: {
     list: '/dictionary/list',

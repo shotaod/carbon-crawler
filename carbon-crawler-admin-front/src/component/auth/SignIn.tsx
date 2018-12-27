@@ -1,9 +1,19 @@
 import * as React from "react";
 import {routes} from "../../route/routes";
-import {DefaultInput, FormBox, FormBoxProps, PickDefault, PrimaryLinkButton, Row} from "../parts";
+import {
+  DefaultInput,
+  ErrorPanel,
+  FormBox,
+  FormBoxProps,
+  PickDefault,
+  PrimaryLinkButton,
+  Row,
+  SecondaryLinkButton
+} from "../parts";
 import {withFormik} from "formik";
 import * as Yup from "yup";
 import {compose, withProps} from "recompose";
+import styled from "styled-components";
 
 export type SignInViewProps = {
   errorMsg?: string
@@ -13,8 +23,7 @@ export type SignInHandler = {
   handleSignIn: (info: {
     email: string,
     password: string,
-  }) => void
-  handleError: (err: any) => void
+  }) => void,
 }
 
 type InnerViewProps = FormBoxProps<SignInValueProps, SignInViewProps>
@@ -23,7 +32,7 @@ type SignInValueProps = {
   password: string,
 }
 
-const defaultProps:  PickDefault<InnerViewProps> = {
+const defaultProps: PickDefault<InnerViewProps> = {
   entries: {
     email: {
       label: 'email',
@@ -55,20 +64,24 @@ const validationEffect = withFormik<InnerViewProps, SignInValueProps>({
     password: Yup.string()
       .required('required: password'),
   }),
-  handleSubmit: async ({email, password}, {setSubmitting, props: {handleError, handleSignIn}},) => {
+  handleSubmit: async ({email, password}, {setSubmitting, props: {handleSignIn}},) => {
     setSubmitting(true)
     handleSignIn({email, password})
   },
 })
 
+const Space = styled.span`
+  width: 10px;
+`
+
 const View = (props: InnerViewProps) => (
   <>
-    {props.errorMsg && (<Row>
-      {props.errorMsg}
-    </Row>)}
+    {props.errorMsg && <ErrorPanel text={props.errorMsg}/>}
     <FormBox {...props}/>
     <Row center>
       <PrimaryLinkButton to={routes.auth.signUp}>or sign up</PrimaryLinkButton>
+      <Space/>
+      <SecondaryLinkButton to={routes.auth.trouble.index}>any trouble?</SecondaryLinkButton>
     </Row>
   </>
 )

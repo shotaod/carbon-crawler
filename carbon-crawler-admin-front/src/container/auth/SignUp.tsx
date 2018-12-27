@@ -8,8 +8,7 @@ import {Action} from "../../action";
 const mapState = (state: State.Root) => ({
   errorMsg: state.auth.errorMsg,
 })
-const mapDispatch = (dispatch: Dispatch): SignUpHandler => bindActionCreators({
-  handleError: (msg: string) => new Action.Auth.Error(msg).create(),
+const mapDispatch = (dispatch: Dispatch): SignUpHandler => bindActionCreators<SignUpHandler, SignUpHandler>({
   handleSignUp: (signUpInfo: SignUpValues) => new Action.Auth.SignUp(signUpInfo).create(),
 }, dispatch)
 const connectEffect = connect(

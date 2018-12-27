@@ -24,6 +24,11 @@ const primaryStyle = css`
   color: #fff
 `
 
+const secondaryStyle = css`
+  background-color: #eee
+  color: #2e7c9c
+`
+
 export const PrimaryButton = styled.button`
   ${buttonBase}
   ${primaryStyle}
@@ -32,4 +37,14 @@ export const PrimaryButton = styled.button`
 export const PrimaryLinkButton = styled(Link)`
   ${buttonBase}
   ${primaryStyle}
+`
+
+export const SecondaryLinkButton = styled(Link)`
+  ${buttonBase}
+  ${secondaryStyle} 
+`
+
+export const TextLinkButton = styled(Link)`
+    text-decoration: underline;
+    color: #000;
 `

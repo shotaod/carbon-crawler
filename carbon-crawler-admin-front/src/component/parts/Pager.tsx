@@ -10,21 +10,21 @@ import styled from 'styled-components'
  *
  * @return element
  */
-type PagerProp = {
+export type PagerProp = {
   className?: string,
   index: number,
-  max: number,
-  path: string,
   size: number,
+  total: number,
+  getPath: (index: number) => string
 }
 
 const _Pager = (props: PagerProp) => {
-  const {className, index, max, path, size} = props
-  const createPath = (index: number) => `${path}?index=${index}&size=${size}`
+  const {className, index, size, total, getPath} = props
   const ClickListItem = (props: { title: string, index: number }) =>
-    (<li><Link to={createPath(props.index)}>{props.title}</Link></li>)
+    (<li><Link to={getPath(props.index)}>{props.title}</Link></li>)
   const ListItem = (props: { title: string }) =>
     (<li><span>{props.title}</span></li>)
+  const max = total / size;
   let validIndex: number
   if (index < 0) validIndex = 0
   else if (max <= index) validIndex = max - 1

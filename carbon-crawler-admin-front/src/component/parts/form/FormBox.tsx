@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import {InjectedFormikProps} from 'formik';
 
-import {PrimaryButton, Row} from '../'
+import {ErrorLabel, PrimaryButton, Row} from '../'
 
 // ______________________________________________________
 //
@@ -45,7 +45,7 @@ export const FormBox = <Props, Values>(props: FormBoxProps<Values, Props>) => {
     .map(key => ({key, entry: entries[key]}))
     .map((e, i) => (
       <Row key={`form_${i}`}>
-        <label>{e.entry.label}</label>
+        <Label>{e.entry.label}</Label>
         <Col>
           {e.entry.input({value: values[e.key], onChange: handleChange, name: '' + e.key})}
           {touched && errors && touched[e.key] && errors[e.key] && <ErrorLabel>{errors[e.key]}</ErrorLabel>}
@@ -59,7 +59,7 @@ export const FormBox = <Props, Values>(props: FormBoxProps<Values, Props>) => {
         {Rows}
         <Row center>
           <PrimaryButton type='submit'>
-            {buttonName || 'register'}
+            {buttonName || 'submit'}
           </PrimaryButton>
         </Row>
       </form>
@@ -75,12 +75,9 @@ const Col = styled.div`
     width: 100%
   }
 `
-const ErrorLabel = styled.p`
-  display: inline-block
-  font-size: 10px
-  border-radius: 2px
-  margin: 1px 0 0 0 
-  padding: 5px 10px
-  color: #fff
-  background-color: #ff5e5e
+
+const Label = styled.label`
+  width: 100px;
+  text-align: right;
+  margin-right: 10px;
 `

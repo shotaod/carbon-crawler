@@ -7,10 +7,8 @@
   "scripts": {
     "prepare": "patch-package",
     "test": "jest",
-    "start": "NODE_ENV=dev webpack-dev-server  --hot --progress --color --port 3000 --open",
-    "build": "NODE_ENV=prd webpack --progress --colors",
-    "cosmos": "NODE_ENV=dev cosmos --config ./cosmos.config.js",
-    "cosmos:export": "NODE_ENV=prd cosmos-export",
+    "app:start": "webpack-dev-server --mode development --hot --progress --color --host carbon.local --port 3000 --open",
+    "app:build": "webpack --mode production --progress --colors",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
   },
   "devDependencies": {
@@ -41,8 +39,6 @@
     "patch-package": "^5.1.1",
     "postinstall-prepare": "^1.0.1",
     "prettier": "1.13.5",
-    "react-cosmos": "4.6.4",
-    "react-cosmos-router-proxy": "^4.6.1",
     "react-hot-loader": "4.3.1",
     "ts-jest": "^23.10.3",
     "ts-loader": "4.4.1",

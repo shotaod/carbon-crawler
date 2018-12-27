@@ -16,6 +16,10 @@ export namespace State {
   export namespace Common {
     export type CallState = {
       loading: boolean
+      error?: {
+        occurred: boolean,
+        message: string,
+      }
     }
   }
 
@@ -24,17 +28,17 @@ export namespace State {
     errorMsg?: string
   }
 
-  export type Remote<V> = {
+  export type Remote<R> = {
     dictionary: {
-      [key in DictionaryRemotes]: V
-      }
+      [key in DictionaryRemotes]: R
+    }
   }
 
   type DictionaryRemotes = 'fetch' | 'add'
   export type Dictionary = {
     data: {
       [key in number]: Model.Dictionary
-      }
+    }
     page?: Page
   }
 }

@@ -14,19 +14,18 @@ export function* watchLoadDictionary() {
     const exist: boolean = yield select(queryExistDictionary, action)
     if (exist) continue
 
-    const {response, error} = yield call(Api.call, action.payload)
+    const {result, error} = yield call(Api.call, action.payload)
 
-    if (response) yield put(new Action.Dictionary.FetchSuccess(response).create())
-    else yield put(new Action.Dictionary.FetchFailure(error).create())
+    if (result) yield put(new Action.Dictionary.FetchSuccess(result).create())
+    else yield put(new Action.Dictionary.FetchFailure(error.message).create())
   }
 }
 
 export function* watchAddDictionary() {
   while (true) {
     const action: Action.Dictionary.AddRequest = yield take(Action.Dictionary.Types.DICTIONARY_ADD_REQUEST)
-    const {response, error} = yield call(Api.call, action.payload)
-
-    if (response) yield put(new Action.Dictionary.AddSuccess(response).create())
-    else yield put(new Action.Dictionary.AddFailure(error).create())
+    const {result, error} = yield call(Api.call, action.payload)
+    if (result) yield put(new Action.Dictionary.AddSuccess(result).create())
+    else yield put(new Action.Dictionary.AddFailure(error.message).create())
   }
 }

@@ -2,8 +2,10 @@ import {Action, AnyAction, applyMiddleware, compose, createStore, Store} from 'r
 import createSagaMiddleware, {END} from 'redux-saga'
 
 import {rootReducer} from '../reducer'
+import {routerMiddleware as createRouterMiddleware} from "react-router-redux";
+import {History} from "history";
 
-export interface Saga {
+type Saga = {
   run: (any: any) => any
   close: () => any
 }
@@ -13,16 +15,18 @@ type reduxWindow = {
 }
 const enhancedCompose = (window as reduxWindow).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-export type SagaStore<S = any, A extends Action = AnyAction> = Store<S, A> & Saga
+type SagaStore<S = any, A extends Action = AnyAction> = Store<S, A> & Saga
 
-export const configureSagaStore = (initialState: any = {}): SagaStore => {
+export const configureSagaStore = (history: History, initialState: any = {}): SagaStore => {
   const sagaMiddleware = createSagaMiddleware()
+  const routerMiddleware = createRouterMiddleware(history);
 
   const store = createStore(
     rootReducer,
     initialState,
     enhancedCompose(
       applyMiddleware(
+        routerMiddleware,
         sagaMiddleware,
       ),
     )

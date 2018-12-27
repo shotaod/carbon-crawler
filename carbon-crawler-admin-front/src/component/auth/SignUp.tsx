@@ -1,11 +1,22 @@
 import * as React from "react";
 import {routes} from "../../route/routes";
-import {DefaultInput, FormBox, FormBoxProps, PickDefault, PrimaryLinkButton, Row} from "../parts";
+import {
+  DefaultInput,
+  ErrorPanel,
+  FormBox,
+  FormBoxProps,
+  PickDefault,
+  PrimaryLinkButton,
+  Row,
+  SecondaryLinkButton
+} from "../parts";
 import {withFormik} from "formik";
 
 import * as Yup from "yup";
 import {compose, withProps} from "recompose";
 import {AuthInfo} from "../../shared";
+import styled from "styled-components";
+import {validator} from "./validator";
 
 export type SignUpViewProps = {
   errorMsg?: string
@@ -13,7 +24,6 @@ export type SignUpViewProps = {
 
 export type SignUpHandler = {
   handleSignUp: (signUpInfo: SignUpValues) => void
-  handleError: (msg: string) => void
 }
 export type SignUpValues = AuthInfo & {
   username: string
@@ -72,36 +82,27 @@ const formik = withFormik<InnerViewProps, SignUpValues>({
     email: Yup.string()
       .email('illegal format, plz input email')
       .required('required: email'),
-    password: Yup.string()
-      .min(8, 'password length must be greater than 8')
-      .max(32, 'password length must be less than 32')
-      .required('required: password'),
-    passwordConfirm: Yup.string()
-      .min(8, 'password length must be greater than 8')
-      .max(32, 'password length must be less than 32')
-      .oneOf([Yup.ref('password')], 'password not match')
-      .required('required: password'),
+    password: validator.password(),
+    passwordConfirm: validator.password()
+      .oneOf([Yup.ref('password')], 'password not match'),
   }),
-  handleSubmit: async (auth, {setSubmitting, props: {handleError, handleSignUp}}) => {
-    try {
-      setSubmitting(true)
-      handleSignUp(auth)
-    } catch (err) {
-      handleError(err)
-    } finally {
-      setSubmitting(false)
-    }
+  handleSubmit: async (auth, {setSubmitting, props: {handleSignUp}}) => {
+    setSubmitting(true)
+    handleSignUp(auth)
   },
 })
 
+const Space = styled.span`
+  width: 10px
+`
 const View = (props: InnerViewProps) => (
   <>
-    {props.errorMsg && (<Row>
-      {props.errorMsg}
-    </Row>)}
+    {props.errorMsg && <ErrorPanel text={props.errorMsg}/>}
     <FormBox {...props}/>
     <Row center>
       <PrimaryLinkButton to={routes.auth.signIn}>or sign in</PrimaryLinkButton>
+      <Space/>
+      <SecondaryLinkButton to={routes.auth.trouble.index}>any trouble?</SecondaryLinkButton>
     </Row>
   </>
 )

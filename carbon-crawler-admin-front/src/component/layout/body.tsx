@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import {SideBar, width} from './sidebar'
-import {render} from '../../utils';
 
 export type ViewProp = {
   currentPath: string
@@ -13,9 +12,11 @@ const SectionView = styled.section <{ withSideBar: boolean }>`
   ${p => p.withSideBar ? `margin-left: ${width}` : ''} 
 `
 
+const SideBarAdjust = (props: { currentPath: string }) => <div><SideBar {...props} /></div>
+
 export const Body = (props: ViewProp) => (
   <>
-    {render(props.signIn ? (<SideBar currentPath={props.currentPath}/>) : null)}
+    {props.signIn && <SideBarAdjust {...props}/>}
     <SectionView withSideBar={props.signIn}>
       {props.children}
     </SectionView>

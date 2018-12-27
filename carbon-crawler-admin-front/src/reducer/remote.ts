@@ -1,5 +1,6 @@
 import * as _ from 'lodash'
 import {Reducer} from 'redux'
+import {LOCATION_CHANGE} from "react-router-redux";
 import {initialState, State} from './state'
 import {Action} from '../action'
 
@@ -8,9 +9,9 @@ type RemoteAction = Action.Remote.Actions
 type RemoteReducer = Reducer<RemoteState, RemoteAction>
 const RemoteTypes = Action.Remote.Types
 
-type HandlerValue = { begins: string[], ends: string[] }
-type Handler = {[k in string]: HandlerValue}
-type RemoteConfig = State.Remote<HandlerValue>
+type HandlerHook = { begins: string[], ends: string[] }
+type Handler = { [k in string]: HandlerHook }
+type RemoteConfig = State.Remote<HandlerHook>
 const configureRemoteReducer = (config: RemoteConfig): (state: RemoteState | undefined, action: RemoteAction) => RemoteState => {
   enum Status {
     start,
@@ -30,6 +31,7 @@ const configureRemoteReducer = (config: RemoteConfig): (state: RemoteState | und
     types,
     status,
   })
+
   const computeHandlers = _.chain(config)
     .entries()
     .map(e => ({
@@ -42,7 +44,7 @@ const configureRemoteReducer = (config: RemoteConfig): (state: RemoteState | und
         .map(he => ({
           domainKey: key,
           apiKey: he[0],
-          handler: he[1] as HandlerValue,
+          handler: he[1] as HandlerHook,
         }))
         .reduce((handlers, h) => {
           const {domainKey, apiKey, handler: {begins, ends}} = h
@@ -58,10 +60,25 @@ const configureRemoteReducer = (config: RemoteConfig): (state: RemoteState | und
   return (state = initialState.remote, action) => {
 
     for (const handler of computeHandlers) {
-      if (handler.types.includes(action.type)) {
+      const {type, error} = action;
+
+      if ((action as any).type === LOCATION_CHANGE) {
+        const errorKeys = _.chain<string[]>(_.keys(state))
+          .flatMap(domain => _.keys(_.get(state, domain))
+            .map(operation => `${domain}.${operation}.error`)
+          ).value()
+        return _.omit(state, errorKeys)
+      }
+
+      if (handler.types.includes(type)) {
         const {domainKey, apiKey, status} = handler
+        const message = error && (action.payload as any).message
         const newValue = _.set({}, [apiKey], {
-          loading: status === Status.start
+          loading: status === Status.start,
+          error: {
+            occurred: error,
+            message,
+          },
         })
         const callState = Object.assign({}, state[domainKey as keyof RemoteState], newValue)
         const newDomainCallState = _.set({}, domainKey, callState)

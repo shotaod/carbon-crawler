@@ -1,7 +1,7 @@
 const path = require('path');
 
 // variables
-const isDevelopment = process.env.NODE_ENV === 'dev';
+const isDev = option => option.mode === 'development';
 const sourcePath = path.join(__dirname, './src');
 const outPath = path.join(__dirname, './dist');
 
@@ -9,8 +9,7 @@ const outPath = path.join(__dirname, './dist');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 
-module.exports = {
-  mode: isDevelopment ? 'development' : 'production',
+module.exports = (env, option) => ({
   context: sourcePath,
   entry: {
     app: './index.tsx'
@@ -37,7 +36,7 @@ module.exports = {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         use: [
-          isDevelopment && {
+          isDev(option) && {
             loader: 'babel-loader',
             options: {
               plugins: ['react-hot-loader/babel']
@@ -91,4 +90,4 @@ module.exports = {
     fs: 'empty',
     net: 'empty'
   }
-};
+});

@@ -9,8 +9,7 @@ import {AuthInfo} from "../../shared";
 const mapState = (state: State.Root) => ({
   errorMsg: state.auth.errorMsg,
 })
-const mapDispatch = (dispatch: Dispatch): SignInHandler => bindActionCreators({
-  handleError: (msg: string) => new Action.Auth.Error(msg).create(),
+const mapDispatch = (dispatch: Dispatch): SignInHandler => bindActionCreators<SignInHandler, SignInHandler>({
   handleSignIn: (auth: AuthInfo) => new Action.Auth.SignIn(auth).create(),
 }, dispatch)
 

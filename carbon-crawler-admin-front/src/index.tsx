@@ -8,8 +8,8 @@ import {aws} from './service/aws'
 import {configureSagaStore} from './store'
 import {Application} from './app'
 
-const sagaStore = configureSagaStore()
 const history = createBrowserHistory()
+const sagaStore = configureSagaStore(history)
 
 aws.configure()
 sagaStore.run(rootSaga)
