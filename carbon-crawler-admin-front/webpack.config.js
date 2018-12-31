@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const path = require('path');
 
 // variables
@@ -70,6 +71,10 @@ module.exports = (env, option) => ({
   },
   plugins: [
     new WebpackCleanupPlugin(),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: option.mode,
+      DEBUG: false,
+    }),
     new HtmlWebpackPlugin({
       template: './__resource__/index.html'
     })

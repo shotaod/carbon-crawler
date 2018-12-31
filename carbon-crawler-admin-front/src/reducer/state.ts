@@ -26,6 +26,16 @@ export namespace State {
   export type Auth = {
     signIn: boolean
     errorMsg?: string
+    trouble?: AuthForgotPassword
+  }
+
+  export type AuthForgotPassword = {
+    forgot: {
+      email?: string,
+      emailSend: boolean,
+      code?: string,
+      newPassword?: string,
+    }
   }
 
   export type Remote<R> = {

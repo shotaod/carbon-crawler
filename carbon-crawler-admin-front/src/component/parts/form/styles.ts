@@ -1,6 +1,6 @@
 import {css} from 'styled-components';
 
-export const focus = css`
+export const focusStyle = css`
 :focus {
   border: 1px solid #607580
   outline: 0

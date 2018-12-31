@@ -1,6 +1,6 @@
 import {ErrorLabel, Pager, StrokeLoader} from "../parts";
 import {render} from "../../utils";
-import {routes} from "../../route/routes";
+import {path} from "../../route/path";
 import styled from "styled-components";
 import * as React from "react";
 import {Page} from "../../shared";
@@ -21,7 +21,7 @@ export const ListView = (props: ListViewProps) => (
         <Row align='flex-end'>
           {props.page &&
           <Pager
-            getPath={i => `${routes.dictionary.list}?size=${props.page!.size}&index=${i}`}
+            getPath={i => `${path.dictionary.list}?size=${props.page!.size}&index=${i}`}
             {...props.page!}
           />
           }

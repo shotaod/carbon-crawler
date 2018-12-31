@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import {routes} from '../../route/routes'
+import {path} from '../../route/path'
 import {Link} from 'react-router-dom';
 
 export const width = '150px'
@@ -11,11 +11,11 @@ const sideBarConfig = [
     items: [
       {
         title: 'list',
-        path: routes.dictionary.list,
+        path: path.dictionary.list,
       },
       {
         title: 'register',
-        path: routes.dictionary.register,
+        path: path.dictionary.register,
       },
     ],
   },
@@ -24,11 +24,11 @@ const sideBarConfig = [
     items: [
       {
         title: 'list',
-        path: routes.query.list,
+        path: path.query.list,
       },
       {
         title: 'register',
-        path: routes.query.register,
+        path: path.query.register,
       },
     ]
   }

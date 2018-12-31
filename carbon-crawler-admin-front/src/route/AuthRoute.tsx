@@ -7,7 +7,7 @@ import {compose, pure, withContext} from 'recompose'
 import {Location} from "history"
 
 import {State} from "../reducer/state"
-import {routes} from "./routes"
+import {path} from "./path"
 
 type PickRequired<T, K extends keyof T> =
   Required<Pick<T, K>>
@@ -29,7 +29,7 @@ const RouteView = ({component: Component, ...rest}: ViewProps) => (<Route
   {...rest}
   render={(props) => (rest.signIn
     ? <Component {...props} />
-    : <Redirect to={routes.auth.signIn}/>)}
+    : <Redirect to={path.auth.signIn}/>)}
 />)
 
 export const AuthRoute = compose<ViewProps, RouteProps>(

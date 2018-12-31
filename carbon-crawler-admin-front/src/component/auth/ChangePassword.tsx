@@ -10,8 +10,7 @@ export type ChangePasswordProps = {
 } & ChangePasswordHandler
 
 export type ChangePasswordHandler = {
-  handleChangePassword: (email: string) => void
-  handleError: (err: any) => void
+  handleChangePassword: (password: string) => void
 }
 
 type InnerViewProps = FormBoxProps<ValueProps, ChangePasswordProps>

@@ -1,17 +1,18 @@
 import {compose, pure} from 'recompose'
-import {ForgotHandler, ForgotPasswordView} from "../../component/auth";
+import {bindActionCreators} from "redux";
 import {connect, Dispatch} from "react-redux";
 import {State} from "../../reducer/state";
 import {Action} from "../../action";
-import {bindActionCreators} from "redux";
+import {ForgotPasswordStepView, Handler} from "../../component/auth/forgot";
 
 const mapState = (state: State.Root) => ({
   errorMsg: state.auth.errorMsg,
 })
 
-const mapDispatch = (dispatch: Dispatch) => bindActionCreators<ForgotHandler, ForgotHandler>({
-  handleError: (err: any) => new Action.Auth.Error(err).create(),
-  handleResend: (email: string) => new Action.Auth.ForgotPassword(email).create()
+
+const mapDispatch = (dispatch: Dispatch) => bindActionCreators<Handler, Handler>({
+  handleResend: email => new Action.Auth.ForgotPasswordSendCode(email).create(),
+  handleSendNewPassword: requirement => new Action.Auth.ForgotPasswordRenew(requirement).create(),
 }, dispatch)
 
 const connectEffect = connect(
@@ -19,7 +20,7 @@ const connectEffect = connect(
   mapDispatch,
 )
 
-export const ForgotPasswordContainer = compose<ForgotHandler, {}>(
+export const ForgotPasswordContainer = compose<Handler, {}>(
   connectEffect,
   pure,
-)(ForgotPasswordView)
+)(ForgotPasswordStepView)

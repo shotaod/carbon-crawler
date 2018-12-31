@@ -1,17 +1,24 @@
 import * as React from "react";
-import {routes} from "../../route/routes";
-import {DefaultInput, ErrorPanel, FormBox, FormBoxProps, PickDefault, Row, SecondaryLinkButton} from "../parts";
+import {path} from "../../../route/path";
+import {
+  DefaultInput,
+  ErrorPanel,
+  FormBox,
+  FormBoxProps,
+  PickDefault,
+  Row,
+  SecondaryLinkButton
+} from "../../parts/index";
 import {withFormik} from "formik";
 import * as Yup from "yup";
 import {compose, withProps} from "recompose";
 
 export type ForgotPasswordProps = {
   errorMsg?: string
-} & ForgotHandler
+} & ForgotSendHandler
 
-export type ForgotHandler = {
+export type ForgotSendHandler = {
   handleResend: (email: string) => void
-  handleError: (err: any) => void
 }
 
 type InnerViewProps = FormBoxProps<ValueProps, ForgotPasswordProps>
@@ -40,7 +47,7 @@ const validationEffect = withFormik<InnerViewProps, ValueProps>({
       .email('illegal format, plz input email')
       .required('required: email'),
   }),
-  handleSubmit: async ({email}, {setSubmitting, props: {handleResend}},) => {
+  handleSubmit: ({email}, {setSubmitting, props: {handleResend}},) => {
     setSubmitting(true)
     handleResend(email)
   },
@@ -51,12 +58,12 @@ const View = (props: InnerViewProps) => (
     {props.errorMsg && <ErrorPanel text={props.errorMsg}/>}
     <FormBox {...props}/>
     <Row center>
-      <SecondaryLinkButton to={routes.auth.trouble.index}>{'<'} any other trouble?</SecondaryLinkButton>
+      <SecondaryLinkButton to={path.auth.trouble.index}>{'<'} any other trouble?</SecondaryLinkButton>
     </Row>
   </>
 )
 
-export const ForgotPasswordView = compose<InnerViewProps, ForgotPasswordProps>(
+export const ConfirmCodeSendView = compose<InnerViewProps, ForgotPasswordProps>(
   withProps(defaultProps),
   validationEffect,
 )(View)

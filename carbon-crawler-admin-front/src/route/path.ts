@@ -1,4 +1,4 @@
-export const routes = {
+export const path = {
   home: '/',
   auth: {
     signIn: '/auth/signin',
@@ -7,8 +7,7 @@ export const routes = {
     trouble: {
       index: '/auth/trouble/index',
       changePassword: '/auth/trouble/changepw',
-      forgetPassword: '/auth/trouble/forgetpw',
-      forgetPasswordConfirm: '/auth/trouble/forgetpw/confirm',
+      forgotPassword: '/auth/trouble/forgotpw',
       resendConfirmMail: '/auth/trouble/resend',
     }
   },

@@ -10,7 +10,6 @@ const mapState = (state: State.Root) => ({
 })
 
 const mapDispatch = (dispatch: Dispatch) => bindActionCreators<ChangePasswordHandler, ChangePasswordHandler>({
-  handleError: (err: any) => new Action.Auth.Error(err).create(),
   handleChangePassword: (password: string) => new Action.Auth.ChangePassword(password).create(),
 }, dispatch)
 

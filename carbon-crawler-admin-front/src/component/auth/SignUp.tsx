@@ -1,5 +1,5 @@
 import * as React from "react";
-import {routes} from "../../route/routes";
+import {path} from "../../route/path";
 import {
   DefaultInput,
   ErrorPanel,
@@ -100,9 +100,9 @@ const View = (props: InnerViewProps) => (
     {props.errorMsg && <ErrorPanel text={props.errorMsg}/>}
     <FormBox {...props}/>
     <Row center>
-      <PrimaryLinkButton to={routes.auth.signIn}>or sign in</PrimaryLinkButton>
+      <PrimaryLinkButton to={path.auth.signIn}>or sign in</PrimaryLinkButton>
       <Space/>
-      <SecondaryLinkButton to={routes.auth.trouble.index}>any trouble?</SecondaryLinkButton>
+      <SecondaryLinkButton to={path.auth.trouble.index}>any trouble?</SecondaryLinkButton>
     </Row>
   </>
 )

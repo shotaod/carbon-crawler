@@ -4,3 +4,21 @@ export const AWS = {
     clientID: '3r3kp1kujo1ld5vbcla003i3di',
   }
 }
+
+class Env {
+  private readonly _env = process.env.NODE_ENV as string
+
+  get value(): string {
+    return this._env;
+  }
+
+  get isDev(): boolean {
+    return this._env === 'development'
+  }
+
+  get isProd(): boolean {
+    return this._env === 'production'
+  }
+}
+
+export const env = new Env();

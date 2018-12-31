@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import {focus} from './styles'
+import {focusStyle} from './styles'
 
 export const DefaultTextarea = styled.textarea`
-  ${focus}
+  ${focusStyle}
   padding: 10px
   border: 1px solid #DDD
   border-radius: 2px

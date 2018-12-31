@@ -1,5 +1,7 @@
 export * from './SignIn'
 export * from './SignUp'
-export * from './Trouble'
 export * from './ChangePassword'
-export * from './ForgotPassword'
+export * from './forgot/ConfirmCodeSendView'
+
+export * from './TroublePage'
+export * from './forgot/CodeConfirmView'

@@ -32,28 +32,21 @@ export class SignOutSuccess extends SharedAction.FsaActionCreator<Types.AUTH_SIG
   }
 }
 
-export class ForgotPassword extends SharedAction.FsaActionCreator<Types.AUTH_TROUBLE_FORGOT_PASSWORD, { email: string }> {
-  constructor(email: string) {
-    super(Types.AUTH_TROUBLE_FORGOT_PASSWORD, {email})
-  }
-}
-
-export class ForgotPasswordSuccess extends SharedAction.FsaActionCreator<Types.AUTH_TROUBLE_FORGOT_PASSWORD_SUCCESS> {
-  constructor() {
-    super(Types.AUTH_TROUBLE_FORGOT_PASSWORD_SUCCESS, {})
-  }
-}
-
-
 export class ChangePassword extends SharedAction.FsaActionCreator<Types.AUTH_CHANGE_PASSWORD, { password: string }> {
   constructor(password: string) {
     super(Types.AUTH_CHANGE_PASSWORD, {password});
   }
 }
 
-export class ChangePasswordSuccess extends SharedAction.FsaActionCreator<Types.AUTH_CHANGE_PASSWORD_SUCCESS> {
-  constructor() {
-    super(Types.AUTH_CHANGE_PASSWORD_SUCCESS, {});
+export class ForgotPasswordSendCode extends SharedAction.FsaActionCreator<Types.AUTH_FORGOT_PASSWORD_SEND_CODE, { email: string }> {
+  constructor(email: string) {
+    super(Types.AUTH_FORGOT_PASSWORD_SEND_CODE, {email})
+  }
+}
+
+export class ForgotPasswordRenew extends SharedAction.FsaActionCreator<Types.AUTH_FORGOT_PASSWORD_RENEW, { email: string, code: string, password: string }> {
+  constructor(requirement: { email: string, code: string, password: string }) {
+    super(Types.AUTH_FORGOT_PASSWORD_RENEW, requirement)
   }
 }
 
@@ -69,8 +62,8 @@ export type Actions = SignUp
   | SignOut
   | SignInSuccess
   | SignOutSuccess
-  | ForgotPassword
-  | ForgotPasswordSuccess
+  | ForgotPasswordSendCode
+  | ForgotPasswordRenew
   | Error
 
 export enum Types {
@@ -80,8 +73,7 @@ export enum Types {
   AUTH_SIGN_OUT = 'AUTH_SIGN_OUT',
   AUTH_SIGN_OUT_SUCCESS = 'AUTH_SIGN_OUT_SUCCESS',
   AUTH_CHANGE_PASSWORD = 'AUTH_CHANGE_PASSWORD',
-  AUTH_CHANGE_PASSWORD_SUCCESS = 'AUTH_CHANGE_PASSWORD_SUCCESS',
-  AUTH_TROUBLE_FORGOT_PASSWORD = 'AUTH_TROUBLE_FORGOT_PASSWORD',
-  AUTH_TROUBLE_FORGOT_PASSWORD_SUCCESS = 'AUTH_TROUBLE_FORGOT_PASSWORD_SUCCESS',
+  AUTH_FORGOT_PASSWORD_SEND_CODE = 'AUTH_FORGOT_PASSWORD_SEND_CODE',
+  AUTH_FORGOT_PASSWORD_RENEW = 'AUTH_FORGOT_PASSWORD_RENEW',
   AUTH_ERROR = 'AUTH_ERROR',
 }

@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import {focus} from './styles'
+import {focusStyle} from './styles'
 
 export const DefaultInput = styled.input`
-  ${focus}
+  ${focusStyle}
   height: 1.5em
   padding: 5px 10px
   border: 1px solid #DDD
