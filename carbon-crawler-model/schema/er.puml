@@ -1,72 +1,65 @@
 @startuml
 
-entity dictionary {
+entity Host {
     id
-    url
     title
+    url
     memo
-}
-
-entity tag {
-    id
-    dictionary_id
-    name
 }
 
 ' --------------------------------------------------
 ' crawl data
 ' --------------------------------------------------
-entity page {
-    id
-    dictionary_id
-    title
-    url
-}
+package Search {
+    entity tag {
+        id
+        dictionary_id
+        name
+    }
 
-entity page_attribute {
-    id
-    page_id
-    key
-    value
-    type
-}
+    entity page {
+        id
+        dictionary_id
+        title
+        url
+    }
 
+    entity page_attribute {
+        id
+        page_id
+        key
+        value
+        type
+    }
+}
 
 ' --------------------------------------------------
 ' crawl query
 ' --------------------------------------------------
-entity crawl_root_doc {
-    id
-    dictionary_id
-    list_page_path
-    list_holder_query
-    list_item_query
-    ins_at
-    upd_at
-    del_at
+package Crawl {
+    entity crawl_list_query {
+        id
+        dictionary_id
+
+        ' path & query
+        listing_page_path
+        detail_link_parent_node_query
+        detail_link_item_node_query
+    }
+
+    entity crawl_detail_query {
+        id
+        dictionary_id
+
+        ' for fetch detail item
+        detail_attribute_node_query
+    }
 }
 
-entity crawl_query {
-    id
-    crawl_root_doc_id
-    name
-    query
-}
-
-entity crawl_source {
-    id
-    crawl_root_doc_id
-    url
-    insertedAt
-    updatedAt
-    deletedAt
-}
-
-dictionary "1" *--  "0..n" tag
-dictionary "1" *-- "1..n" page
+Host "1" *--  "0..n" tag
+Host "1" *-- "1..n" page
 page o-- page_attribute
-dictionary "1" *-- "1" crawl_root_doc
-crawl_root_doc o-- crawl_source
-crawl_root_doc o-- crawl_query
+Host "1" *-- "1" crawl_list_query
+Host "1" <-- "0..n" crawl_detail_query
 
 @enduml
