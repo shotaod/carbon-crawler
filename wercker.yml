@@ -76,7 +76,7 @@ build-node:
         cd carbon-crawler-admin-front
         yarn && yarn app:build
 
-build-docker:
+deploy-docker:
   steps:
   - internal/docker-build:
       dockerfile: carbon-crawler-ci/carbon_jre/Dockerfile
@@ -90,27 +90,24 @@ build-docker:
       dockerfile: carbon-crawler-ci/carbon_jre/Dockerfile
       image-name: carbon-crawler-stream-flow-crawl-listing-source
       build-args: "JAR_FILE=carbon-crawler-stream/flow/crawl-listing-source/build/libs/crawl-listing-source-LATEST.jar"
-
-deploy:
-  steps:
   - internal/docker-push:
       image-name: carbon-crawler-admin-api
       username: _json_key
       password: $GCR_JSON_KEY_FILE
-      repository: gcr.io/carbon/$WERCKER_GIT_REPOSITORY
+      repository: asia.gcr.io/carbon/$WERCKER_GIT_REPOSITORY
       registry: https://asia.gcr.io/v2
       tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG
   - internal/docker-push:
       image-name: carbon-crawler-stream-flow-crawl-listing-sink
       username: _json_key
       password: $GCR_JSON_KEY_FILE
-      repository: gcr.io/carbon/$WERCKER_GIT_REPOSITORY
+      repository: asisa.gcr.io/carbon/$WERCKER_GIT_REPOSITORY
       registry: https://asia.gcr.io/v2
       tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG flow
   - internal/docker-push:
-      dockerfile: carbon-crawler-ci/carbon_jre/Dockerfile
+      image-name: carbon-crawler-stream-flow-crawl-listing-source
       username: _json_key
       password: $GCR_JSON_KEY_FILE
-      repository: gcr.io/carbon/$WERCKER_GIT_REPOSITORY
+      repository: asisa.gcr.io/carbon/$WERCKER_GIT_REPOSITORY
       registry: https://asia.gcr.io/v2
       tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG flow
