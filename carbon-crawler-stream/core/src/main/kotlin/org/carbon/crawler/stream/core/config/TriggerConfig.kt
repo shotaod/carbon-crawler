@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 /**
  * @author Soda 2018/08/21.
  */
-@ConfigurationProperties("trigger")
+@ConfigurationProperties("carbon.trigger")
 class TriggerProp {
     var maxMessage: String? = null
     var cron: String? = null
