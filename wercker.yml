@@ -10,13 +10,12 @@ build:
       code: |
         echo 'todo build script here'
 test-jvm:
+  box: openjdk:8-jdk
   service:
   - mysql:5.7
     env:
       MYSQL_ROOT_PASSWORD: rootpw
       MYSQL_DATABASE: test_db
-  # https://devcenter.wercker.com/overview-and-core-concepts/containers/
-  box: openjdk:8-jdk
   # https://devcenter.wercker.com/administration/services/service-container-networking/#getting-the-environment-variables
   # https://devcenter.wercker.com/administration/services/examples/mysql/
   steps:
@@ -38,12 +37,7 @@ test-jvm:
     cache_project_cache: true
 
 test-node:
-  # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: node:10.9.0-alpine
-  # The steps that will be executed on build
-  # Steps make up the actions in your pipeline
-  # Read more about steps on our dev center:
-  # https://devcenter.wercker.com/development/steps/
   steps:
   - script:
       name: add git
