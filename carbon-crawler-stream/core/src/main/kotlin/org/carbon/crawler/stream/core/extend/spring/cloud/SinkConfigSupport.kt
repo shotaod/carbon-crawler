@@ -29,34 +29,28 @@ typealias TypedSink<PAYLOAD> = (PAYLOAD) -> Unit
  * @author Soda 2018/08/10.
  */
 abstract class SinkConfigSupport<T : Any>(
-        private val payloadClass: KClass<T>,
-        private val channel: Sink,
-        private val sink: TypedSink<T>
+    private val payloadClass: KClass<T>,
+    private val channel: Sink,
+    private val sink: TypedSink<T>
 ) {
-    protected interface MessageSink<BODY> : MessageHandler {
+    protected class HandleSinkConnector<BODY>(val sink: TypedSink<BODY>) : MessageHandler {
         private inline fun <reified T> Any.alsoTyped(also: (T) -> Unit) {
             if (this is T) also(this)
         }
 
         override fun handleMessage(message: Message<*>) {
             message.alsoTyped<Message<BODY>> {
-                handle(it.payload)
+                sink(it.payload)
             }
         }
-
-        val handle: TypedSink<BODY>
-    }
-
-    protected fun TypedSink<T>.toHandler() = object : MessageSink<T> {
-        override val handle: TypedSink<T> = this@toHandler
     }
 
     @Bean
     open fun sinkFlow(): IntegrationFlow {
         return IntegrationFlows
-                .from(channel.input())
-                .transform(JsonToObjectTransformer(payloadClass.java))
-                .handle(sink.toHandler())
-                .get()
+            .from(channel.input())
+            .transform(JsonToObjectTransformer(payloadClass.java))
+            .handle(HandleSinkConnector(sink))
+            .get()
     }
 }

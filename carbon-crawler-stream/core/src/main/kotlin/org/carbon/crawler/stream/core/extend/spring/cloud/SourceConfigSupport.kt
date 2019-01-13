@@ -33,9 +33,9 @@ typealias TypedSource<PAYLOAD> = () -> PAYLOAD?
  * @author Soda 2018/08/08.
  */
 abstract class SourceConfigSupport<OUT>(
-        private var poller: PollerMetadata,
-        private val channel: Source,
-        private val source: TypedSource<OUT>
+    private var poller: PollerMetadata,
+    private val channel: Source,
+    private val source: TypedSource<OUT>
 ) {
     companion object {
         val count = AtomicInteger(0)
@@ -44,9 +44,9 @@ abstract class SourceConfigSupport<OUT>(
     val logger = LoggerFactory.getLogger(this.javaClass)!!
 
     fun <T> TypedSource<T>.toSource(): MessageSource<T> = object : AbstractMessageSource<T>() {
-        override fun getComponentType(): String = "p-${this::class.simpleName}-${count.incrementAndGet()}"
+        override fun getComponentType(): String = "source:${this::class.simpleName}#${count.incrementAndGet()}"
         override fun doReceive(): T? {
-            val result: T? = this@toSource()
+            val result: T? = this@toSource.invoke()
             when (result) {
                 null -> logger.info("[source] null")
                 else -> logger.info("[source] $result")
@@ -58,7 +58,7 @@ abstract class SourceConfigSupport<OUT>(
 
     @Bean
     open fun sourceFlow(): IntegrationFlow = IntegrationFlows
-            .from(source.toSource(), Consumer { it.poller(poller) })
-            .channel(channel.output())
-            .get()
+        .from(source.toSource(), Consumer { it.poller(poller) })
+        .channel(channel.output())
+        .get()
 }
