@@ -32,7 +32,7 @@ test-jvm:
         export CARBON_TEST_RDB_PASSWORD=rootpw
   # https://github.com/wercker/step-gradle
   - java/gradle:
-    task: clean test
+    task: --full-stacktrace clean test
     version: '5.1'
     cache_project_cache: true
 
