@@ -9,20 +9,38 @@ import java.sql.DriverManager
 import javax.annotation.PostConstruct
 import javax.sql.DataSource
 
-/**
- * @author Soda 2018/07/23.
- */
 @Import(
-        DataSourceConfig::class,
-        DataSourceProp::class,
-        ExposedConfig::class
+    DataSourceConfig::class,
+    DataSourceProp::class,
+    ExposedConfig::class
 )
 @Configuration
 interface DataConfig
 
+/**
+ * [https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-kotlin.html#boot-features-kotlin-configuration-properties]
+ */
+@ConfigurationProperties("carbon.rdb")
+class DataSourceProp {
+    lateinit var rdbUrl: String
+    lateinit var rdbUsername: String
+    lateinit var rdbPassword: String
+    var rdbOption: Map<String, String>? = null
+
+    fun toDataSource(): DataSource {
+        return org.apache.tomcat.jdbc.pool.DataSource()
+            .also {
+                it.url = "$rdbUrl${rdbOption?.map { "${it.key}=${it.value}" }?.joinToString("&", prefix = "?").orEmpty()}"
+                it.driverClassName = DriverManager.getDriver(rdbUrl)::class.qualifiedName
+                it.username = rdbUsername
+                it.password = rdbPassword
+            }
+    }
+}
+
 @Configuration
 class DataSourceConfig constructor(
-        private val prop: DataSourceProp
+    private val prop: DataSourceProp
 ) {
     @Bean
     fun dataSource(): DataSource {
@@ -31,35 +49,9 @@ class DataSourceConfig constructor(
 }
 
 @Configuration
-@ConfigurationProperties("rdb.main")
-class DataSourceProp : BasicDataSourceProp()
-
-// ===================================================================================
-//                                                                          ORM
-//                                                                          ==========
-@Configuration
 class ExposedConfig(val dataSource: DataSource) {
     @PostConstruct
     fun configureExposed() {
         Database.connect(dataSource)
-    }
-}
-
-/**
- * @link https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-kotlin.html#boot-features-kotlin-configuration-properties
- */
-open class BasicDataSourceProp {
-    lateinit var url: String
-    lateinit var username: String
-    lateinit var password: String
-    var option: Map<String, String>? = null
-
-    fun toDataSource(): DataSource {
-        return org.apache.tomcat.jdbc.pool.DataSource().also {
-            it.url = "$url${option?.map { "${it.key}=${it.value}" }?.joinToString("&", prefix = "?").orEmpty()}"
-            it.driverClassName = DriverManager.getDriver(it.url)::class.qualifiedName
-            it.username = username
-            it.password = password
-        }
     }
 }

@@ -14,15 +14,15 @@ import java.net.URL
 @Import(DriverHubProp::class)
 @Configuration
 class WebDriverConfig(
-        val prop: DriverHubProp
+    val prop: DriverHubProp
 ) {
     @Bean
     fun driverFactory() = DriverFactory(prop.toURL(), ChromeOptions())
 }
 
 @Configuration
-@ConfigurationProperties("driver.hub")
+@ConfigurationProperties("carbon.wd")
 class DriverHubProp {
-    lateinit var url: String
-    fun toURL(): URL = URL(url)
+    lateinit var driverHubUrl: String
+    fun toURL(): URL = URL(driverHubUrl)
 }
