@@ -12,9 +12,8 @@ import org.carbon.composer.compose
 import org.carbon.crawler.admin.KtorModuleTest
 import org.carbon.crawler.admin.extend.compose.TestModule
 import org.carbon.crawler.admin.module
+import org.carbon.crawler.model.extend.composer.DBUtil
 import org.carbon.crawler.model.extend.composer.RollbackTransaction
-import org.carbon.crawler.model.infra.record.HostTable
-import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.junit.jupiter.api.Test
 
 /**
@@ -25,7 +24,9 @@ class QueryRouteKtTest : KtorModuleTest {
 
     @Test
     fun get_success() = compose(TestModule(Application::module), RollbackTransaction) {
-        create(HostTable)
+        with(context[DBUtil::class]) {
+            clean()
+        }
         with(context[TestApplicationEngine::class]) {
             val call = handleRequest(HttpMethod.Get, "/v1/queries?page=1&size=10")
             call.response.status() shouldBe (HttpStatusCode.OK)
