@@ -25,6 +25,15 @@ bootInstall.enabled = false
 subprojects {
     group = 'org.carbon.crawler.stream.flow'
 
+    sourceSets {
+        def coreResource = project(':carbon-crawler-stream:core').sourceSets.main.resources.srcDirs
+        main.resources.srcDir coreResource
+        test.resources.srcDir coreResource
+    }
+    println("""module: $name add additional resource
+    main: $sourceSets.main.resources.srcDirs
+    test: $sourceSets.test.resources.srcDirs""")
+
     dependencies {
         implementation 'org.springframework.cloud:spring-cloud-stream'
         implementation project(':carbon-composer')
