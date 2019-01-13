@@ -1,14 +1,11 @@
 version = '0.1.0-SNAPSHOT'
 
-bootJar {
-    enabled = false
-}
-jar {
-    enabled = true
-}
-
 dependencies {
     implementation "org.jetbrains.exposed:exposed:$versions.exposed"
+    implementation "org.apache.tomcat:tomcat-jdbc:$versions.tomcat"
+    implementation "mysql:mysql-connector-java:$versions.mysql"
+
+    implementation project(':carbon-composer')
 
     testImplementation "org.flywaydb:flyway-core:$versions.flyway"
     testImplementation "com.h2database:h2:$versions.h2"
