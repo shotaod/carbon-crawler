@@ -1,0 +1,10 @@
+version = 'LATEST'
+
+dependencies {
+
+    implementation project(':carbon-crawler-model')
+    boms.rdb delegate
+    boms.webdriver delegate
+
+    testImplementation "io.mockk:mockk:$versions.mockk"
+}
