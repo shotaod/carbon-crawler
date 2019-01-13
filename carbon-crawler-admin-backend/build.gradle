@@ -1,20 +1,33 @@
-version = '0.0.1-SNAPSHOT'
+version = 'LATEST'
 
 apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 mainClassName = 'org.carbon.crawler.admin.CarbonCrawlerAdminApplicationKt'
+
+shadowJar {
+    //noinspection GroovyAssignabilityCheck
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+repositories {
+    // for ts-generator
+    maven { url 'https://jitpack.io' }
+}
 
 dependencies {
     implementation "io.ktor:ktor-server-netty:$versions.ktor"
     implementation "io.ktor:ktor-jackson:$versions.ktor"
     implementation "io.ktor:ktor-locations:$versions.ktor"
-
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$versions.jackson"
 
     implementation "org.carbon.libs:carbon-validation:$versions.carbon.validation"
+    implementation project(':carbon-composer')
+    implementation project(':carbon-crawler-model')
+    boms.rdb delegate
 
     testImplementation "io.ktor:ktor-server-test-host:$versions.ktor"
-    testImplementation "io.kotlintest:kotlintest-runner-junit5:$versions.kotlintest"
-
-    boms.rdb delegate
+    testImplementation 'com.github.ntrrgc:ts-generator:1.1.1'
 }
