@@ -15,12 +15,10 @@ test-jvm:
     env:
       MYSQL_ROOT_PASSWORD: rootpw
       MYSQL_DATABASE: test_db
-  # This references an OpenJDK container from the
-  # Docker Hub https://hub.docker.com/_/openjdk/
-  # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: openjdk:8-jdk
   # https://devcenter.wercker.com/administration/services/service-container-networking/#getting-the-environment-variables
+  # https://devcenter.wercker.com/administration/services/examples/mysql/
   steps:
   - script:
       name: expand env
@@ -40,10 +38,6 @@ test-jvm:
     cache_project_cache: true
 
 test-node:
-  # This references the default nodejs container from
-  # the Docker Hub: https://registry.hub.docker.com/_/node/
-  # If you want Nodesource's container you would reference nodesource/node
-  # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: node:10.9.0-alpine
   # The steps that will be executed on build
@@ -78,12 +72,14 @@ build-jvm:
 build-docker:
   steps:
   - internal/docker-build:
-
+    dockerfile: carbon-crawler-ci/carbon_jre/Dockerfile
+    image-name: carbon-crawler-admin-api
+    build-args: "JAR_FILE=carbon-crawler-admin-api/build/libs/carbon-crawler-admin-api-LATEST.jar"
   - internal/docker-build:
-    dockerfile: carbon-crawler-ci/stream-flow/Dockerfile
+    dockerfile: carbon-crawler-ci/carbon_jre/Dockerfile
     image-name: carbon-crawler-stream-flow-crawl-listing-sink
     build-args: "JAR_FILE=carbon-crawler-stream/flow/crawl-listing-sink/build/libs/crawl-listing-sink-LATEST.jar"
   - internal/docker-build:
-    dockerfile: carbon-crawler-ci/stream-flow/Dockerfile
+    dockerfile: carbon-crawler-ci/carbon_jre/Dockerfile
     image-name: carbon-crawler-stream-flow-crawl-listing-source
     build-args: "JAR_FILE=carbon-crawler-stream/flow/crawl-listing-sink/build/libs/crawl-listing-source-LATEST.jar"
