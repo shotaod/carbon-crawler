@@ -76,6 +76,8 @@ build-node:
         cd carbon-crawler-admin-front
         yarn && yarn app:build
 
+      # https://devcenter.wercker.com/administration/containers/building-an-image/#creating-a-docker-image-using-wercker-steps
+# Note: If you don’t push the new image to a registry, the image will become inaccessible when the pipeline ends.
 deploy-docker:
   steps:
   - internal/docker-build:
