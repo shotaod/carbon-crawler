@@ -6,5 +6,6 @@ ext {
 
 dependencies {
     // todo if use model
+    // implementation project(':carbon-crawler-model')
     // boms.rdb delegate
 }
