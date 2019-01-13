@@ -2,11 +2,7 @@ package org.carbon.crawler.model.extend.composer
 
 import org.carbon.composer.Composable
 import org.carbon.crawler.model.extend.exposed.transactionL
-import org.carbon.crawler.model.infra.record.CrawlDetailQueryTable
-import org.carbon.crawler.model.infra.record.CrawlListQueryTable
-import org.carbon.crawler.model.infra.record.HostTable
-import org.carbon.crawler.model.infra.record.PageAttributeTable
-import org.carbon.crawler.model.infra.record.PageTable
+import org.carbon.crawler.model.infra.meta.Meta
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -26,9 +22,8 @@ object RollbackTransaction : Composable<Unit>() {
     private object RollbackException : Exception("for Rollback purpose")
     private class DBUtilImpl : DBUtil {
         override fun clean() {
-            val tables = arrayOf(HostTable, PageTable, PageAttributeTable, CrawlListQueryTable, CrawlDetailQueryTable)
-            SchemaUtils.create(*tables)
-            tables
+            SchemaUtils.create(*Meta.tablesByAncestor)
+            Meta.tablesByAncestor
                 .reversed()
                 .forEach { it.deleteAll() }
         }
