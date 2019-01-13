@@ -18,10 +18,6 @@ test-jvm:
       MYSQL_DATABASE: test_db
   # https://devcenter.wercker.com/administration/services/service-container-networking/#getting-the-environment-variables
   # https://devcenter.wercker.com/administration/services/examples/mysql/
-  steps:
-  - script:
-      name: expand env
-      code: env
   - script:
       name: mapping env
       code: |
@@ -46,15 +42,10 @@ test-node:
         apk upgrade && \
         apk add --no-cache git
   - script:
-    name: install
+    name: test
     code:  |
       cd carbon-crawler-admin-front
-      yarn install
-  - script:
-    name: test
-    code: |
-      cd carbon-crawler-admin-front
-      yarn test
+      yarn && yarn app:test
 
 build-jvm:
   box: openjdk:8-jdk
@@ -63,6 +54,21 @@ build-jvm:
     task: clean build -x test
     version: '5.1'
     cache_project_cache: true
+
+build-node:
+  box: node:10.9.0-alpine
+    steps:
+    - script:
+        name: add git
+        code: |
+          apk update && \
+          apk upgrade && \
+          apk add --no-cache git
+    - script:
+      name: build
+      code:  |
+        cd carbon-crawler-admin-front
+        yarn && yarn app:build
 
 build-docker:
   steps:
@@ -77,4 +83,28 @@ build-docker:
   - internal/docker-build:
     dockerfile: carbon-crawler-ci/carbon_jre/Dockerfile
     image-name: carbon-crawler-stream-flow-crawl-listing-source
-    build-args: "JAR_FILE=carbon-crawler-stream/flow/crawl-listing-sink/build/libs/crawl-listing-source-LATEST.jar"
+    build-args: "JAR_FILE=carbon-crawler-stream/flow/crawl-listing-source/build/libs/crawl-listing-source-LATEST.jar"
+
+deploy:
+  steps:
+  - internal/docker-push:
+      image-name: carbon-crawler-admin-api
+      username: _json_key
+      password: $GCR_JSON_KEY_FILE
+      repository: gcr.io/carbon/$WERCKER_GIT_REPOSITORY
+      registry: https://asia.gcr.io/v2
+      tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG
+  - internal/docker-push:
+      image-name: carbon-crawler-stream-flow-crawl-listing-sink
+      username: _json_key
+      password: $GCR_JSON_KEY_FILE
+      repository: gcr.io/carbon/$WERCKER_GIT_REPOSITORY
+      registry: https://asia.gcr.io/v2
+      tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG flow
+  - internal/docker-push:
+      dockerfile: carbon-crawler-ci/carbon_jre/Dockerfile
+      username: _json_key
+      password: $GCR_JSON_KEY_FILE
+      repository: gcr.io/carbon/$WERCKER_GIT_REPOSITORY
+      registry: https://asia.gcr.io/v2
+      tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG flow
