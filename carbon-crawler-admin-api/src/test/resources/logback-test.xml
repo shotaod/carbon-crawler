@@ -8,4 +8,5 @@
   <root level="DEBUG">
     <appender-ref ref="CONSOLE"/>
   </root>
+  <logger name="Exposed" level="INFO"/>
 </configuration>
