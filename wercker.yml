@@ -30,6 +30,11 @@ test-jvm:
         export CARBON_CRAWLER_RDB_SCHEMA=test_db
         export CARBON_CRAWLER_RDB_USER=root
         export CARBON_CRAWLER_RDB_PASSWORD=rootpw
+        echo ${MYSQL_PORT_3306_TCP_ADDR}
+        echo ${MYSQL_PORT_3306_TCP_PORT}
+        echo test_db
+        echo root
+        echo rootpw
   # https://github.com/wercker/step-gradle
   - java/gradle:
     task: clean test
