@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "prepare": "patch-package",
-    "test": "jest",
+    "app:test": "jest",
     "app:start": "webpack-dev-server --mode development --hot --progress --color --host carbon.local --port 3000 --open",
     "app:build": "webpack --mode production --progress --colors",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
