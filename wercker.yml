@@ -60,9 +60,9 @@ build-jvm:
   box: openjdk:8-jdk
   steps:
   - java/gradle:
-    task: clean build -x test
-    version: 5.1
-    cache_project_cache: true
+      task: clean build -x test
+      version: 5.1
+      cache_project_cache: true
 
 build-docker:
   steps:
