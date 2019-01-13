@@ -43,11 +43,12 @@ module.exports = (env, option) => ({
               plugins: ['react-hot-loader/babel']
             }
           },
-          'ts-loader'
+          'ts-loader',
         ].filter(Boolean)
       },
       // static assets
       {test: /\.html$/, use: 'html-loader'},
+      {test: /\.css$/, use: ['style-loader', 'css-loader']},
       {test: /\.(a?png|svg)$/, use: 'url-loader?limit=10000'},
       {test: /\.(jpe?g|gif|bmp|mp3|mp4|ogg|wav|eot|ttf|woff|woff2)$/, use: 'file-loader'}
     ]

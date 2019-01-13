@@ -11,9 +11,11 @@ type Saga = {
 }
 
 type reduxWindow = {
-  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: any
 }
-const enhancedCompose = (window as reduxWindow).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const enhancedCompose = (window as reduxWindow).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+  trace: true,
+}) || compose
 
 type SagaStore<S = any, A extends Action = AnyAction> = Store<S, A> & Saga
 

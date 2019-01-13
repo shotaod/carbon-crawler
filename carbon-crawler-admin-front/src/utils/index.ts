@@ -10,16 +10,6 @@ export function omit<T extends object, K extends keyof T>(target: T, ...omitKeys
   )
 }
 
-export const correct = <k extends string, v extends any>(initialValue: v, ...keys: k[]): { [Key in k]: v } => {
+export const fillValue = <k extends string, v extends any>(initialValue: v, ...keys: k[]): { [Key in k]: v } => {
   return keys.reduce((acc, k) => Object.assign({}, acc, {[k]: initialValue}), {}) as { [Key in k]: v }
-}
-
-export const render = (element: JSX.Element | JSX.Element[] | (() => JSX.Element) | null): JSX.Element | JSX.Element[] | null => {
-  if (!element) return null
-
-  if (typeof element === 'function') {
-    return element()
-  }
-
-  return element
 }

@@ -3,11 +3,11 @@ import {Reducer} from 'redux'
 import {LOCATION_CHANGE} from "react-router-redux";
 import {initialState, State} from './state'
 import {Action} from '../action'
+import {REMOTE_RESET} from "../action/remote";
 
 type RemoteState = State.Remote<State.Common.CallState>
 type RemoteAction = Action.Remote.Actions
 type RemoteReducer = Reducer<RemoteState, RemoteAction>
-const RemoteTypes = Action.Remote.Types
 
 type HandlerHook = { begins: string[], ends: string[] }
 type Handler = { [k in string]: HandlerHook }
@@ -70,15 +70,17 @@ const configureRemoteReducer = (config: RemoteConfig): (state: RemoteState | und
         return _.omit(state, errorKeys)
       }
 
+      if ((action as any).type === REMOTE_RESET) {
+        return initialState.remote
+      }
+
       if (handler.types.includes(type)) {
         const {domainKey, apiKey, status} = handler
-        const message = error && (action.payload as any).message
+        const errorEntry = {message: (error && (action.payload as any).message) || undefined}
         const newValue = _.set({}, [apiKey], {
           loading: status === Status.start,
-          error: {
-            occurred: error,
-            message,
-          },
+          error: errorEntry,
+          success: !error && status === Status.end,
         })
         const callState = Object.assign({}, state[domainKey as keyof RemoteState], newValue)
         const newDomainCallState = _.set({}, domainKey, callState)
@@ -91,14 +93,24 @@ const configureRemoteReducer = (config: RemoteConfig): (state: RemoteState | und
 }
 
 export const remoteReducer: RemoteReducer = configureRemoteReducer({
-  dictionary: {
+  query: {
     fetch: {
-      begins: [RemoteTypes.DICTIONARY_FETCH_REQUEST],
-      ends: [RemoteTypes.DICTIONARY_FETCH_SUCCESS, RemoteTypes.DICTIONARY_FETCH_FAILURE],
+      begins: [Action.Query.Types.QUERY_FETCH_REQUEST],
+      ends: [Action.Query.Types.QUERY_FETCH_SUCCESS, Action.Query.Types.QUERY_FETCH_FAILURE],
     },
     add: {
-      begins: [RemoteTypes.DICTIONARY_ADD_REQUEST],
-      ends: [RemoteTypes.DICTIONARY_ADD_SUCCESS, RemoteTypes.DICTIONARY_ADD_FAILURE],
+      begins: [Action.Query.Types.QUERY_ADD_REQUEST],
+      ends: [Action.Query.Types.QUERY_ADD_SUCCESS, Action.Query.Types.QUERY_ADD_FAILURE],
+    },
+    put: {
+      begins: [Action.Query.Types.QUERY_PUT_REQUEST],
+      ends: [Action.Query.Types.QUERY_PUT_SUCCESS, Action.Query.Types.QUERY_PUT_FAILURE],
     },
   },
+  snap: {
+    fetch: {
+      begins: [Action.Snap.Types.SNAP_FETCH_REQUEST],
+      ends: [Action.Snap.Types.SNAP_FETCH_SUCCESS, Action.Snap.Types.SNAP_FETCH_FAILURE]
+    }
+  }
 })

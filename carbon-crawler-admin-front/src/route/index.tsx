@@ -6,8 +6,16 @@ import {ConnectedRouter} from 'react-router-redux'
 import {AuthRoute} from './AuthRoute'
 import {path} from "./path";
 
-import {TroublePage,} from "../component/auth";
-import {DictionaryAddContainer, DictionaryListContainer, LayoutContainer, TopContainer,} from '../container'
+import {TroublePage,} from "../component/page/auth";
+import {
+  LayoutContainer,
+  QueryAddContainer,
+  QueryDetailContainer,
+  QueryTableContainer,
+  SnapListViewContainer,
+  SnapPageListViewContainer,
+  TopContainer,
+} from '../container'
 
 import {ChangePasswordContainer, ForgotPasswordContainer, SignInContainer, SignUpContainer,} from "../container/auth";
 
@@ -22,8 +30,11 @@ export const RoutesContainer = (props: { history: History }) => (
         <Route exact path={path.auth.trouble.forgotPassword} component={ForgotPasswordContainer}/>
         <Route exact path={path.auth.trouble.resendConfirmMail} component={TroublePage}/>
         <AuthRoute exact path={path.auth.trouble.changePassword} component={ChangePasswordContainer}/>
-        <AuthRoute exact path={path.dictionary.list} component={DictionaryListContainer}/>
-        <AuthRoute exact path={path.dictionary.register} component={DictionaryAddContainer}/>
+        <AuthRoute exact path={path.query.list} component={QueryTableContainer}/>
+        <AuthRoute exact path={path.query.detail} component={QueryDetailContainer}/>
+        <AuthRoute exact path={path.query.register} component={QueryAddContainer}/>
+        <AuthRoute exact path={path.snap.list} component={SnapListViewContainer}/>
+        <AuthRoute path={path.snap.pages} component={SnapPageListViewContainer}/>
       </LayoutContainer>
     </Switch>
   </ConnectedRouter>

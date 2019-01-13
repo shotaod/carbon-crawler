@@ -3,7 +3,7 @@ import {connect, Dispatch} from "react-redux";
 import {State} from "../../reducer/state";
 import {Action} from "../../action";
 import {bindActionCreators} from "redux";
-import {ChangePasswordHandler, ChangePasswordView} from "../../component/auth";
+import {ChangePasswordHandler, ChangePasswordView} from "../../component/page/auth";
 
 const mapState = (state: State.Root) => ({
   errorMsg: state.auth.errorMsg,

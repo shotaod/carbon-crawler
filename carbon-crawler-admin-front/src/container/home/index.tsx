@@ -1,13 +1,13 @@
 import * as React from 'react'
-import {PrimaryLinkButton, Title} from '../../component/parts'
+import {PrimaryLinkButton} from '../../component/parts'
 import {path} from '../../route/path'
 
 export const TopContainer = () => (
   <div>
-    <Title>Admin Home</Title>
+    <h1>Admin Home</h1>
     <ul>
-      <li><PrimaryLinkButton to={path.dictionary.list}>list</PrimaryLinkButton></li>
-      <li><PrimaryLinkButton to={path.dictionary.register}>registration</PrimaryLinkButton></li>
+      <li><PrimaryLinkButton to={path.query.list}>list</PrimaryLinkButton></li>
+      <li><PrimaryLinkButton to={path.query.register}>registration</PrimaryLinkButton></li>
     </ul>
   </div>
 )

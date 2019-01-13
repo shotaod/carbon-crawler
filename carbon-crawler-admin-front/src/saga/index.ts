@@ -1,12 +1,13 @@
 import {all, fork} from 'redux-saga/effects'
-import {watchAddDictionary, watchLoadDictionary} from './dictionary'
+import {querySagas} from './query'
 import {authSagas} from './auth'
+import {snapSagas} from "./snap";
 
 
 export function* rootSaga() {
   yield all([
-    fork(watchLoadDictionary),
-    fork(watchAddDictionary),
     ...authSagas.map(fork),
+    ...querySagas.map(fork),
+    ...snapSagas.map(fork),
   ])
 }

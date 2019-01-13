@@ -45,7 +45,6 @@ export class JsonApiCallable {
     try {
       const response = await fetch()
       const result = await response.json()
-      console.log(response, result)
 
       if (response.status >= 400) {
         const {message} = result;

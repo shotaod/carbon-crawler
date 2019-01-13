@@ -11,12 +11,13 @@ export const path = {
       resendConfirmMail: '/auth/trouble/resend',
     }
   },
-  dictionary: {
-    list: '/dictionary/list',
-    register: '/dictionary/register',
-  },
   query: {
     list: '/query/list',
+    detail: '/query/detail',
     register: '/query/register',
+  },
+  snap: {
+    list: '/snap/list',
+    pages: '/snap/pages',
   }
 }

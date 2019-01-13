@@ -1,6 +1,12 @@
-import * as Dictionary from './dictionary'
+import * as Query from './query'
 
-export type Actions = Dictionary.Actions
+export type Actions = Query.Actions
 export const Types = {
-  ...Dictionary.Types
+  ...Query.Types
+}
+
+export const REMOTE_RESET = 'REMOTE_RESET'
+export const resetRemote = {
+  type: REMOTE_RESET,
+  payload: {},
 }

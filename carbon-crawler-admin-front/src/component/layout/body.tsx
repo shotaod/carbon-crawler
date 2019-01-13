@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import {SideBar, width} from './sidebar'
+import {ToastContainer} from "react-toastify";
 
 export type ViewProp = {
   currentPath: string
@@ -9,15 +10,18 @@ export type ViewProp = {
 }
 
 const SectionView = styled.section <{ withSideBar: boolean }>`
-  ${p => p.withSideBar ? `margin-left: ${width}` : ''} 
+  position: relative;
+  ${p => p.withSideBar ? `margin-left: ${width}` : ''}
 `
-
-const SideBarAdjust = (props: { currentPath: string }) => <div><SideBar {...props} /></div>
 
 export const Body = (props: ViewProp) => (
   <>
-    {props.signIn && <SideBarAdjust {...props}/>}
+    {props.signIn && <SideBar {...props}/>}
     <SectionView withSideBar={props.signIn}>
+      <ToastContainer
+        closeButton={false}
+        hideProgressBar
+      />
       {props.children}
     </SectionView>
   </>

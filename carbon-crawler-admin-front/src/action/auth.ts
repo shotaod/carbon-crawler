@@ -1,6 +1,6 @@
 import * as SharedAction from './shared'
 import {AuthInfo} from "../shared";
-import {SignUpValues} from "../component/auth";
+import {SignUpValues} from "../component/page/auth";
 
 export class SignUp extends SharedAction.FsaActionCreator<Types.AUTH_SIGN_UP, SignUpValues> {
   constructor(signUpInfo: SignUpValues) {

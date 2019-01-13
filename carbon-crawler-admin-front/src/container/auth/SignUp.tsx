@@ -1,5 +1,5 @@
 import {compose, pure} from 'recompose'
-import {SignUpHandler, SignUpValues, SignUpView, SignUpViewProps} from "../../component/auth";
+import {SignUpHandler, SignUpValues, SignUpView, SignUpViewProps} from "../../component/page/auth";
 import {connect, Dispatch} from "react-redux";
 import {State} from "../../reducer/state";
 import {bindActionCreators} from "redux";

@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as React from 'react'
-import {Link} from 'react-router-dom'
 import styled from 'styled-components'
+import {PrimaryButton} from "./Button";
 
 /**
  * @param path: each page path to
@@ -15,13 +15,13 @@ export type PagerProp = {
   index: number,
   size: number,
   total: number,
-  getPath: (index: number) => string
+  handlePageClick: (index: number) => void
 }
 
 const _Pager = (props: PagerProp) => {
-  const {className, index, size, total, getPath} = props
+  const {className, index, size, total, handlePageClick} = props
   const ClickListItem = (props: { title: string, index: number }) =>
-    (<li><Link to={getPath(props.index)}>{props.title}</Link></li>)
+    (<li><PrimaryButton onClick={() => handlePageClick(index)}>{props.title}</PrimaryButton></li>)
   const ListItem = (props: { title: string }) =>
     (<li><span>{props.title}</span></li>)
   const max = total / size;
@@ -44,8 +44,8 @@ const _Pager = (props: PagerProp) => {
         return range
           .map(i => {
             const pageNum = i + 1
-            if (i === validIndex) return (<ListItem key={`dictionary_${i}`} title={'' + pageNum}/>)
-            else return (<ClickListItem key={`dictionary_${i}`} title={'' + pageNum} index={i}/>)
+            if (i === validIndex) return (<ListItem key={`crawlQuery_${i}`} title={'' + pageNum}/>)
+            else return (<ClickListItem key={`crawlQuery_${i}`} title={'' + pageNum} index={i}/>)
           })
       })()}
       {(() => {
@@ -60,7 +60,6 @@ export const Pager = styled(_Pager)`
   > li {
     display: inline-block
     margin-left: 5px
-    padding-bottom: 100%
   }
   list-style: none
 
