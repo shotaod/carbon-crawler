@@ -22,7 +22,9 @@ interface DataConfig
  */
 @ConfigurationProperties("carbon.rdb")
 class DataSourceProp {
-    lateinit var rdbUrl: String
+    lateinit var rdbHost: String
+    lateinit var rdbPort: String
+    lateinit var rdbSchema: String
     lateinit var rdbUsername: String
     lateinit var rdbPassword: String
     var rdbOption: Map<String, String>? = null
@@ -30,8 +32,10 @@ class DataSourceProp {
     fun toDataSource(): DataSource {
         return org.apache.tomcat.jdbc.pool.DataSource()
             .also {
-                it.url = "$rdbUrl${rdbOption?.map { "${it.key}=${it.value}" }?.joinToString("&", prefix = "?").orEmpty()}"
-                it.driverClassName = DriverManager.getDriver(rdbUrl)::class.qualifiedName
+                val baseUrl = "jdbc:mysql://$rdbHost:$rdbPort/$rdbSchema"
+                val option = rdbOption?.map { (key, value) -> "$key=$value" }?.joinToString("&").orEmpty()
+                it.url = "$baseUrl?$option"
+                it.driverClassName = DriverManager.getDriver(baseUrl)::class.qualifiedName
                 it.username = rdbUsername
                 it.password = rdbPassword
             }
