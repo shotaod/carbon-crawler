@@ -1,10 +1,10 @@
 package org.carbon.crawler.admin
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 interface KtorModuleTest {
-    @Before
+    @BeforeEach
     fun setUp() {
-        System.setProperty("config.resource", "application.test.conf")
+        System.setProperty("carbon.profile", "test")
     }
 }
