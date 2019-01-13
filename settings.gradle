@@ -1,10 +1,14 @@
 rootProject.name = 'carbon-crawler'
 
+println """
+settings.gradle
+--------------------------------------------------"""
+
 fileTree('.') {
     include '**/build.gradle'
     exclude(
-            'build.gradle', // Exclude the root build file.
-            'carbon-crawler-admin-front/**',
+        'build.gradle', // Exclude the root build file.
+        'carbon-crawler-admin-front/**',
     )
 }.collect {
     relativePath(it.parent).replace(File.separator, ':')
@@ -12,3 +16,7 @@ fileTree('.') {
     println('module: ' + it)
     include it
 }
+
+println """--------------------------------------------------
+
+"""
