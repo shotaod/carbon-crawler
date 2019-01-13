@@ -12,7 +12,7 @@ build:
 test-jvm:
   box: openjdk:8-jdk
   services:
-  - mysql:5.7
+  - "mysql:5.7"
     env:
       MYSQL_ROOT_PASSWORD: rootpw
       MYSQL_DATABASE: test_db
