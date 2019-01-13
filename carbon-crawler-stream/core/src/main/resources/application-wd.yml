@@ -1,0 +1,3 @@
+carbon:
+  wd:
+    driverHubUrl: http://driver.carbon-crawler.local:4444/wd/hub

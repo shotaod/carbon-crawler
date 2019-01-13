@@ -1,0 +1,13 @@
+spring:
+  output.ansi.enabled: always
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers:
+          - pause:9092
+      bindings:
+      # name:
+      # property org.springframework.cloud.stream.config.BindingProperties
+
+logging.level.: info
