@@ -1,0 +1,12 @@
+spring:
+  output.ansi.enabled: ALWAYS
+  batch:
+    initialize-schema: always
+
+carbon:
+  rdb:
+    rdbUrl: jdbc:h2:mem:crawler_definition
+    rdbUsername: carbon
+    rdbPassword: carbonpw
+    rdbOption:
+      none:
