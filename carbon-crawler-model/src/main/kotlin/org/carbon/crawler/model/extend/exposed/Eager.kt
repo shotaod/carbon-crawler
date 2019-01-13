@@ -31,5 +31,6 @@ interface EagerTrait {
         }
     }
 
-    infix fun <ID : Comparable<ID>, Parent : Entity<ID>, Child : Entity<ID>> Referrers<ID, Parent, ID, Child>.eager(e: Parent) = EagerReferrers(this, e)
+    infix fun <ID : Comparable<ID>, Parent : Entity<ID>, Child : Entity<ID>> Referrers<ID, Parent, ID, Child>.eager(e: Parent) =
+        EagerReferrers(this, e)
 }
