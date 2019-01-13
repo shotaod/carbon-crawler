@@ -10,7 +10,7 @@ import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import org.carbon.composer.compose
 import org.carbon.crawler.admin.KtorModuleTest
-import org.carbon.crawler.admin.TestModule
+import org.carbon.crawler.admin.extend.compose.TestModule
 import org.carbon.crawler.admin.module
 import org.carbon.crawler.model.extend.composer.RollbackTransaction
 import org.carbon.crawler.model.infra.record.HostTable
