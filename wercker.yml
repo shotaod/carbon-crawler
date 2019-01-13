@@ -9,6 +9,10 @@ build:
       name: noop
       code: |
         echo 'todo build script here'
+  - script:
+      name: check env
+      code: |
+        env
 test-jvm:
   box: openjdk:8-jdk
   services:
@@ -57,14 +61,14 @@ build-jvm:
 
 build-node:
   box: node:10.9.0-alpine
-    steps:
-    - script:
-        name: add git
-        code: |
-          apk update && \
-          apk upgrade && \
-          apk add --no-cache git
-    - script:
+  steps:
+  - script:
+      name: add git
+      code: |
+        apk update && \
+        apk upgrade && \
+        apk add --no-cache git
+  - script:
       name: build
       code:  |
         cd carbon-crawler-admin-front
