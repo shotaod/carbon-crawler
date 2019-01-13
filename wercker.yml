@@ -11,8 +11,8 @@ build:
         echo 'todo build script here'
 test-jvm:
   box: openjdk:8-jdk
-  service:
-  - "mysql:5.7"
+  services:
+  - mysql:5.7
     env:
       MYSQL_ROOT_PASSWORD: rootpw
       MYSQL_DATABASE: test_db
