@@ -22,7 +22,6 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.junit.jupiter.api.Test
 
-
 class HostRepositoryTest : KtorModuleTest {
 
     @Test
