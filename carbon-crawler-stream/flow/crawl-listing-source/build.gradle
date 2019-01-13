@@ -1,0 +1,9 @@
+version = 'LATEST'
+
+dependencies {
+
+    implementation project(':carbon-crawler-model')
+    boms.rdb delegate
+
+    testImplementation "io.mockk:mockk:$versions.mockk"
+}
