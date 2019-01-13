@@ -48,6 +48,7 @@ test-node:
   - script:
       name: test
       code:  |
+        set -x
         cd carbon-crawler-admin-front
         yarn && yarn app:test
 
@@ -71,6 +72,7 @@ build-node:
   - script:
       name: build
       code:  |
+        set -x
         cd carbon-crawler-admin-front
         yarn && yarn app:build
 
