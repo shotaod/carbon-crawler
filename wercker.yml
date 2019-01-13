@@ -35,14 +35,6 @@ test-jvm:
         echo $CARBON_CRAWLER_RDB_SCHEMA
         echo $CARBON_CRAWLER_RDB_USER
         echo $CARBON_CRAWLER_RDB_PASSWORD
-  - script:
-      name: fetch env
-      code: |
-        echo $CARBON_CRAWLER_RDB_HOST
-        echo $CARBON_CRAWLER_RDB_PORT
-        echo $CARBON_CRAWLER_RDB_SCHEMA
-        echo $CARBON_CRAWLER_RDB_USER
-        echo $CARBON_CRAWLER_RDB_PASSWORD
   # https://github.com/wercker/step-gradle
   - java/gradle:
     task: clean test
