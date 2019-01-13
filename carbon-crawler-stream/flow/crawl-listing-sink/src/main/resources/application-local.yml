@@ -18,12 +18,14 @@ trigger:
   fixedDelay: 1
   initialDelay: 0
 
-rdb:
-  main:
-    url: jdbc:mysql://pause:43306/crawler_definition
-    username: carbon
-    password: carbonpw
-    option:
+carbon:
+  rdb:
+    rdbUrl: jdbc:mysql://pause:43306/crawler_definition
+    rdbUsername: carbon
+    rdbPassword: carbonpw
+    rdbOption:
       useSSL: false
+  wd:
+    driverHubUrl: http://driver.carbon-crawler.local:4444/wd/hub
 
 logging.level.: info
