@@ -1,31 +1,4 @@
-spring:
-  output.ansi.enabled: always
-  cloud:
-    stream:
-      bindings:
-        input:
-          destination: crawl.target
-          contentType: application/json
-          group: g.crawl.target
-      kafka:
-        binder:
-          brokers:
-          - pause:9092
-
-trigger:
-  maxMessage: 1
-  timeUnit: seconds
-  fixedDelay: 1
-  initialDelay: 0
-
-carbon:
-  rdb:
-    rdbUrl: jdbc:mysql://pause:43306/crawler_definition
-    rdbUsername: carbon
-    rdbPassword: carbonpw
-    rdbOption:
-      useSSL: false
-  wd:
-    driverHubUrl: http://driver.carbon-crawler.local:4444/wd/hub
-
-logging.level.: info
+spring.profiles.include:
+- base
+- rdb
+- wd
