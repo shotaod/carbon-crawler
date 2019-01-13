@@ -1,5 +1,62 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
 version = '0.1.0'
+
+bootJar.enabled = false
+jar.enabled = false
+
+allprojects {
+    // https://github.com/spring-projects/spring-boot/issues/13187
+    task bootInstall(group: 'application', type: Upload) {
+        configuration = project.configurations.bootArchives
+        // Install to the local Maven repository
+        repositories.mavenInstaller()
+        // It's a fat jar. Clear the scope mappings so that the pom has no dependencies
+        //noinspection GroovyAssignabilityCheck
+        repositories.withType(MavenResolver.class) { resolver ->
+            resolver.pom.scopeMappings.mappings.clear()
+        }
+    }
+}
+
+bootInstall.enabled = false
 
 subprojects {
     group = 'org.carbon.crawler.stream.flow'
+
+    dependencies {
+        implementation 'org.springframework.cloud:spring-cloud-stream'
+        implementation project(':carbon-composer')
+        implementation project(':carbon-crawler-stream:core')
+        implementation project(':carbon-crawler-stream:message')
+        testImplementation project(':carbon-crawler-stream:test')
+    }
+}
+task printFlowApps {
+    doLast {
+        def filePath = Paths.get(rootProject.buildDir.toString(), 'crawl-stream-apps')
+        Files.deleteIfExists(filePath)
+        Files.createFile(filePath)
+
+        println '--------------------------------------------------'
+        println 'export stream apps ...'
+        println '--------------------------------------------------'
+        def lines = subprojects.collect {
+            def group = it.group
+            def version = it.version
+            def type = ''
+            def name = it.name
+            if (name.endsWith('sink')) {
+                type = 'sink'
+            } else if (name.endsWith('source')) {
+                type = 'source'
+            }
+            def mavenRepoPath = "maven://$group:${name}:$version"
+            println mavenRepoPath
+            "$type.$name=$mavenRepoPath"
+        }
+
+        Files.write(filePath, lines)
+    }
 }
