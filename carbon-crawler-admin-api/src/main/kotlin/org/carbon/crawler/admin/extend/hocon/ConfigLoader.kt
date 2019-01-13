@@ -10,7 +10,6 @@ object ConfigLoader {
         val profile = System.getProperty("carbon.profile") ?: "dev"
         logger.info("profile: {}", profile)
         ConfigFactory.load().getConfig(profile)
-            .also(::println)
     }
 
     fun <T> withConfig(cb: Config.() -> T) = config.run(cb)
