@@ -1,10 +1,3 @@
-export const AWS = {
-  Cognito: {
-    poolID: 'ap-northeast-1_ol9UjYOwO',
-    clientID: '3r3kp1kujo1ld5vbcla003i3di',
-  }
-}
-
 class Env {
   private readonly _env = process.env.NODE_ENV as string
 
@@ -22,3 +15,14 @@ class Env {
 }
 
 export const env = new Env();
+
+export const AWS = {
+  Cognito: {
+    poolID: 'ap-northeast-1_ol9UjYOwO',
+    clientID: '3r3kp1kujo1ld5vbcla003i3di',
+  }
+}
+
+export const Hosts = {
+  apiAdmin: 'http://localhost:9001',
+}
