@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 
 object ConfigLoader {
     private val logger = LoggerFactory.getLogger(ConfigLoader::class.java)
-    private val config: Config by lazy {
+    val config: Config by lazy {
         val profile = System.getProperty("carbon.profile") ?: "dev"
         logger.info("profile: {}", profile)
         ConfigFactory.load().getConfig(profile)
