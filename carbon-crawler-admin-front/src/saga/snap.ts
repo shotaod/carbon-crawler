@@ -3,6 +3,7 @@ import {call, put, select, take} from 'redux-saga/effects'
 import {Action} from '../action'
 import {Api} from '../service/api'
 import {State} from '../reducer/state'
+import {AuthUtil} from "../service/aws";
 
 export const snapSagas = [
   watchLoadSnap,
@@ -13,8 +14,8 @@ function* watchLoadSnap() {
     const action: Action.Snap.FetchRequest = yield take(Action.Snap.Types.SNAP_FETCH_REQUEST)
     const exist: boolean = yield select(queryExistSnap, action)
     if (exist) continue
-
-    const {result, error} = yield call(Api.call, action.payload)
+    const token = yield call(AuthUtil.jwtToken)
+    const {result, error} = yield call(Api.call, action.payload, token)
     if (result) yield put(new Action.Snap.FetchSuccess(result).create())
     else yield put(new Action.Snap.FetchFailure(error.message).create())
   }
