@@ -1,0 +1,9 @@
+[build]
+  base    = "carbon-crawler-admin-front"
+  publish = "carbon-crawler-admin-front/build"
+  command = "yarn app:build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
