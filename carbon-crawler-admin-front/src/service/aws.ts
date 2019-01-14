@@ -1,5 +1,5 @@
 import {AWS} from '../config';
-import Amplify from 'aws-amplify';
+import Amplify, {Auth} from 'aws-amplify';
 
 export const aws = {
   configure: () => {
@@ -10,5 +10,12 @@ export const aws = {
         userPoolWebClientId: AWS.Cognito.clientID,
       }
     });
+  }
+}
+
+export const AuthUtil = {
+  jwtToken: async () => {
+    const session = await Auth.currentSession()
+    return session.getIdToken().getJwtToken()
   }
 }
