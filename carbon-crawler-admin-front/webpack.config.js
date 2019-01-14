@@ -4,7 +4,7 @@ const path = require('path');
 // variables
 const isDev = option => option.mode === 'development';
 const sourcePath = path.join(__dirname, './src');
-const outPath = path.join(__dirname, './dist');
+const outPath = path.join(__dirname, './build');
 
 // plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
