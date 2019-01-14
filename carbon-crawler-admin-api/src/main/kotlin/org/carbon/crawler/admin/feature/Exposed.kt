@@ -22,10 +22,10 @@ class Exposed private constructor(configuration: Configuration) {
         var password = ""
         var option: Map<String, String> = HashMap()
         private fun Map<String, String>.toParam(): String =
-                when {
-                    this.isEmpty() -> ""
-                    else -> this.map { e -> "${e.key}=${e.value}" }.joinToString("&", prefix = "?")
-                }
+            when {
+                this.isEmpty() -> ""
+                else -> this.map { e -> "${e.key}=${e.value}" }.joinToString("&", prefix = "?")
+            }
 
         fun datasource(): DataSource = DataSource().also {
             it.url = "$url${option.toParam()}"
