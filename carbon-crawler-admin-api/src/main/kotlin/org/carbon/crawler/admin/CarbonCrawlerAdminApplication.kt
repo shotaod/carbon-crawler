@@ -8,6 +8,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.authenticate
 import io.ktor.features.CORS
 import io.ktor.features.CallLogging
 import io.ktor.features.Compression
@@ -23,9 +25,11 @@ import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import org.carbon.crawler.admin.extend.aws.cognito.CognitoJWTAuthentication
 import org.carbon.crawler.admin.extend.carbon.validation.CarbonValidationModule
 import org.carbon.crawler.admin.extend.hocon.ConfigLoader
 import org.carbon.crawler.admin.extend.ktor.ReservedException
+import org.carbon.crawler.admin.extend.ktor.auth.configure
 import org.carbon.crawler.admin.feature.Exposed
 import org.carbon.crawler.admin.www.v1.query.v1Queries
 import org.carbon.crawler.admin.www.v1.snap.v1Snaps
@@ -50,13 +54,6 @@ fun Application.module() {
     install(DefaultHeaders)
     install(Compression)
     install(CallLogging)
-    install(CORS) {
-        method(HttpMethod.Options)
-        method(HttpMethod.Put)
-        method(HttpMethod.Delete)
-        anyHost()
-        host(host = "localhost:3000")
-    }
     install(ContentNegotiation) {
         jackson {
             configure(SerializationFeature.INDENT_OUTPUT, true)
@@ -84,9 +81,33 @@ fun Application.module() {
             }
         }
     }
+    val enableAuth = ConfigLoader.config.hasPath("carbon.crawler.server.auth")
+    install(CORS) {
+        if (enableAuth) {
+            header("authorization")
+        }
+        method(HttpMethod.Options)
+        method(HttpMethod.Put)
+        method(HttpMethod.Delete)
+        host(host = "carbon.local:3000")
+    }
+
+    install(Authentication) {
+        if (enableAuth) {
+            val param = ConfigLoader.config.getConfig("carbon.crawler.server.auth")
+            configure(CognitoJWTAuthentication, param)
+        }
+    }
     install(Routing) {
-        v1Queries()
-        v1Snaps()
+        val routes = {
+            v1Queries()
+            v1Snaps()
+        }
+        if (enableAuth) authenticate {
+            routes()
+        } else {
+            routes()
+        }
     }
 }
 
