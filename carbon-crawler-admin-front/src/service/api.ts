@@ -1,3 +1,5 @@
+import {Hosts} from "../config";
+
 export enum HttpMethod {
   GET = 'get',
   POST = 'post',
@@ -17,24 +19,27 @@ type FetchResponse = {
   error?: FetchError,
 }
 
-export type FetchError = {
+type FetchError = {
   message: string,
 }
 
-export class JsonApiCallable {
+class JsonApiCallable {
 
   private readonly requestUrl: string
+  private readonly token: string
 
-  constructor(requestUrl: string) {
+  constructor(requestUrl: string, token: string) {
     this.requestUrl = requestUrl
+    this.token = token
   }
 
-  private static init(method: HttpMethod, param?: { [key in string]: any }): RequestInit {
+  private init(method: HttpMethod, param?: { [key in string]: any }): RequestInit {
     const base = {
       mode: 'cors',
       method,
       headers: new Headers({
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.token}`,
       }),
     }
 
@@ -59,29 +64,29 @@ export class JsonApiCallable {
   }
 
   get = async () =>
-    await JsonApiCallable.execute(() => fetch(this.requestUrl, JsonApiCallable.init(HttpMethod.GET)))
+    await JsonApiCallable.execute(() => fetch(this.requestUrl, this.init(HttpMethod.GET)))
 
   post = async (body: any) =>
-    await JsonApiCallable.execute(() => fetch(this.requestUrl, JsonApiCallable.init(HttpMethod.POST, {body: JSON.stringify(body)})))
+    await JsonApiCallable.execute(() => fetch(this.requestUrl, this.init(HttpMethod.POST, {body: JSON.stringify(body)})))
 
   put = async (body: any) =>
-    await JsonApiCallable.execute(() => fetch(this.requestUrl, JsonApiCallable.init(HttpMethod.PUT, {body: JSON.stringify(body)})))
+    await JsonApiCallable.execute(() => fetch(this.requestUrl, this.init(HttpMethod.PUT, {body: JSON.stringify(body)})))
 
   delete = async (body: any) =>
-    await JsonApiCallable.execute(() => fetch(this.requestUrl, JsonApiCallable.init(HttpMethod.DELETE, {body: JSON.stringify(body)})))
+    await JsonApiCallable.execute(() => fetch(this.requestUrl, this.init(HttpMethod.DELETE, {body: JSON.stringify(body)})))
 }
 
 export class Api {
-  private static readonly HOST = 'http://localhost:9001'
+  private static readonly HOST = Hosts.apiAdmin
   private static toUrlParam: (param?: { [key in string]: string | number }) => string = param => {
     if (!param) return ''
     else return Object.keys(param).map(k => `${k}=${param[k]}`).join('&')
   }
 
-  static call(request: Request): Promise<FetchResponse> {
+  static call(request: Request, token: string): Promise<FetchResponse> {
     const {method, path, query, body} = request
     const url = `${Api.HOST}${path}?${Api.toUrlParam(query)}`
-    const apiCallable = new JsonApiCallable(url)
+    const apiCallable = new JsonApiCallable(url, token)
     switch (method) {
       case HttpMethod.GET:
         return apiCallable.get()
