@@ -13,7 +13,7 @@ export const queryReducer: QueryReducer = (state: QueryState = initialState.quer
       const {items, page} = action.payload;
       const newItems = items
         .map(item => ({[item.id]: item}))
-        .reduce((acc, item) => ({...acc, ...item}))
+        .reduce((acc, item) => ({...acc, ...item}), {})
 
       return {
         items: {...state.items, ...newItems},

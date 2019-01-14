@@ -15,10 +15,10 @@ export const snapReducer: SnapReducer = (state: SnapState = initialState.snap, a
         .map(item => {
           const pages = item.pages
             .map(page => ({[page.id]: page}))
-            .reduce((acc, p) => ({...acc, ...p}))
+            .reduce((acc, p) => ({...acc, ...p}), {})
           return ({[item.id]: {...item, pages}})
         })
-        .reduce((acc, item) => ({...acc, ...item}))
+        .reduce((acc, item) => ({...acc, ...item}), {})
       return {
         items: {...state.items, ...newItems},
         page,
