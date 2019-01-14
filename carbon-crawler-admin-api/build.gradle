@@ -21,6 +21,7 @@ dependencies {
     implementation "io.ktor:ktor-server-netty:$versions.ktor"
     implementation "io.ktor:ktor-jackson:$versions.ktor"
     implementation "io.ktor:ktor-locations:$versions.ktor"
+    implementation "io.ktor:ktor-auth-jwt:$versions.ktor"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$versions.jackson"
 
     implementation "org.carbon.libs:carbon-validation:$versions.carbon.validation"
