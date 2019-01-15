@@ -18,11 +18,12 @@ export const env = new Env();
 
 export const AWS = {
   Cognito: {
-    poolID: 'ap-northeast-1_ol9UjYOwO',
-    clientID: '3r3kp1kujo1ld5vbcla003i3di',
+    region: process.env.ENV_CARBON_COGNITO_REGION,
+    poolID: process.env.ENV_CARBON_COGNITO_POOL_ID,
+    clientID: process.env.ENV_CARBON_COGNITO_CLIENT_ID,
   }
 }
 
 export const Hosts = {
-  apiAdmin: 'http://localhost:9001',
+  apiAdmin: `${process.env.ENV_CARBON_API_HOST}:${process.env.ENV_CARBON_API_PORT}`,
 }
