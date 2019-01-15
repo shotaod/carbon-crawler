@@ -108,7 +108,10 @@ subprojects {
 
     test {
         useJUnitPlatform()
-        testLogging.showStandardStreams = true
+        testLogging {
+            showStandardStreams = true
+            exceptionFormat 'full'
+        }
     }
 
     // code coverage
