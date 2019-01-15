@@ -30,7 +30,7 @@ subprojects {
         main.resources.srcDir coreResource
         test.resources.srcDir coreResource
     }
-    println("""module: $name add additional resource
+    println("""> Convention: add [module: $name] to additional resource dir
     main: $sourceSets.main.resources.srcDirs
     test: $sourceSets.test.resources.srcDirs""")
 
