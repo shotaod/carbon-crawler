@@ -102,18 +102,18 @@ deploy-docker:
       password: $GCR_JSON_KEY_FILE
       repository: asia.gcr.io/carbon/crawler-admin-api
       registry: https://asia.gcr.io/v2
-      tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG
+      tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG $WERCKER_GIT_COMMIT ${WERCKER_GIT_COMMIT:0:8}
   - internal/docker-push:
       image-name: carbon-crawler-stream-flow-crawl-listing-sink
       username: _json_key
       password: $GCR_JSON_KEY_FILE
       repository: asia.gcr.io/carbon/carbon-crawler-stream-flow-crawl-listing-sink
       registry: https://asia.gcr.io/v2
-      tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG flow
+      tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG $WERCKER_GIT_COMMIT ${WERCKER_GIT_COMMIT:0:8}
   - internal/docker-push:
       image-name: carbon-crawler-stream-flow-crawl-listing-source
       username: _json_key
       password: $GCR_JSON_KEY_FILE
       repository: asia.gcr.io/carbon/carbon-crawler-stream-flow-crawl-listing-source
       registry: https://asia.gcr.io/v2
-      tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG flow
+      tag: $WERCKER_GIT_BRANCH $WERCKER_GIT_TAG $WERCKER_GIT_COMMIT ${WERCKER_GIT_COMMIT:0:8}
