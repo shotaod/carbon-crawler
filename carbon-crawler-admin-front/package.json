@@ -8,7 +8,7 @@
     "prepare": "patch-package",
     "app:test": "jest",
     "app:start": "scripts/app:start.sh",
-    "app:build": "webpack --mode production --progress --colors",
+    "app:build": "webpack --mode production --colors",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
   },
   "devDependencies": {
