@@ -93,18 +93,21 @@ fun Application.module() {
     // ______________________________________________________
     //
     // @ Security And Routing
+    val enableClient = !ConfigLoader.isDefined("carbon.crawler.client.disable")
     val enableAuth = !ConfigLoader.isDefined("carbon.crawler.auth.disable")
-    install(CORS) {
-        if (enableAuth) {
-            header("authorization")
-        }
-        method(HttpMethod.Options)
-        method(HttpMethod.Put)
-        method(HttpMethod.Delete)
-        with(ConfigLoader["carbon.crawler.client"]) {
-            val host = getString("host")
-            val port = getString("port")
-            host("$host:$port")
+    if (enableClient) {
+        install(CORS) {
+            if (enableAuth) {
+                header("authorization")
+            }
+            method(HttpMethod.Options)
+            method(HttpMethod.Put)
+            method(HttpMethod.Delete)
+            with(ConfigLoader["carbon.crawler.client"]) {
+                val host = getString("host")
+                val port = getString("port")
+                host("$host:$port")
+            }
         }
     }
     install(Authentication) {
