@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "patch-package",
     "app:test": "jest",
-    "app:start": "source ../.env.local && webpack-dev-server --mode development --hot --progress --color --host carbon.local --port 3000",
+    "app:start": "scripts/app:start.sh",
     "app:build": "webpack --mode production --progress --colors",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
   },
