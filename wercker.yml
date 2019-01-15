@@ -25,11 +25,13 @@ test-jvm:
   - script:
       name: mapping env
       code: |
-        export CARBON_CRAWLER_RDB_HOST=${MYSQL_PORT_3306_TCP_ADDR}
-        export CARBON_CRAWLER_RDB_PORT=${MYSQL_PORT_3306_TCP_PORT}
-        export CARBON_CRAWLER_RDB_SCHEMA=test_db
-        export CARBON_CRAWLER_RDB_USER=root
-        export CARBON_CRAWLER_RDB_PASSWORD=rootpw
+        export CARBON_RDB_HOST=${MYSQL_PORT_3306_TCP_ADDR}
+        export CARBON_RDB_PORT=${MYSQL_PORT_3306_TCP_PORT}
+        export CARBON_RDB_CRAWLER_SCHEMA=test_db
+        export CARBON_RDB_CRAWLER_USER=root
+        export CARBON_RDB_CRAWLER_PASSWORD=rootpw
+        export CARBON_API_CRAWLER_ADMIN_HOST=localhost
+        export CARBON_API_CRAWLER_ADMIN_PORT=40001
   # https://github.com/wercker/step-gradle
   - java/gradle:
     task: clean test
