@@ -54,3 +54,4 @@ pids
 
 ### Project Specifics ###
 !carbon-crawler-admin-front/.env
+carbon-crawler-admin-front/stats
