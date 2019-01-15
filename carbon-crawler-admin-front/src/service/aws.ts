@@ -1,5 +1,6 @@
-import {AWS} from '../config';
-import Amplify, {Auth} from 'aws-amplify';
+import {AWS} from '../config'
+import Amplify from '@aws-amplify/core'
+import Auth from '@aws-amplify/auth'
 
 export const aws = {
   configure: () => {
@@ -9,7 +10,7 @@ export const aws = {
         userPoolId: AWS.Cognito.poolID,
         userPoolWebClientId: AWS.Cognito.clientID,
       }
-    });
+    })
   }
 }
 

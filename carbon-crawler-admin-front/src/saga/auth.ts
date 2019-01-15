@@ -1,6 +1,6 @@
 import {call, fork, put, take} from 'redux-saga/effects'
 import {push} from "react-router-redux"
-import {Auth} from 'aws-amplify'
+import Auth from '@aws-amplify/auth'
 import {CognitoUser as BaseCognitoUser} from 'amazon-cognito-identity-js'
 import {Action} from '../action'
 import {path} from "../route/path"
