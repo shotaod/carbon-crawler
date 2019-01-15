@@ -20,6 +20,12 @@ test-jvm:
       MYSQL_ROOT_PASSWORD: rootpw
       MYSQL_DATABASE: test_db
   steps:
+  # https://devcenter.wercker.com/administration/services/service-container-networking/#waiting-for-services-to-come-up
+  - script:
+    name: "Wait for MySQL connection"
+    code: |
+      while ! nc -q 1 $MYSQL_PORT_3306_TCP_ADDR $MYSQL_PORT_3306_TCP_PORT
+      </dev/null; do sleep 1; done
   # https://devcenter.wercker.com/administration/services/service-container-networking/#getting-the-environment-variables
   # https://devcenter.wercker.com/administration/services/examples/mysql/
   - script:
