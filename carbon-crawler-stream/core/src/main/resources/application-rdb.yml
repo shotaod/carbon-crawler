@@ -1,9 +1,9 @@
 carbon:
   rdb:
-    rdbHost: ${CARBON_CRAWLER_RDB_HOST:rdb.carbon-crawler.local}
-    rdbPort: ${CARBON_CRAWLER_RDB_PORT:43306}
-    rdbSchema: ${CARBON_CRAWLER_RDB_SCHEMA:crawler_definition}
-    rdbUsername: ${CARBON_CRAWLER_RDB_USER:carbon}
-    rdbPassword: ${CARBON_CRAWLER_RDB_PASSWORD:carbonpw}
+    rdbHost: ${CARBON_RDB_HOST}
+    rdbPort: ${CARBON_RDB_PORT}
+    rdbSchema: ${CARBON_RDB_CRAWLER_SCHEMA}
+    rdbUsername: ${CARBON_RDB_CRAWLER_USER}
+    rdbPassword: ${CARBON_RDB_CRAWLER_PASSWORD}
     rdbOption:
       none:
