@@ -6,11 +6,14 @@ import org.slf4j.LoggerFactory
 
 object ConfigLoader {
     private val logger = LoggerFactory.getLogger(ConfigLoader::class.java)
-    val config: Config by lazy {
+    private val config: Config by lazy {
         val profile = System.getProperty("carbon.profile") ?: "dev"
-        logger.info("profile: {}", profile)
+        if (profile === "dev") {
+            logger.info("profile: {}", profile)
+        }
         ConfigFactory.load().getConfig(profile)
     }
 
-    fun <T> withConfig(cb: Config.() -> T) = config.run(cb)
+    operator fun get(prefix: String): Config = config.getConfig(prefix)
+    fun isDefined(boolKeyPath: String) = config.hasPath(boolKeyPath) && config.getBoolean(boolKeyPath)
 }
