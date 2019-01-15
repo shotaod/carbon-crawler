@@ -95,9 +95,6 @@ fun Application.module() {
     // @ Security And Routing
     val enableClient = !ConfigLoader.isDefined("carbon.crawler.client.disable")
     val enableAuth = !ConfigLoader.isDefined("carbon.crawler.auth.disable")
-    println(")))))))))))))))))))))))))))))0")
-    println(enableClient)
-    println(enableAuth)
     if (enableClient) {
         install(CORS) {
             if (enableAuth) {
