@@ -77,7 +77,6 @@ class JsonApiCallable {
 }
 
 export class Api {
-  private static readonly HOST = Hosts.apiAdmin
   private static toUrlParam: (param?: { [key in string]: string | number }) => string = param => {
     if (!param) return ''
     else return Object.keys(param).map(k => `${k}=${param[k]}`).join('&')
@@ -85,7 +84,7 @@ export class Api {
 
   static call(request: Request, token: string): Promise<FetchResponse> {
     const {method, path, query, body} = request
-    const url = `${Api.HOST}${path}?${Api.toUrlParam(query)}`
+    const url = `${Hosts.apiAdmin}${path}?${Api.toUrlParam(query)}`
     const apiCallable = new JsonApiCallable(url, token)
     switch (method) {
       case HttpMethod.GET:
