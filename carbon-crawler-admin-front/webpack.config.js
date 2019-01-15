@@ -11,9 +11,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 const DotenvPlugin = require('dotenv-webpack')
 
-// not expand env such as dotenv-expand
-// const DotenvPlugin = require('dotenv-webpack');
-
 module.exports = (env, option) => ({
   context: sourcePath,
   entry: {
