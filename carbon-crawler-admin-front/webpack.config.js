@@ -8,7 +8,8 @@ const outPath = path.join(__dirname, './build');
 
 // plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack')
 
 module.exports = (env, option) => ({
@@ -72,7 +73,8 @@ module.exports = (env, option) => ({
     runtimeChunk: true
   },
   plugins: [
-    new WebpackCleanupPlugin(),
+    new CleanWebpackPlugin,
+    new LodashModuleReplacementPlugin,
     new webpack.EnvironmentPlugin({
       NODE_ENV: option.mode,
       DEBUG: false,
