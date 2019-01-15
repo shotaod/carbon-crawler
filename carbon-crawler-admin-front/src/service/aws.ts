@@ -5,7 +5,7 @@ export const aws = {
   configure: () => {
     Amplify.configure({
       Auth: {
-        region: 'ap-northeast-1',
+        region: AWS.Cognito.region,
         userPoolId: AWS.Cognito.poolID,
         userPoolWebClientId: AWS.Cognito.clientID,
       }
