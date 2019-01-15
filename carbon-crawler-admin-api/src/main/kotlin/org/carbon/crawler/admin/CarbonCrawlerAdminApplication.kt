@@ -25,6 +25,7 @@ import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import org.carbon.crawler.admin.extend.aws.cognito.CognitoConfig
 import org.carbon.crawler.admin.extend.aws.cognito.CognitoJWTAuthentication
 import org.carbon.crawler.admin.extend.carbon.validation.CarbonValidationModule
 import org.carbon.crawler.admin.extend.hocon.ConfigLoader
@@ -39,18 +40,9 @@ import org.slf4j.LoggerFactory
  * @author Soda 2018/07/22.
  */
 fun Application.module() {
-    install(Exposed) {
-        ConfigLoader.withConfig {
-            val host = getString("carbon.crawler.db.host")
-            val port = getString("carbon.crawler.db.port")
-            val schema = getString("carbon.crawler.db.schema")
-            url = "jdbc:mysql://$host:$port/$schema"
-            username = getString("carbon.crawler.db.username")
-            password = getString("carbon.crawler.db.password")
-            option = getObject("carbon.crawler.db.option").map { e -> e.key to e.value.render() }.toMap()
-        }
-    }
-
+    // ______________________________________________________
+    //
+    // @ Common
     install(DefaultHeaders)
     install(Compression)
     install(CallLogging)
@@ -65,6 +57,23 @@ fun Application.module() {
             registerModule(JavaTimeModule())
         }
     }
+    // ______________________________________________________
+    //
+    // @ Persist
+    install(Exposed) {
+        with(ConfigLoader["carbon.crawler.persist.rdb"]) {
+            val host = getString("host")
+            val port = getString("port")
+            val schema = getString("schema")
+            url = "jdbc:mysql://$host:$port/$schema"
+            username = getString("user")
+            password = getString("password")
+            option = getObject("option").map { e -> e.key to e.value.render() }.toMap()
+        }
+    }
+    // ______________________________________________________
+    //
+    // @ Error Handling
     install(StatusPages) {
         val logger = LoggerFactory.getLogger("application")
 
@@ -81,7 +90,10 @@ fun Application.module() {
             }
         }
     }
-    val enableAuth = ConfigLoader.config.hasPath("carbon.crawler.server.auth")
+    // ______________________________________________________
+    //
+    // @ Security And Routing
+    val enableAuth = !ConfigLoader.isDefined("carbon.crawler.auth.disable")
     install(CORS) {
         if (enableAuth) {
             header("authorization")
@@ -89,13 +101,21 @@ fun Application.module() {
         method(HttpMethod.Options)
         method(HttpMethod.Put)
         method(HttpMethod.Delete)
-        host(host = "carbon.local:3000")
+        with(ConfigLoader["carbon.crawler.client"]) {
+            val host = getString("host")
+            val port = getString("port")
+            host("$host:$port")
+        }
     }
-
     install(Authentication) {
         if (enableAuth) {
-            val param = ConfigLoader.config.getConfig("carbon.crawler.server.auth")
-            configure(CognitoJWTAuthentication, param)
+            with(ConfigLoader["carbon.crawler.auth.cognito"]) {
+                configure(CognitoJWTAuthentication, CognitoConfig(
+                    getString("region"),
+                    getString("poolId"),
+                    getString("clientId")
+                ))
+            }
         }
     }
     install(Routing) {
@@ -112,11 +132,12 @@ fun Application.module() {
 }
 
 fun main(args: Array<String>) {
-    ConfigLoader.withConfig {
+    with(ConfigLoader["carbon.crawler.server"]) {
         embeddedServer(
             Netty,
-            watchPaths = getStringList("carbon.crawler.server.watch"),
-            port = getInt("carbon.crawler.server.port"),
+            host = getString("host"),
+            watchPaths = getStringList("watch"),
+            port = getInt("port"),
             module = Application::module
         ).start(true)
     }
