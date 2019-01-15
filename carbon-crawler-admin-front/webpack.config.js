@@ -9,6 +9,10 @@ const outPath = path.join(__dirname, './build');
 // plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+const DotenvPlugin = require('dotenv-webpack')
+
+// not expand env such as dotenv-expand
+// const DotenvPlugin = require('dotenv-webpack');
 
 module.exports = (env, option) => ({
   context: sourcePath,
@@ -78,7 +82,11 @@ module.exports = (env, option) => ({
     }),
     new HtmlWebpackPlugin({
       template: './__resource__/index.html'
-    })
+    }),
+    new DotenvPlugin({
+      systemvars: true,
+      expand: true
+    }),
   ],
   devServer: {
     contentBase: sourcePath,

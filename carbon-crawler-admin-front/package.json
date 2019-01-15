@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "patch-package",
     "app:test": "jest",
-    "app:start": "webpack-dev-server --mode development --hot --progress --color --host carbon.local --port 3000 --open",
+    "app:start": "source ../.env.local && webpack-dev-server --mode development --hot --progress --color --host carbon.local --port 3000",
     "app:build": "webpack --mode production --progress --colors",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
   },
@@ -35,6 +35,7 @@
     "babel-core": "6.26.3",
     "babel-loader": "7.1.4",
     "css-loader": "^2.1.0",
+    "dotenv-webpack": "^1.6.0",
     "file-loader": "1.1.11",
     "html-loader": "1.0.0-alpha.0",
     "html-webpack-plugin": "4.0.0-alpha",

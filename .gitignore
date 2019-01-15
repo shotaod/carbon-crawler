@@ -1,8 +1,11 @@
 ### Common ###
 # Log file
 *.log
+# artifact
 build/
 out/
+# misc
+/.env.local
 
 ### IntelliJ IDEA ###
 .idea
