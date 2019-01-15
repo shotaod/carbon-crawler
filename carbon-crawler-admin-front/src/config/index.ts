@@ -24,6 +24,7 @@ export const AWS = {
   }
 }
 
+const protocol = env.isDev ? 'http' : 'https'
 export const Hosts = {
-  apiAdmin: `${process.env.ENV_CARBON_API_HOST}:${process.env.ENV_CARBON_API_PORT}`,
+  apiAdmin: `${protocol}://${process.env.ENV_CARBON_API_HOST}:${process.env.ENV_CARBON_API_PORT}`,
 }
