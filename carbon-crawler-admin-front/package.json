@@ -9,6 +9,7 @@
     "app:test": "jest",
     "app:start": "scripts/app:start.sh",
     "app:build": "webpack --mode production --colors",
+    "app:analyze": "scripts/app:analyze.sh",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\""
   },
   "devDependencies": {
@@ -50,7 +51,7 @@
     "typescript": "3.0.3",
     "url-loader": "1.0.1",
     "webpack": "4.12.0",
-    "webpack-cleanup-plugin": "0.5.1",
+    "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "3.1.0",
     "webpack-dev-server": "3.1.14"
   },
