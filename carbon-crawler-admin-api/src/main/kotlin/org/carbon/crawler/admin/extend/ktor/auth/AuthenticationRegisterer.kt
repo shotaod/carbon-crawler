@@ -1,10 +1,9 @@
 package org.carbon.crawler.admin.extend.ktor.auth
 
-import com.typesafe.config.Config
 import io.ktor.auth.Authentication
 
-interface AuthenticationRegisterer {
-    fun enable(authentication: Authentication.Configuration, param: Config)
+interface AuthenticationRegisterer<CONFIG> {
+    fun enable(authentication: Authentication.Configuration, param: CONFIG)
 }
 
-fun Authentication.Configuration.configure(registerer: AuthenticationRegisterer, param: Config) = registerer.enable(this, param)
+fun <T> Authentication.Configuration.configure(registerer: AuthenticationRegisterer<T>, param: T) = registerer.enable(this, param)
