@@ -15,6 +15,7 @@
       <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
       </root>
+      <logger name="org.springframework" level="INFO"/>
     </else>
   </if>
 </configuration>
