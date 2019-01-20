@@ -1,4 +1,3 @@
 spring.profiles.include:
 - base
-- rdb
 - trigger
