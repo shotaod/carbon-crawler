@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import kotlin.properties.Delegates
 
-private val log: Logger = LoggerFactory.getLogger("crawler")
+private val log: Logger = LoggerFactory.getLogger("crawl.listing.sink")
 fun crawlListingSink(driverFactory: DriverFactory): TypedSink<ListingOrderPayload> = { (hostId) ->
     HostRepository.fetchBy(hostId)
         ?.let { entity ->
