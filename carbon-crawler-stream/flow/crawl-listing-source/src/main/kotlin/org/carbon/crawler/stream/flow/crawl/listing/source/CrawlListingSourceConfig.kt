@@ -22,5 +22,5 @@ class CrawlListingSourceConfig(
 ) : SourceConfigSupport<ListingOrderPayload>(
     poller,
     source,
-    ::crawlOrderSource
+    ::crawlListingSource
 )

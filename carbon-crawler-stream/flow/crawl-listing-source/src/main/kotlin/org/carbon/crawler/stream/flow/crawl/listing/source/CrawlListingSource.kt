@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 private val currentIndex: AtomicInteger = AtomicInteger(0)
 
-fun crawlOrderSource(): ListingOrderPayload? = transaction {
+fun crawlListingSource(): ListingOrderPayload? = transaction {
     HostRepository.fetch(currentIndex.getAndIncrement(), 1)
         .singleOrNull()
         ?.let {
