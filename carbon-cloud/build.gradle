@@ -2,5 +2,4 @@ version = '0.1.0'
 
 subprojects {
     group = 'org.carbon.cloud'
-    apply from: "$rootDir/gradles/spring.gradle"
 }
