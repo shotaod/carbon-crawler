@@ -5,4 +5,10 @@ jar.enabled = true
 
 dependencies {
     implementation "org.nanohttpd:nanohttpd:$versions.nanoHttpd"
+    implementation 'org.springframework.cloud:spring-cloud-stream'
+    implementation "org.springframework.cloud:spring-cloud-dataflow-core:$versions.springCloudDataFlow"
+    implementation "org.springframework.cloud:spring-cloud-dataflow-rest-client:$versions.springCloudDataFlow"
+
+    implementation project(':carbon-crawler-stream:flow:crawl-listing-sink')
+    implementation project(':carbon-crawler-stream:flow:crawl-listing-source')
 }

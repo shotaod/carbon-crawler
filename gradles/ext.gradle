@@ -12,6 +12,7 @@ ext {
         springBoot = '2.1.2.RELEASE'
         springCloud = 'Greenwich.BUILD-SNAPSHOT'
         springCloudStream = 'Fishtown.RELEASE'
+        springCloudDataFlow = '1.7.3.RELEASE'
         kafkaBinder = '2.0.1.RELEASE'
 
         selenium = '3.13.0'
