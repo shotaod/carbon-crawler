@@ -1,0 +1,3 @@
+[submodule "carbon-cloud/config"]
+	path = carbon-cloud/config
+	url = git@github.com:ShotaOd/carbon-cloud-config.git
