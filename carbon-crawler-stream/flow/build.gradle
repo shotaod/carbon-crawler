@@ -6,7 +6,32 @@ version = '0.1.0'
 bootJar.enabled = false
 jar.enabled = false
 
-allprojects {
+subprojects {
+    group = 'org.carbon.crawler.stream.flow'
+
+    sourceSets {
+        def coreResource = project(':carbon-crawler-stream:core').sourceSets.main.resources.srcDirs
+        main.resources.srcDir coreResource
+        test.resources.srcDir coreResource
+    }
+    println("""> Convention: additional resource @[module: $name]
+    main: $sourceSets.main.resources.srcDirs
+    test: $sourceSets.test.resources.srcDirs""")
+
+    // in runtime stream, prefer to use system property passed by deployer
+    // https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config
+    bootJar {
+        exclude "**/application*.yml"
+    }
+
+    dependencies {
+        implementation 'org.springframework.cloud:spring-cloud-stream'
+        implementation project(':carbon-composer')
+        implementation project(':carbon-crawler-stream:core')
+        implementation project(':carbon-crawler-stream:message')
+        testImplementation project(':carbon-crawler-stream:test')
+    }
+
     // https://github.com/spring-projects/spring-boot/issues/13187
     task bootInstall(group: 'application', type: Upload) {
         configuration = project.configurations.bootArchives
@@ -20,31 +45,9 @@ allprojects {
     }
 }
 
-bootInstall.enabled = false
-
-subprojects {
-    group = 'org.carbon.crawler.stream.flow'
-
-    sourceSets {
-        def coreResource = project(':carbon-crawler-stream:core').sourceSets.main.resources.srcDirs
-        main.resources.srcDir coreResource
-        test.resources.srcDir coreResource
-    }
-    println("""> Convention: add [module: $name] to additional resource dir
-    main: $sourceSets.main.resources.srcDirs
-    test: $sourceSets.test.resources.srcDirs""")
-
-    dependencies {
-        implementation 'org.springframework.cloud:spring-cloud-stream'
-        implementation project(':carbon-composer')
-        implementation project(':carbon-crawler-stream:core')
-        implementation project(':carbon-crawler-stream:message')
-        testImplementation project(':carbon-crawler-stream:test')
-    }
-}
-task printFlowApps {
+task printFlowProperties {
     doLast {
-        def filePath = Paths.get(rootProject.buildDir.toString(), 'crawl-stream-apps')
+        def filePath = hasProperty("propertyDist") ? Paths.get(propertyDist) : Paths.get(project.buildDir.toString(), 'crawl-stream-apps')
         Files.deleteIfExists(filePath)
         Files.createFile(filePath)
 
@@ -67,5 +70,6 @@ task printFlowApps {
         }
 
         Files.write(filePath, lines)
+        println "writing at $filePath"
     }
 }
