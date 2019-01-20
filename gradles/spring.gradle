@@ -1,0 +1,15 @@
+apply plugin: 'kotlin-spring'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+    kapt 'org.springframework.boot:spring-boot-configuration-processor'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude module: 'junit'
+    }
+
+    dependencyManagement {
+        imports { mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.springCloud" }
+        imports { mavenBom "org.springframework.cloud:spring-cloud-stream-dependencies:$versions.springCloudStream" }
+    }
+}

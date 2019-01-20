@@ -1,0 +1,41 @@
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
+
+sourceCompatibility = 1.8
+
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+        exceptionFormat 'full'
+    }
+}
+
+dependencies {
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$versions.jackson"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
+    implementation "ch.qos.logback:logback-classic:$versions.logback"
+    implementation "org.codehaus.janino:janino:$versions.janio"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$versions.junit"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$versions.junit"
+    testImplementation "io.kotlintest:kotlintest-assertions:$versions.kotlintest"
+    // with intellij not working
+    // testImplementation "io.kotlintest:kotlintest-runner-junit5:$versions.kotlintest"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:$versions.junit"
+}

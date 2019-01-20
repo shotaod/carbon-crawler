@@ -1,0 +1,11 @@
+apply plugin: 'jacoco'
+
+jacocoTestReport {
+    additionalSourceDirs.from(
+        files(subprojects.sourceSets.main.allSource.srcDirs)
+    )
+    additionalClassDirs.from(
+        files(subprojects.sourceSets.main.output)
+    )
+    onlyIf { true }
+}
