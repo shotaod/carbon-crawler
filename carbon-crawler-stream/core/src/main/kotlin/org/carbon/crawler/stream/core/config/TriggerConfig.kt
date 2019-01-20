@@ -14,26 +14,20 @@ import java.util.concurrent.TimeUnit
 /**
  * @author Soda 2018/08/21.
  */
-@ConfigurationProperties("carbon.trigger")
+@ConfigurationProperties("carbon.stream.trigger")
 class TriggerProp {
     var maxMessage: String? = null
     var cron: String? = null
     var timeUnit: TimeUnit? = null
     var fixedDelay: String? = null
     var initialDelay: String? = null
-    override fun toString(): String = """ TriggerProp(
-              maxMessage=$maxMessage,
-              cron=$cron,
-              timeUnit=$timeUnit,
-              fixedDelay=$fixedDelay,
-              initialDelay=$initialDelay
-           )""".trimIndent()
+    override fun toString(): String = " {maxMessage=$maxMessage,cron=$cron,timeUnit=$timeUnit,fixedDelay=$fixedDelay,initialDelay=$initialDelay}"
 }
 
 @Import(TriggerProp::class)
 @Configuration
 class TriggerConfig(
-        val triggerProperties: TriggerProp
+    val triggerProperties: TriggerProp
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(TriggerConfig::class.java)
@@ -49,7 +43,7 @@ class TriggerConfig(
 
     @Bean
     fun trigger(): Trigger {
-        logger.info("{}", triggerProperties)
+        logger.info("trigger property: {}", triggerProperties)
         val trigger =
             if (triggerProperties.cron != null) cronTrigger(triggerProperties.cron!!)
             else periodicTrigger()

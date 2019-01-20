@@ -1,7 +1,7 @@
 package org.carbon.crawler.stream.core.config
 
+import org.carbon.cloud.config.spring.DataSourceProp
 import org.jetbrains.exposed.sql.Database
-import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -17,38 +17,22 @@ import javax.sql.DataSource
 @Configuration
 interface DataConfig
 
-/**
- * [https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-kotlin.html#boot-features-kotlin-configuration-properties]
- */
-@ConfigurationProperties("carbon.rdb")
-class DataSourceProp {
-    lateinit var rdbHost: String
-    lateinit var rdbPort: String
-    lateinit var rdbSchema: String
-    lateinit var rdbUsername: String
-    lateinit var rdbPassword: String
-    var rdbOption: Map<String, String>? = null
-
-    fun toDataSource(): DataSource {
-        return org.apache.tomcat.jdbc.pool.DataSource()
-            .also {
-                val baseUrl = "jdbc:mysql://$rdbHost:$rdbPort/$rdbSchema"
-                val option = rdbOption?.map { (key, value) -> "$key=$value" }?.joinToString("&").orEmpty()
-                it.url = "$baseUrl?$option"
-                it.driverClassName = DriverManager.getDriver(baseUrl)::class.qualifiedName
-                it.username = rdbUsername
-                it.password = rdbPassword
-            }
-    }
-}
-
+@Import(DataSourceProp::class)
 @Configuration
 class DataSourceConfig constructor(
-    private val prop: DataSourceProp
+    private val p: DataSourceProp
 ) {
     @Bean
     fun dataSource(): DataSource {
-        return prop.toDataSource()
+        val schemaName = "crawlerdb"
+        val crawlerSchema = p.schema[schemaName]!!
+        return org.apache.tomcat.jdbc.pool.DataSource()
+            .apply {
+                url = "jdbc:mysql://${p.host}:${p.port}/$schemaName"
+                driverClassName = DriverManager.getDriver(url)::class.qualifiedName
+                username = crawlerSchema.username
+                password = crawlerSchema.password
+            }
     }
 }
 
