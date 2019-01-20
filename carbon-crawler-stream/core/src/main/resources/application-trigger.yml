@@ -1,6 +1,7 @@
 carbon:
-  trigger:
-    maxMessage: 1
-    timeUnit: seconds
-    fixedDelay: 1
-    initialDelay: 0
+  stream:
+    trigger:
+      maxMessage: 1
+      timeUnit: seconds
+      fixedDelay: 1
+      initialDelay: 0

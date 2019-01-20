@@ -1,0 +1,3 @@
+spring.cloud.config:
+  uri: http://${CARBON_API_CONFIG_HOST:localhost}:${CARBON_API_CONFIG_PORT:8888}
+  fail-fast: true
