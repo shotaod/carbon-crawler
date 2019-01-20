@@ -1,31 +1,11 @@
 version = '0.1.0'
 
+jar.enabled = false
+
 subprojects {
     group = 'org.carbon.crawler.stream'
 
     apply plugin: 'maven'
-
-    apply plugin: 'kotlin-spring'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-
-    dependencies {
-        kapt 'org.springframework.boot:spring-boot-configuration-processor'
-        runtime 'org.springframework.boot:spring-boot-devtools'
-        testImplementation('org.springframework.boot:spring-boot-starter-test'){
-            exclude module: 'junit'
-        }
-        testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
-    }
-
-    dependencyManagement {
-        imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$versions.springCloud"
-        }
-        imports {
-            mavenBom "org.springframework.cloud:spring-cloud-stream-dependencies:$versions.springCloudStream"
-        }
-    }
 
     uploadBootArchives {
         repositories {
@@ -34,5 +14,9 @@ subprojects {
                 repository url: "file:${System.getProperty('user.home')}/.m2/repository"
             }
         }
+    }
+
+    dependencies {
+        testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
     }
 }
