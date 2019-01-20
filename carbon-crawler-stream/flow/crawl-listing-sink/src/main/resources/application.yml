@@ -1,7 +1,5 @@
 spring.profiles.include:
 - base
-- rdb
-- wd
 
 carbon.rdb.rdbOption:
   useSSL: false
