@@ -1,5 +1,7 @@
 version = '0.1.0-SNAPSHOT'
 
+jar.enabled = true
+
 dependencies {
     implementation "org.jetbrains.exposed:exposed:$versions.exposed"
     implementation "org.apache.tomcat:tomcat-jdbc:$versions.tomcat"
