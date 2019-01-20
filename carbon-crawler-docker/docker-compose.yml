@@ -4,18 +4,21 @@ services:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: crawler_definition
+      MYSQL_DATABASE: crawlerdb
       MYSQL_USER: carbon
       MYSQL_PASSWORD: carbonpw
     ports:
-    - "43306:3306"
+    - "40003:3306"
     volumes:
     - ./mysql_conf:/etc/mysql/conf.d
   db_migration:
     image: boxfuse/flyway:5.1
+    command: clean migrate
     volumes:
     - ./flyway_conf/conf:/flyway/conf
     - ../carbon-crawler-model/schema/sql:/flyway/sql
+    depends_on:
+    - main_db
   schemaspy:
     image: schemaspy/schemaspy:6.0.0
     volumes:
@@ -24,9 +27,9 @@ services:
     - -t
     - mysql
     - -db
-    - crawler_definition
+    - crawlerdb
     - -s
-    - crawler_definition
+    - crawlerdb
     - -host
     - main_db:3306
     - -u
