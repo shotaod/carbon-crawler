@@ -1,9 +1,0 @@
-carbon:
-  rdb:
-    rdbHost: ${CARBON_RDB_HOST}
-    rdbPort: ${CARBON_RDB_PORT}
-    rdbSchema: ${CARBON_RDB_CRAWLER_SCHEMA}
-    rdbUsername: ${CARBON_RDB_CRAWLER_USER}
-    rdbPassword: ${CARBON_RDB_CRAWLER_PASSWORD}
-    rdbOption:
-      none:
