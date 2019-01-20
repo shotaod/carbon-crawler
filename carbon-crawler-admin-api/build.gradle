@@ -28,6 +28,7 @@ dependencies {
     implementation project(':carbon-composer')
     implementation project(':carbon-crawler-model')
     boms.rdb delegate
+    implementation project(":carbon-cloud:config:client")
 
     testImplementation "io.ktor:ktor-server-test-host:$versions.ktor"
     testImplementation 'com.github.ntrrgc:ts-generator:1.1.1'
