@@ -1,5 +1,8 @@
 version = '0.1.0'
 
+jar.enabled = false
+bootJar.enabled = false
+
 subprojects {
     group = 'org.carbon.cloud'
 }

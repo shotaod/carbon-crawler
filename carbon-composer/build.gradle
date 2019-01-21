@@ -1,7 +1,4 @@
 version = '0.0.1-SNAPSHOT'
 
-ext {
-}
-
-dependencies {
-}
+jar.enabled = true
+bootJar.enabled = false
