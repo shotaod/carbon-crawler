@@ -1,5 +1,17 @@
 version = '0.0.1-SNAPSHOT'
 
+// if group
+jar.enabled = false
+bootJar.enabled = false
+
+// if library
+jar.enabled = true
+bootJar.enabled = false
+
+// if boot application
+jar.enabled = false
+bootJar.enabled = true
+
 ext {
     // todo put constants
 }
