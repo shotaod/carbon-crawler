@@ -43,7 +43,7 @@ class KeyManager {
   toProps(i: number) {
     const {createRef, keyHandlerWithIndex} = this;
     return {
-      innerRef: createRef(),
+      ref: createRef(),
       onKeyPress: keyHandlerWithIndex(i), // handle only character (not include meta)
       onPaste: (e: any) => {
         e.preventDefault()
