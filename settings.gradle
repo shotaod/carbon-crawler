@@ -8,6 +8,7 @@ fileTree('.') {
     include '**/build.gradle'
     exclude(
         'build.gradle', // Exclude the root build file.
+        'carbon-crawler-project-template',
         'carbon-crawler-admin-front/**',
     )
 }.collect {
