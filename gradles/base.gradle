@@ -30,6 +30,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
     implementation "ch.qos.logback:logback-classic:$versions.logback"
+    // for logback expression compiler
     implementation "org.codehaus.janino:janino:$versions.janio"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$versions.junit"
