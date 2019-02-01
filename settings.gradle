@@ -9,7 +9,7 @@ fileTree('.') {
     exclude(
         'build.gradle', // Exclude the root build file.
         'carbon-crawler-project-template',
-        'carbon-crawler-admin-front/**',
+        'carbon-crawler-admin-client/**',
     )
 }.collect {
     relativePath(it.parent).replace(File.separator, ':')

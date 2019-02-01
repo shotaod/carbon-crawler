@@ -53,7 +53,7 @@ test-node:
       name: test
       code:  |
         set -x
-        cd carbon-crawler-admin-front
+        cd carbon-crawler-admin-client
         yarn && yarn app:test
 
 build-jvm:
@@ -77,7 +77,7 @@ build-node:
       name: build
       code:  |
         set -x
-        cd carbon-crawler-admin-front
+        cd carbon-crawler-admin-client
         yarn && yarn app:build
 
       # https://devcenter.wercker.com/administration/containers/building-an-image/#creating-a-docker-image-using-wercker-steps
