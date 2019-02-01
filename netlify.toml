@@ -1,6 +1,6 @@
 [build]
-  base    = "carbon-crawler-admin-front"
-  publish = "carbon-crawler-admin-front/build"
+  base    = "carbon-crawler-admin-client"
+  publish = "carbon-crawler-admin-client/build"
   command = "yarn app:build"
 
 [[redirects]]
