@@ -1,6 +1,3 @@
-import java.nio.file.Files
-import java.nio.file.Paths
-
 version = '0.1.0'
 
 bootJar.enabled = false
@@ -21,15 +18,17 @@ subprojects {
     // in runtime stream, prefer to use system property passed by deployer
     // https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config
     bootJar {
-        exclude "**/application*.yml"
+        exclude "**/application*.yml", "**/bootstrap*.yml"
     }
 
     dependencies {
         implementation 'org.springframework.cloud:spring-cloud-stream'
-        implementation project(':carbon-composer')
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+        implementation "org.carbon.libs:carbon-kompose:$versions.carbon.kompose"
         implementation project(':carbon-crawler-stream:core')
         implementation project(':carbon-crawler-stream:message')
-        testImplementation project(':carbon-crawler-stream:test')
     }
 
     // https://github.com/spring-projects/spring-boot/issues/13187
@@ -42,34 +41,5 @@ subprojects {
         repositories.withType(MavenResolver.class) { resolver ->
             resolver.pom.scopeMappings.mappings.clear()
         }
-    }
-}
-
-task printFlowProperties {
-    doLast {
-        def filePath = hasProperty("propertyDist") ? Paths.get(propertyDist) : Paths.get(project.buildDir.toString(), 'crawl-stream-apps')
-        Files.deleteIfExists(filePath)
-        Files.createFile(filePath)
-
-        println '--------------------------------------------------'
-        println 'export stream apps ...'
-        println '--------------------------------------------------'
-        def lines = subprojects.collect {
-            def group = it.group
-            def version = it.version
-            def type = ''
-            def name = it.name
-            if (name.endsWith('sink')) {
-                type = 'sink'
-            } else if (name.endsWith('source')) {
-                type = 'source'
-            }
-            def mavenRepoPath = "maven://$group:${name}:$version"
-            println mavenRepoPath
-            "$type.$name=$mavenRepoPath"
-        }
-
-        Files.write(filePath, lines)
-        println "writing at $filePath"
     }
 }
