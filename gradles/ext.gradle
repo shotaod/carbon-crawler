@@ -20,7 +20,6 @@ ext {
 
         tomcat = '9.0.10'
         mysql = '8.0.11'
-        h2 = '1.4.197'
         flyway = '5.1.4'
 
         assertj = '3.11.1'
@@ -31,6 +30,7 @@ ext {
 
         carbon = ext {
             validation = '0.4'
+            kompose = '0.1.1'
         }
     }
     boms = ext {
@@ -38,7 +38,6 @@ ext {
             it.implementation "org.jetbrains.exposed:exposed:$versions.exposed"
             it.implementation "org.apache.tomcat:tomcat-jdbc:$versions.tomcat"
             it.implementation "mysql:mysql-connector-java:$versions.mysql"
-            it.testImplementation "com.h2database:h2:$versions.h2"
         }
         webdriver = {
             it.implementation "org.seleniumhq.selenium:selenium-java:$versions.selenium"
