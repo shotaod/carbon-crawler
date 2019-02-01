@@ -6,6 +6,7 @@ build/
 out/
 # misc
 /.env.local
+tmp/
 
 ### IntelliJ IDEA ###
 .idea
@@ -53,5 +54,5 @@ pids
 .env
 
 ### Project Specifics ###
-!carbon-crawler-admin-front/.env
-carbon-crawler-admin-front/stats
+!carbon-crawler-admin-client/.env
+carbon-crawler-admin-client/stats
