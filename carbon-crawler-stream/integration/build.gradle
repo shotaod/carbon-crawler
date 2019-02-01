@@ -1,0 +1,104 @@
+version = '0.0.1-SNAPSHOT'
+
+bootJar.enabled = false
+jar.enabled = true
+
+sourceSets {
+    integrationTest {
+        kotlin.srcDir file('src/integrationTest/kotlin')
+        resources.srcDir file('src/integrationTest/resources')
+        compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+compileIntegrationTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+
+dependencies {
+    implementation "org.nanohttpd:nanohttpd:$versions.nanoHttpd"
+    implementation 'org.springframework.cloud:spring-cloud-stream'
+    implementation "org.springframework.cloud:spring-cloud-dataflow-core:$versions.springCloudDataFlow"
+    implementation "org.springframework.cloud:spring-cloud-dataflow-rest-client:$versions.springCloudDataFlow"
+
+    testImplementation "org.carbon.libs:carbon-kompose:$versions.carbon.kompose"
+    testImplementation project(':carbon-crawler-model')
+    testImplementation project(':carbon-crawler-stream:core')
+    testImplementation project(':carbon-crawler-stream:flow:crawl-listing-sink')
+    testImplementation project(':carbon-crawler-stream:flow:crawl-listing-source')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+
+// ______________________________________________________
+//
+// @ tasks
+import java.nio.file.Files
+import java.nio.file.Paths
+
+def filePath = Paths.get(rootDir.toString(), 'tmp/carbon.stream.apps.property')
+def flowModules = project(":carbon-crawler-stream:flow").subprojects
+task printFlowProperties {
+    doLast {
+        Files.deleteIfExists(filePath)
+        Files.createFile(filePath)
+
+        println '--------------------------------------------------'
+        println 'export stream apps ...'
+        println '--------------------------------------------------'
+        def lines = flowModules.collect {
+            def group = it.group
+            def version = it.version
+            def type = ''
+            def name = it.name
+            if (name.endsWith('sink')) {
+                type = 'sink'
+            } else if (name.endsWith('source')) {
+                type = 'source'
+            } else {
+                println "!!! violation named flow found: $name !!!"
+            }
+            def mavenRepoPath = "maven://$group:${name}:$version"
+            println "$mavenRepoPath"
+            "$type.$name=$mavenRepoPath"
+        }
+
+        Files.write(filePath, lines)
+        println "writing at $filePath"
+    }
+}
+
+task setupEnvironment {
+    doLast {
+        exec {
+            executable 'sh'
+            args './script/integration.setup.sh'
+        }
+    }
+}
+
+task integrationTest(type: Test, group: 'verification') {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+    // should install flow modules locally
+    flowModules.each { dependsOn it.bootInstall }
+    dependsOn printFlowProperties
+    dependsOn setupEnvironment
+    dependsOn test
+
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+        exceptionFormat 'full'
+    }
+
+    systemProperties = [
+        // http://d.hatena.ne.jp/yamap_55/20140415/1397563046
+        'carbon.test.integ.deployerUri': 'http://localhost:9393',
+        'carbon.test.integ.defFile'    : filePath.toString(),
+    ]
+}
