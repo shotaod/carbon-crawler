@@ -1,6 +1,15 @@
 version: '3'
 services:
-  main_db:
+  # https://tools.ietf.org/html/rfc952
+  # follow domain specification
+  config.carbon.local:
+    build:
+      context: ../carbon-cloud/config/server
+      args:
+        JAR_FILE: ./build/libs/server-1.0.0-SNAPSHOT.jar
+    ports:
+      - "40000:80"
+  rdb.carbon.local:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -8,56 +17,70 @@ services:
       MYSQL_USER: carbon
       MYSQL_PASSWORD: carbonpw
     ports:
-    - "40003:3306"
+      - "40003:3306"
     volumes:
-    - ./mysql_conf:/etc/mysql/conf.d
+      - ./mysql_conf:/etc/mysql/conf.d
   db_migration:
-    image: boxfuse/flyway:5.1
+    image: boxfuse/flyway:5.2.1
     command: clean migrate
     volumes:
-    - ./flyway_conf/conf:/flyway/conf
-    - ../carbon-crawler-model/schema/sql:/flyway/sql
+      - ./flyway_conf/conf:/flyway/conf
+      - ../carbon-crawler-model/schema/sql:/flyway/sql
     depends_on:
-    - main_db
-  schemaspy:
-    image: schemaspy/schemaspy:6.0.0
-    volumes:
-    - ../carbon-crawler-model/schema/er:/output
-    command:
-    - -t
-    - mysql
-    - -db
-    - crawlerdb
-    - -s
-    - crawlerdb
-    - -host
-    - main_db:3306
-    - -u
-    - carbon
-    - -p
-    - carbonpw
-    depends_on:
-    - main_db
-  selenium_hub:
+      - rdb.carbon.local
+  selenium.carbon.local:
     image: selenium/hub:3.13.0-argon
     ports:
-    - "4444:4444"
+      - "40004:4444"
     environment:
       GRID_BROWSER_TIMEOUT: 30
   chrome_node:
     image: selenium/node-chrome:3.13.0-argon
     depends_on:
-    - selenium_hub
+      - selenium.carbon.local
     environment:
-      HUB_HOST: selenium_hub
+      HUB_HOST: selenium.carbon.local
       HUB_PORT: 4444
   firefox_node:
     image: selenium/node-firefox:3.13.0-argon
     depends_on:
-    - selenium_hub
+      - selenium.carbon.local
     environment:
-      HUB_HOST: selenium_hub
+      HUB_HOST: selenium.carbon.local
       HUB_PORT: 4444
+  dataflow:
+    image: springcloud/spring-cloud-dataflow-server:2.0.0.M1
+    volumes:
+      # making dataflow be able to access host's maven repository via maven:// schema
+      - ~/.m2:/root/.m2
+    ports:
+      - "9393:9393"
+    environment:
+      - spring.cloud.skipper.client.serverUri=http://skipper:7577/api
+      # - spring.cloud.dataflow.metrics.collector.uri=http://metrics:8080
+      - spring.cloud.dataflow.applicationProperties.stream.spring.profiles.active=dev-internal
+      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.kafka.binder.brokers=pause:9092
+      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.config.uri=http://config.carbon.local:80
+      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.config.failFast=true
+      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.bindings.applicationMetrics.destination=metrics
+      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.metrics.meter-filter=spring.integration.*
+    depends_on:
+      - zookeeper
+      - kafka_root
+  skipper:
+    image: springcloud/spring-cloud-skipper-server:2.0.0.M1
+    volumes:
+      - ~/.m2:/root/.m2
+    ports:
+      - "7577:7577"
+      - "9000-9010:9000-9010"
+  #  metrics:
+  #    image: springcloud/metrics-collector-kafka:2.0.0.M1
+  #    environment:
+  #      - spring.cloud.stream.kafka.binder.brokers=pause:9092
+  #      - spring.cloud.stream.bindings.input.destination=metrics
+  #    depends_on:
+  #      - dataflow
   # ==================================================
   # kafka Orchestration
   # ==================================================
@@ -96,14 +119,14 @@ services:
   pause:
     image: gcr.io/google-containers/pause:3.1
     ports:
-    - 2181:2181
-    - 9092-9102:9092-9102
+      - 2181:2181
+      - 9092-9102:9092-9102
   zookeeper:
     image: zookeeper:3.4
     pid: service:pause
     network_mode: service:pause
     depends_on:
-    - pause
+      - pause
   kafka_root:
     image: wurstmeister/kafka:2.11-2.0.0
     environment:
@@ -115,14 +138,14 @@ services:
     pid: service:pause
     network_mode: service:pause
     depends_on:
-    - zookeeper
+      - zookeeper
   kafka_node:
     image: wurstmeister/kafka:2.11-2.0.0
     # -v docker.sock
     # only for local, it is very !!dangerous!!
     # local convenience for detecting free port
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       HOSTNAME_COMMAND: 'echo pause'
       # find free port by diff using port vs docker port
@@ -136,16 +159,4 @@ services:
     pid: service:pause
     network_mode: service:pause
     depends_on:
-    - kafka_root
-  dataflow:
-    image: springcloud/spring-cloud-dataflow-server-local:1.6.1.RELEASE
-    volumes:
-    # making dataflow be able to access host's maven repository via maven:// schema
-    - ~/.m2:/root/.m2
-    ports:
-    - "9393:9393"
-    environment:
-    - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.kafka.binder.brokers=pause:9092
-    depends_on:
-    - zookeeper
-    - kafka_root
+      - kafka_root

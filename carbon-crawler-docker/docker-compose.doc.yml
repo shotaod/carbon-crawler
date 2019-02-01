@@ -1,0 +1,21 @@
+version: '3'
+service:
+  schemaspy:
+    image: schemaspy/schemaspy:6.0.0
+    volumes:
+      - ../carbon-crawler-model/schema/er:/output
+    command:
+      - -t
+      - mysql
+      - -db
+      - crawlerdb
+      - -s
+      - crawlerdb
+      - -host
+      - rdb.carbon.local:3306
+      - -u
+      - carbon
+      - -p
+      - carbonpw
+    depends_on:
+      - rdb.carbon.local
