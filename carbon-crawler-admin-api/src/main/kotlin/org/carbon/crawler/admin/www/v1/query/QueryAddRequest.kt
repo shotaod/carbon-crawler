@@ -3,7 +3,7 @@ package org.carbon.crawler.admin.www.v1.query
 import org.carbon.crawler.admin.extend.carbon.validation.LengthMax
 import org.carbon.crawler.admin.extend.carbon.validation.OneOf
 import org.carbon.crawler.admin.extend.carbon.validation.XPath
-import org.carbon.crawler.model.domain.HostEntity
+import org.carbon.crawler.model.domain.QueryEntity
 import org.carbon.objects.validation.Definition
 import org.carbon.objects.validation.Validated
 import org.carbon.objects.validation.invalidate
@@ -14,25 +14,23 @@ import org.carbon.objects.validation.matcher.max
 import org.carbon.objects.validation.matcher.mayBe
 
 data class QueryAddRequest(
-    val id: Long?,
     val url: String,
     val title: String,
     val memo: String?,
     val listing: ListingQuery,
     val details: List<DetailQuery>
 ) : Validated<QueryAddRequest> by QueryAddRequestSchema {
-    fun toEntity(id: Long? = null): HostEntity = HostEntity(
+    fun toEntity(id: Long? = null): QueryEntity = QueryEntity(
         id,
         url,
         title,
         memo,
-        emptyList(),
-        HostEntity.Query(
+        QueryEntity.Query(
             null,
             listing.pagePath,
             listing.linkQuery,
             details.map {
-                HostEntity.DetailQuery(
+                QueryEntity.DetailQuery(
                     null,
                     it.queryName,
                     it.query,
@@ -49,8 +47,8 @@ object QueryAddRequestSchema : Validated<QueryAddRequest> {
         body.title should { it max 255 } otherwise "title".invalidate()
         body.memo should { it mayBe LengthMax(1023) } otherwise "memo".invalidate()
 
-        body.listing.shouldValidated()
-        body.details.shouldEachValidated()
+        body.listing.shouldValidated() otherwise "listing".invalidate()
+        body.details.shouldEachValidated() otherwise "details".invalidate()
     }
 }
 
