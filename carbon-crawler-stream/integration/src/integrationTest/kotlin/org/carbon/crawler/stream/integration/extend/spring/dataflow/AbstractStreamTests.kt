@@ -1,4 +1,4 @@
-package org.carbon.crawler.stream.integration.extend.spring.dataFlow
+package org.carbon.crawler.stream.integration.extend.spring.dataflow
 
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -112,7 +112,7 @@ abstract class AbstractStreamTests : InitializingBean {
      * @param stream the stream object containing the stream definition.
      * @return the available StreamDefinition REST resource.
      */
-    protected fun updateStream(stream: StreamDefinition, properties: String, appNames: List<String>): StreamDefinitionResource? {
+    protected fun updateStream(stream: StreamDefinition, properties: String, appNames: List<String>): StreamDefinitionResource {
         val propertiesToUse: Map<String, String>?
         try {
             propertiesToUse = DeploymentPropertiesUtils.parseDeploymentProperties(properties, null, 0)
@@ -134,7 +134,7 @@ abstract class AbstractStreamTests : InitializingBean {
      * @param streamVersion the stream version to rollback to
      * @return the available StreamDefinition REST resource.
      */
-    protected fun rollbackStream(stream: StreamDefinition, streamVersion: Int): StreamDefinitionResource? {
+    protected fun rollbackStream(stream: StreamDefinition, streamVersion: Int): StreamDefinitionResource {
         logger.info("Rolling back the stream '" + stream.name + "' to the version " + streamVersion)
         this.streamOperations.rollbackStream(stream.name, streamVersion)
         return streamAvailable(stream)
@@ -245,23 +245,19 @@ abstract class AbstractStreamTests : InitializingBean {
      * @param stream the stream that is to be monitored.
      * @return the available StreamDefinition REST resource.
      */
-    private fun streamAvailable(stream: StreamDefinition): StreamDefinitionResource? {
-        var streamStarted = false
+    private fun streamAvailable(stream: StreamDefinition): StreamDefinitionResource {
         var attempt = 0
-        var status = "not present"
         var resource: StreamDefinitionResource? = null
-        while (!streamStarted && attempt < property.deployPauseRetries.toInt()) {
+        while (resource == null && attempt < property.deployPauseRetries.toInt()) {
             resource = streamOperations.list().content
                 .find { it.name == stream.name }
                 ?.also {
-                    status = it.status
                     logger.info("Checking: Stream=${stream.name}, status = ${it.status}, status description = ${it.statusDescription}")
+                    if (it.status == "failed")
+                        throw IllegalStateException("Failed to deploy stream ${stream.name} resource=${it.name} status=${it.status}")
                 }
                 ?.takeIf {
                     it.status == "deployed" && platformHelper.setUrlsForStream(stream) // url is available ?
-                }
-                ?.also {
-                    streamStarted = true
                 }
 
             if (resource != null) break
@@ -270,21 +266,14 @@ abstract class AbstractStreamTests : InitializingBean {
             pause()
         }
 
-        if (streamStarted) {
-            logger.info(String.format("Stream '%s' started with status: %s", stream.name, status))
-            for (app in stream.applications) {
-                logger.info("App '${app.name}' has instances: ${app.instanceUrls}")
-            }
-        } else {
-            var statusDescription = "null"
-            if (resource != null) {
-                statusDescription = resource.statusDescription
-            }
-            logger.info("Stream '${stream.name}' NOT started with status: $status.  Description = $statusDescription")
-
-            throw IllegalStateException("Unable to start stream ${stream.name}.  Definition = ${stream.dsl}")
-        }
         return resource
+            ?.also {
+                logger.info(String.format("Stream '%s' started with status: %s", stream.name, it.status))
+                for (app in stream.applications) {
+                    logger.info("App '${app.name}' has instances: ${app.instanceUrls}")
+                }
+            }
+            ?: throw IllegalStateException("Unable to start stream ${stream.name}.  Definition = ${stream.dsl}")
     }
 
     /**

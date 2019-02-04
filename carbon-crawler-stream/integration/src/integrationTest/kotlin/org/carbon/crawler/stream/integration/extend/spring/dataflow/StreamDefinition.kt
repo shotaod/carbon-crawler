@@ -1,4 +1,4 @@
-package org.carbon.crawler.stream.integration.extend.spring.dataFlow
+package org.carbon.crawler.stream.integration.extend.spring.dataflow
 
 /**
  * Builder of deployable SCDF stream definitions which honors elements of SCDF Shell DSL.

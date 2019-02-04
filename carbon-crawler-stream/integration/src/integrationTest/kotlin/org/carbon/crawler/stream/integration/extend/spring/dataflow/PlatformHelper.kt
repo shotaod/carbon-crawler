@@ -1,4 +1,4 @@
-package org.carbon.crawler.stream.integration.extend.spring.dataFlow
+package org.carbon.crawler.stream.integration.extend.spring.dataflow
 
 import org.springframework.cloud.dataflow.rest.client.RuntimeOperations
 import org.springframework.cloud.dataflow.rest.resource.AppStatusResource

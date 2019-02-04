@@ -1,4 +1,4 @@
-package org.carbon.crawler.stream.integration.extend.spring.dataFlow
+package org.carbon.crawler.stream.integration.extend.spring.dataflow
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
