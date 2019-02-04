@@ -1,3 +1,5 @@
 spring.profiles.include:
 - base
 - trigger
+
+server.port: 40081
