@@ -34,7 +34,7 @@ fun String.isXpath(): Evaluation =
     )
 
 fun String.oneOf(vararg value: String): Evaluation =
-    if (value.any { this === it }) Evaluation.Accepted
+    if (value.any { this == it }) Evaluation.Accepted
     else this.reject(
         Code("String.OneOf"),
         ParamList(value.toList()),
