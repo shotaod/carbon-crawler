@@ -7,6 +7,7 @@ out/
 # misc
 /.env.local
 tmp/
+secrets/
 
 ### IntelliJ IDEA ###
 .idea
