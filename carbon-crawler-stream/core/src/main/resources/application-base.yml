@@ -1,4 +1,16 @@
 spring:
-  output.ansi.enabled: always
+  output.ansi.enabled: detect
+  cloud.gcp.pubsub:
+    emulatorHost: pubsub.carbon.local:40007
+    projectId: carbon
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - logfile
 
-logging.level.: info
+carbon.cloud.rdb.schema.crawlerdb.option:
+  useSSL: false
