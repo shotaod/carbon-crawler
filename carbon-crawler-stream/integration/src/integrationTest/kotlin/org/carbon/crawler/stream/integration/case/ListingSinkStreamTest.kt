@@ -4,26 +4,28 @@ import io.kotlintest.matchers.haveSize
 import io.kotlintest.should
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.carbon.crawler.model.domain.HostEntity
-import org.carbon.crawler.model.domain.HostRepository
+import org.carbon.crawler.model.domain.QueryEntity
+import org.carbon.crawler.model.domain.QueryRepository
 import org.carbon.crawler.model.domain.SnapShotRepository
 import org.carbon.crawler.model.extend.exposed.beginTransaction
 import org.carbon.crawler.model.infra.record.PageTable
 import org.carbon.crawler.stream.core.config.DataSourceConfig
 import org.carbon.crawler.stream.integration.extend.kompose.ServeHtml
 import org.carbon.crawler.stream.integration.extend.matcher.shouldBeFound
-import org.carbon.crawler.stream.integration.extend.spring.dataFlow.AbstractStreamTests
-import org.carbon.crawler.stream.integration.extend.spring.dataFlow.StreamDefinition
+import org.carbon.crawler.stream.integration.extend.spring.dataflow.AbstractStreamTests
+import org.carbon.crawler.stream.integration.extend.spring.dataflow.StreamDefinition
 import org.carbon.kompose.kompose
 import org.jetbrains.exposed.sql.selectAll
 import org.junit.jupiter.api.Test
-import org.junit.platform.commons.logging.LoggerFactory
+import org.slf4j.LoggerFactory
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
 @ActiveProfiles("dev")
 @SpringBootTest(classes = [DataSourceConfig::class])
 class ListingSinkStreamTest : AbstractStreamTests() {
+
+    val logger = LoggerFactory.getLogger(ListingSinkStreamTest::class.java)!!
 
     @Suppress("FunctionName")
     @Test
@@ -32,30 +34,29 @@ class ListingSinkStreamTest : AbstractStreamTests() {
         //
         // @ Given
         val host = "http://host.docker.internal:40101"
-        val entity = HostEntity(
+        val entity = QueryEntity(
             null,
             host,
             "carbon wiki",
             "this is test host",
-            emptyList(),
-            HostEntity.Query(
+            QueryEntity.Query(
                 null,
                 "list.html",
                 "xpath:///html/body/div/ul/li/a",
                 listOf(
-                    HostEntity.DetailQuery(
+                    QueryEntity.DetailQuery(
                         null,
                         "version",
                         "xpath:///html/body/section[1]/pre",
                         "text/text"
                     ),
-                    HostEntity.DetailQuery(
+                    QueryEntity.DetailQuery(
                         null,
                         "feature",
                         "xpath:///html/body/section[2]/pre",
                         "text/text"
                     ),
-                    HostEntity.DetailQuery(
+                    QueryEntity.DetailQuery(
                         null,
                         "dependency",
                         "xpath:///html/body/section[3]/pre",
@@ -65,7 +66,7 @@ class ListingSinkStreamTest : AbstractStreamTests() {
             ))
 
         beginTransaction {
-            HostRepository.save(entity)
+            QueryRepository.save(entity)
         }
 
         // ______________________________________________________
@@ -75,12 +76,10 @@ class ListingSinkStreamTest : AbstractStreamTests() {
             "crawl-stream",
             "crawl-listing-source | crawl-listing-sink",
             mapOf(
-                "app.crawl-listing-source.trigger.fixedDelay" to "1000",
-                "app.crawl-listing-source.trigger.initialDelay" to "0",
+                "app.crawl-listing-source.trigger.fixedDelay" to "5000",
                 "app.crawl-listing-source.trigger.maxMessage" to "10"
             ))
         deployStream(stream)
-
 
         // ______________________________________________________
         //
@@ -91,7 +90,7 @@ class ListingSinkStreamTest : AbstractStreamTests() {
         var find = false
         while (!find) {
             find = beginTransaction { PageTable.selectAll().count() > 0 }
-            LoggerFactory.getLogger(ListingSinkStreamTest::class.java).info { "wait streaming is started" }
+            logger.info("wait streaming is started")
             if (cnt++ > maxRetry)
                 throw IllegalStateException("data is not updated, maxRetry: $maxRetry")
             Thread.sleep(sleep)
