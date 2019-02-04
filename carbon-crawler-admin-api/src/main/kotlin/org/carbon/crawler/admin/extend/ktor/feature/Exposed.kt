@@ -1,4 +1,4 @@
-package org.carbon.crawler.admin.feature
+package org.carbon.crawler.admin.extend.ktor.feature
 
 import io.ktor.application.Application
 import io.ktor.application.ApplicationFeature
@@ -35,7 +35,7 @@ class Exposed private constructor(configuration: Configuration) {
         }
     }
 
-    companion object Feature : ApplicationFeature<Application, Configuration, Exposed> {
+    companion object : ApplicationFeature<Application, Configuration, Exposed> {
         override val key: AttributeKey<Exposed> = AttributeKey("Exposed")
 
         override fun install(pipeline: Application, configure: Configuration.() -> Unit): Exposed {
