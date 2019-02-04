@@ -5,10 +5,10 @@ jar.enabled = true
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-stream'
-    implementation "org.springframework.cloud:spring-cloud-stream-binder-kafka:$versions.kafkaBinder"
+    implementation "org.carbon.libs:carbon-kompose:$versions.carbon.kompose"
 
-    implementation project(":carbon-cloud:config:client")
-
+    implementation project(':carbon-cloud:config:client')
+    implementation project(':carbon-crawler-model')
     boms.rdb delegate
     boms.webdriver delegate
 }
