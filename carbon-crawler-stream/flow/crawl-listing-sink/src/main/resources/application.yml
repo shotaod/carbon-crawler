@@ -1,5 +1,4 @@
 spring.profiles.include:
-- base
+  - base
 
-carbon.rdb.rdbOption:
-  useSSL: false
+server.port: 40080
