@@ -20,16 +20,22 @@ function stage() {
 # --------------------------------------------------
 # Steps
 # --------------------------------------------------
-function tear_down() {
+function tear_down_compose() {
     stage "Tear Down"
 
-    docker-compose \
-        --no-ansi \
-        -f ${COMPOSE_PATH} \
-        down
+    if [[ ${SKIP_COMPOSE_DOWN} == t* ]]; then
+        echo "skip compose down"
+    else
+        echo "To suppress overhead in re-creating docker image"
+        echo "you can skip this step by passing SKIP_COMPOSE_DOWN=true"
+        docker-compose \
+            --no-ansi \
+            -f ${COMPOSE_PATH} \
+            down
+    fi
 }
 
-function set_up_docker() {
+function set_up_compose() {
     stage "Set Up"
 
     docker-compose \
@@ -41,7 +47,7 @@ function set_up_docker() {
 function check_connection() {
     stage "Wait For Connection"
     echo checking spring cloud data flow server is available
-    until curl -sSf localhost:9393/about >/dev/null 2>/dev/null;
+    until curl -sSf localhost:40008/about >/dev/null 2>/dev/null;
     do
         printf '.'
         sleep 1
@@ -54,6 +60,6 @@ function check_connection() {
 # main routine
 # --------------------------------------------------
 set -e
-tear_down
-set_up_docker
+tear_down_compose
+set_up_compose
 check_connection
