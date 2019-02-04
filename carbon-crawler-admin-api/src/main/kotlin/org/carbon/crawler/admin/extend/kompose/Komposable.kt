@@ -1,12 +1,12 @@
-package org.carbon.crawler.admin.extend
+package org.carbon.crawler.admin.extend.kompose
 
 import io.ktor.http.HttpStatusCode
-import org.carbon.composer.Composable
 import org.carbon.crawler.admin.extend.ktor.ReservedException
+import org.carbon.kompose.Komposable
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import java.sql.SQLException
 
-class PersistentErrorHandler<T> : Composable<T>() {
+class PersistentErrorHandler<T> : Komposable<T>() {
     class DuplicateException : ReservedException(HttpStatusCode.BadRequest, "already exist")
 
     override fun invoke(): T =
