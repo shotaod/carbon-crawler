@@ -21,8 +21,8 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 
-object HostRepository {
-    fun save(entity: HostEntity) {
+object QueryRepository {
+    fun save(entity: QueryEntity) {
         when (entity.id) {
             null -> {
                 val entityID = HostTable.insertAndGetId {
@@ -52,33 +52,26 @@ object HostRepository {
         }
     }
 
-    private fun doSave(id: EntityID<Long>, entity: HostEntity) {
+    private fun doSave(id: EntityID<Long>, entity: QueryEntity) {
         CrawlListQueryTable.insert {
             it[hostId] = id
             it[listingPagePath] = entity.query.listingPagePath
             it[listingLinkQuery] = entity.query.listingLinkQuery
         }
-        entity.query.details
-            .map {
-                it.queryName to it.query
-            }
-            .let {
-                CrawlDetailQueryTable.batchInsert(it) { data ->
-                    this[CrawlDetailQueryTable.hostId] = id
-                    this[CrawlDetailQueryTable.name] = data.first
-                    this[CrawlDetailQueryTable.query] = data.second
-                }
-            }
+        CrawlDetailQueryTable.batchInsert(entity.query.details) { data ->
+            this[CrawlDetailQueryTable.hostId] = id
+            this[CrawlDetailQueryTable.name] = data.queryName
+            this[CrawlDetailQueryTable.query] = data.query
+            this[CrawlDetailQueryTable.type] = data.type
+        }
     }
 
-    fun fetchBy(id: Long): HostEntity? {
+    fun fetchBy(id: Long): QueryEntity? {
         val result = doFetch(listOf(id))
-        return if (result.isEmpty()) null
-        else result[0]
+        return result.firstOrNull()
     }
 
-    fun fetch(page: Int, size: Int): List<HostEntity> {
-
+    fun fetch(page: Int, size: Int): List<QueryEntity> {
         val ids = HostTable
             .slice(HostTable.id)
             .selectAll()
@@ -87,7 +80,7 @@ object HostRepository {
         return doFetch(ids)
     }
 
-    private fun doFetch(ids: List<Long>): List<HostEntity> {
+    private fun doFetch(ids: List<Long>): List<QueryEntity> {
         val parser = RowParser()
         val records = HostTable
             .leftJoin(PageTable)
@@ -114,65 +107,44 @@ object HostRepository {
 
         fun parse(row: ResultRow) {
             row.tryGet(HostTable.id)
-                ?.let {
+                ?.also {
                     hostRecords[it.value] = HostRecord.wrapRow(row)
                 }
             row.tryGet(PageTable.id)
-                ?.let {
+                ?.also {
                     val record = PageRecord.wrapRow(row)
                     pageRecords
-                        .computeIfAbsent(record.host.id.value) { HashMap() }
+                        .getOrPut(record.host.id.value) { HashMap() }
                         .putIfAbsent(record.id.value, record)
                 }
             row.tryGet(PageAttributeTable.id)
-                ?.let {
+                ?.also {
                     val record = PageAttributeRecord.wrapRow(row)
                     pageAttributeRecords
-                        .computeIfAbsent(record.page.id.value) { HashMap() }
+                        .getOrPut(record.page.id.value) { HashMap() }
                         .putIfAbsent(record.id.value, record)
                 }
             row.tryGet(CrawlListQueryTable.id)
-                ?.let {
+                ?.also {
                     val record = CrawlListQueryRecord.wrapRow(row)
                     listQueryRecords
                         .putIfAbsent(record.host.id.value, record)
                 }
             row.tryGet(CrawlDetailQueryTable.id)
-                ?.let {
+                ?.also {
                     val record = CrawlDetailQueryRecord.wrapRow(row)
                     detailQueryRecords
-                        .computeIfAbsent(record.host.id.value) { HashMap() }
+                        .getOrPut(record.host.id.value) { HashMap() }
                         .putIfAbsent(record.id.value, record)
                 }
         }
 
-        val result: List<HostEntity>
+        val result: List<QueryEntity>
             get() {
                 return hostRecords.map { (id, record) ->
-                    val pages = pageRecords[id]
-                        ?.map { (pId, pRecord) ->
-                            val attributes = (pageAttributeRecords[pId]
-                                ?.values
-                                ?.map {
-                                    HostEntity.PageAttribute(
-                                        it.id.value,
-                                        it.key,
-                                        it.value,
-                                        it.type
-                                    )
-                                } ?: emptyList())
-                            HostEntity.Page(
-                                pId,
-                                pRecord.title,
-                                pRecord.url,
-                                attributes
-                            )
-                        } ?: emptyList()
-
-
                     val detailQueries = detailQueryRecords[id]
                         ?.map { (qId, qRecord) ->
-                            HostEntity.DetailQuery(
+                            QueryEntity.DetailQuery(
                                 qId,
                                 qRecord.queryName,
                                 qRecord.query,
@@ -181,7 +153,7 @@ object HostRepository {
                         } ?: emptyList()
                     val query = listQueryRecords[id]
                         ?.let {
-                            HostEntity.Query(
+                            QueryEntity.Query(
                                 it.id.value,
                                 it.listingPagePath,
                                 it.listingLinkQuery,
@@ -190,12 +162,11 @@ object HostRepository {
                         } ?: {
                         throw IllegalStateException("data is illegal")
                     }()
-                    HostEntity(
+                    QueryEntity(
                         id,
                         record.url,
                         record.title,
                         record.memo,
-                        pages,
                         query
                     )
                 }

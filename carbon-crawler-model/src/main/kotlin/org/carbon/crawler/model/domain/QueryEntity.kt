@@ -5,28 +5,13 @@ import java.nio.file.Paths
 /**
  * @author Soda 2018/08/06.
  */
-data class HostEntity(
+data class QueryEntity(
     val id: Long?,
     val url: String,
     val title: String,
     val memo: String?,
-    val pages: List<Page>,
     val query: Query
 ) {
-    data class Page(
-        val id: Long?,
-        val title: String,
-        val url: String,
-        val attributes: List<PageAttribute>
-    )
-
-    data class PageAttribute(
-        val id: Long?,
-        val key: String,
-        val value: String,
-        val type: String
-    )
-
     data class Query(
         val id: Long?,
         val listingPagePath: String,
