@@ -1,0 +1,10 @@
+id,page_id,key       ,value                                                   ,type,ins_at             ,upd_at             ,del_at
+1 ,1      ,version   ,0.1.0-BETA                                              ,text,2019-01-27 17:49:27,2019-01-27 17:49:33,
+2 ,1      ,feature   ,Modularized & Pluggable Web Framework                   ,text,2019-01-27 17:49:27,2019-01-27 17:49:33,
+3 ,1      ,dependency,"carbon-component,carbon-util,carbon-modular"           ,text,2019-01-27 17:49:27,2019-01-27 17:49:33,
+4 ,2      ,version   ,0.1.0-BETA                                              ,text,2019-01-27 17:49:27,2019-01-27 17:49:33,
+5 ,2      ,feature   ,Open-ended Authentication                               ,text,2019-01-27 17:49:27,2019-01-27 17:49:33,
+6 ,2      ,dependency,"carbon-component,carbon-util,carbon-modular,carbon-web",text,2019-01-27 17:49:27,2019-01-27 17:49:33,
+7 ,3      ,version   ,0.1.0-BETA                                              ,text,2019-01-27 17:49:27,2019-01-27 17:49:33,
+8 ,3      ,feature   ,"Persistent Facade,SQL Dialect Resolver"                ,text,2019-01-27 17:49:27,2019-01-27 17:49:33,
+9 ,3      ,dependency,"carbon-component,carbon-modular"                       ,text,2019-01-27 17:49:27,2019-01-27 17:49:33,

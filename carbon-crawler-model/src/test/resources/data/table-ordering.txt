@@ -1,0 +1,5 @@
+host
+page
+page_attribute
+crawl_list_query
+crawl_detail_query
