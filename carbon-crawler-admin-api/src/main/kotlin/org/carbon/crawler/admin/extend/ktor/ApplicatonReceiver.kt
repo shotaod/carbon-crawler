@@ -6,7 +6,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 
 class JsonMappingException(e: MissingKotlinParameterException)
-    : ReservedException(HttpStatusCode.BadRequest, "property missing: ${e.parameter.name}")
+    : ReservedException(HttpStatusCode.BadRequest, "missing property '${e.parameter.name}'")
 
 suspend inline fun <reified T : Any> ApplicationCall.receiveJsonStrict(): T {
     try {
