@@ -1,20 +1,13 @@
 package org.carbon.crawler.admin.www.v1.snap
 
-import org.carbon.crawler.model.domain.HostEntity
+import org.carbon.crawler.model.domain.SnapShotEntity
 
 data class SnapResponse(
     val id: Long,
-    val url: String,
     val title: String,
-    val memo: String?,
-    val pages: List<PageItem>
+    val url: String,
+    val attributes: List<PageAttributeItem>
 ) {
-    data class PageItem(
-        val id: Long,
-        val title: String,
-        val url: String,
-        val attributes: List<PageAttributeItem>
-    )
 
     data class PageAttributeItem(
         val id: Long,
@@ -24,24 +17,16 @@ data class SnapResponse(
     )
 
     companion object {
-        fun parseEntity(entity: HostEntity): SnapResponse = SnapResponse(
+        fun parseEntity(entity: SnapShotEntity): SnapResponse = SnapResponse(
             entity.id!!,
             entity.url,
             entity.title,
-            entity.memo,
-            entity.pages.map { page ->
-                PageItem(
-                    page.id!!,
-                    page.title,
-                    page.url,
-                    page.attributes.map { attr ->
-                        PageAttributeItem(
-                            attr.id!!,
-                            attr.key,
-                            attr.value,
-                            attr.type
-                        )
-                    }
+            entity.attributes.map { attr ->
+                PageAttributeItem(
+                    attr.id!!,
+                    attr.key,
+                    attr.value,
+                    attr.type
                 )
             }
         )
