@@ -17,17 +17,11 @@ import java.time.LocalDateTime
 abstract class AuditLongIdTable(name: String, columnName: String = "id") : LongIdTable(name, columnName) {
     val insertedAt = localdatetime("ins_at").default(LocalDateTime.now())
     val updatedAt = localdatetime("upd_at").nullable()
-    val deletedAt = localdatetime("del_at").nullable()
 }
 
 abstract class AuditLongEntity(id: EntityID<Long>, table: AuditLongIdTable) : LongEntity(id) {
     val insertedAt by table.insertedAt
     var updatedAt by table.updatedAt
-    var deletedAt by table.deletedAt
-
-    override fun delete() {
-        deletedAt = LocalDateTime.now()
-    }
 }
 
 private inline fun <reified T : Any> Any.mapTyped(): T? = this as? T
@@ -45,8 +39,8 @@ fun Database.enableAuditing(): Database {
     EntityHook.subscribe { action ->
         if (action.changeType == EntityChangeType.Updated) {
             action.toEntity()
-                    ?.mapTyped<AuditLongEntity>()
-                    ?.updatedAt = LocalDateTime.now()
+                ?.mapTyped<AuditLongEntity>()
+                ?.updatedAt = LocalDateTime.now()
         }
     }
     return this
