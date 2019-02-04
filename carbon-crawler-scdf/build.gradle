@@ -1,0 +1,11 @@
+version = '0.1.0-SNAPSHOT'
+
+jar.enabled = false
+bootJar.enabled = true
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation "org.springframework.cloud:spring-cloud-dataflow-server-core:$versions.springCloudDataFlow"
+
+    boms.springServer delegate
+}
