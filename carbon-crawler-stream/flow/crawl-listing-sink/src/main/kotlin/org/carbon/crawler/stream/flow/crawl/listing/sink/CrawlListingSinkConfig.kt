@@ -1,13 +1,15 @@
 package org.carbon.crawler.stream.flow.crawl.listing.sink
 
-import org.carbon.composer.compose
-import org.carbon.crawler.model.extend.composer.Transaction
-import org.carbon.crawler.stream.core.config.DataConfig
+import org.carbon.crawler.model.extend.kompose.Transaction
+import org.carbon.crawler.stream.core.config.DataSourceConfig
 import org.carbon.crawler.stream.core.config.WebDriverConfig
+import org.carbon.crawler.stream.core.extend.carbon.ExceptionLogging
 import org.carbon.crawler.stream.core.extend.selenium.DriverFactory
-import org.carbon.crawler.stream.core.extend.spring.cloud.SinkConfigSupport
-import org.carbon.crawler.stream.message.crawlOrder.ListingOrderPayload
+import org.carbon.crawler.stream.message.TargetHostPayload
+import org.carbon.kompose.Context
+import org.carbon.kompose.kompose1
 import org.springframework.cloud.stream.annotation.EnableBinding
+import org.springframework.cloud.stream.annotation.StreamListener
 import org.springframework.cloud.stream.messaging.Sink
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -15,14 +17,16 @@ import org.springframework.context.annotation.Import
 /**
  * @author Soda 2018/08/13.
  */
-@Import(DataConfig::class, WebDriverConfig::class)
+@Import(DataSourceConfig::class, WebDriverConfig::class)
 @EnableBinding(Sink::class)
 @Configuration
-class CrawlListingSinkConfig(
-    sink: Sink,
-    driverFactory: DriverFactory
-) : SinkConfigSupport<ListingOrderPayload>(
-    ListingOrderPayload::class,
-    sink,
-    compose(Transaction()) { crawlListingSink(driverFactory) }
-)
+class CrawlListingSinkConfig(driverFactory: DriverFactory) {
+
+    val contextualized: Context.(TargetHostPayload) -> Unit = { crawlListingSink(driverFactory)(it) }
+
+    @StreamListener(Sink.INPUT)
+    fun sink(payload: TargetHostPayload): Unit = kompose1(
+        Transaction(logging = true),
+        ExceptionLogging(this::class),
+        expression = contextualized)(payload)
+}
