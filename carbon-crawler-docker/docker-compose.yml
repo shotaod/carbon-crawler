@@ -28,6 +28,18 @@ services:
       - ../carbon-crawler-model/schema/sql:/flyway/sql
     depends_on:
       - rdb.carbon.local
+  pubsub.carbon.local:
+    build:
+      context: ./gcp_pubsub
+    volumes:
+      - ../secrets/gcp/certs:/certs
+    environment:
+      KEY_FILE: /certs/pubsub_svc.json
+      PROJECT_ID: carbon
+      PUBSUB_HOST: pubsub.carbon.local
+      PUBSUB_PORT: 80
+    ports:
+      - "40007:80"
   selenium.carbon.local:
     image: selenium/hub:3.13.0-argon
     ports:
@@ -48,25 +60,30 @@ services:
     environment:
       HUB_HOST: selenium.carbon.local
       HUB_PORT: 4444
-  dataflow:
-    image: springcloud/spring-cloud-dataflow-server:2.0.0.M1
+  scdf.carbon.local:
+    build:
+      context: ../carbon-crawler-scdf
+      args:
+        JAR_FILE: ./build/libs/carbon-crawler-scdf-0.1.0-SNAPSHOT.jar
     volumes:
       # making dataflow be able to access host's maven repository via maven:// schema
       - ~/.m2:/root/.m2
     ports:
-      - "9393:9393"
+      - "40008:8080"
     environment:
+      - CARBON_API_CONFIG_HOST=config.carbon.local
+      - CARBON_API_CONFIG_PORT=80
       - spring.cloud.skipper.client.serverUri=http://skipper:7577/api
-      # - spring.cloud.dataflow.metrics.collector.uri=http://metrics:8080
       - spring.cloud.dataflow.applicationProperties.stream.spring.profiles.active=dev-internal
-      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.kafka.binder.brokers=pause:9092
+      - spring.cloud.dataflow.applicationProperties.logging.level.org.springframework.cloud.gcp.core.DefaultCredentialsProvider.=DEBUG
       - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.config.uri=http://config.carbon.local:80
       - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.config.failFast=true
+      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.gcp.pubsub.emulatorHost=pubsub.carbon.local:80
+      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.gcp.pubsub.projectId=carbon
       - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.bindings.applicationMetrics.destination=metrics
-      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.metrics.meter-filter=spring.integration.*
+      - spring.cloud.dataflow.applicationProperties.stream.spring.cloud.stream.metrics.meterFilter=spring.integration.*
     depends_on:
-      - zookeeper
-      - kafka_root
+      - config.carbon.local
   skipper:
     image: springcloud/spring-cloud-skipper-server:2.0.0.M1
     volumes:
@@ -74,89 +91,3 @@ services:
     ports:
       - "7577:7577"
       - "9000-9010:9000-9010"
-  #  metrics:
-  #    image: springcloud/metrics-collector-kafka:2.0.0.M1
-  #    environment:
-  #      - spring.cloud.stream.kafka.binder.brokers=pause:9092
-  #      - spring.cloud.stream.bindings.input.destination=metrics
-  #    depends_on:
-  #      - dataflow
-  # ==================================================
-  # kafka Orchestration
-  # ==================================================
-  # pause for network host
-  # see also
-  # - https://github.com/wurstmeister/kafka-docker/wiki/Connectivity
-  # - https://davidfrancoeur.com/post/kafka-on-docker-for-mac/
-  # ------------------------------
-  # for test compose-network(outside of pause-network)
-  #  kafkacat:
-  #    image: solsson/kafkacat
-  #  trifecta:
-  #    image: janschultecom/docker-trifecta
-  #    ports:
-  #    - 9001:9000
-  #    environment:
-  #      ZK_HOST: pause:2181
-  #    depends_on:
-  #    - kafka_root
-  #    - kafka_node
-  #  kafka_manager:
-  #    build: ./kafka_manager
-  #    ports:
-  #    - "9000:9000"
-  #    volumes:
-  #    # for cache, caz sbt dependency resolution take sooooo much time
-  #    - ./kafka_manager/build:/opt/kafka_manager
-  #    - ~/.sbt:/root/.sbt
-  #    - ~/.ivy2:/root/.ivy2
-  #    depends_on:
-  #    - kafka_root
-  #    - kafka_node
-  #    environment:
-  #      ZK_HOSTS: pause:2181
-  # ------------------------------
-  pause:
-    image: gcr.io/google-containers/pause:3.1
-    ports:
-      - 2181:2181
-      - 9092-9102:9092-9102
-  zookeeper:
-    image: zookeeper:3.4
-    pid: service:pause
-    network_mode: service:pause
-    depends_on:
-      - pause
-  kafka_root:
-    image: wurstmeister/kafka:2.11-2.0.0
-    environment:
-      HOSTNAME_COMMAND: 'echo pause'
-      PORT_COMMAND: 'echo 9092'
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:_{PORT_COMMAND}
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://_{HOSTNAME_COMMAND}:_{PORT_COMMAND}
-      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
-    pid: service:pause
-    network_mode: service:pause
-    depends_on:
-      - zookeeper
-  kafka_node:
-    image: wurstmeister/kafka:2.11-2.0.0
-    # -v docker.sock
-    # only for local, it is very !!dangerous!!
-    # local convenience for detecting free port
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      HOSTNAME_COMMAND: 'echo pause'
-      # find free port by diff using port vs docker port
-      PORT_COMMAND: "diff <(netstat -tl | awk 'NR>2 {print $$4}' | cut -d: -f2 | sort) <(hostname | xargs -IHOST docker port HOST  | cut -d: -f2 | sort) | grep -E '^\\+[0-9]' | shuf | head -n1 | cut -d+ -f2"
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:_{PORT_COMMAND}
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://_{HOSTNAME_COMMAND}:_{PORT_COMMAND}
-      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
-      # TODO: JMX is not available... due to Competing port
-      # KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1099"
-      # JMX_PORT: 1099
-    pid: service:pause
-    network_mode: service:pause
-    depends_on:
-      - kafka_root
