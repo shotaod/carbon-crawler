@@ -1,6 +1,6 @@
 package org.carbon.crawler.admin.www.v1.query
 
-import org.carbon.crawler.model.domain.HostEntity
+import org.carbon.crawler.model.domain.QueryEntity
 
 data class QueryResponse(
     val id: Long,
@@ -22,7 +22,7 @@ data class QueryResponse(
     )
 
     companion object {
-        fun parseEntity(entity: HostEntity): QueryResponse = QueryResponse(
+        fun parseEntity(entity: QueryEntity): QueryResponse = QueryResponse(
             entity.id!!,
             entity.url,
             entity.title,
