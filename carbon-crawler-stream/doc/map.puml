@@ -1,6 +1,6 @@
 @startuml
 
-cloud Kafka {
+cloud CloudPubSub {
     queue crawl_target_queue as q_target
     file CrawlTargetPayload as p_target
     q_target -d- p_target
