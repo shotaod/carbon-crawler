@@ -4,11 +4,11 @@ bootJar.enabled = false
 jar.enabled = true
 
 sourceSets {
-    integrationTest {
-        kotlin.srcDir file('src/integrationTest/kotlin')
-        resources.srcDir file('src/integrationTest/resources')
-        compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
-        runtimeClasspath += output + compileClasspath
+    integrationTest { sourceSet ->
+        ["kotlin", "resources"].each {
+            if (!sourceSet.hasProperty(it)) return
+            sourceSet."$it".srcDir file("src/integrationTest/${it}")
+        }
     }
 }
 
@@ -27,10 +27,16 @@ dependencies {
 
     testImplementation "org.carbon.libs:carbon-kompose:$versions.carbon.kompose"
     testImplementation project(':carbon-crawler-model')
+    boms.rdb delegate
     testImplementation project(':carbon-crawler-stream:core')
     testImplementation project(':carbon-crawler-stream:flow:crawl-listing-sink')
     testImplementation project(':carbon-crawler-stream:flow:crawl-listing-source')
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    integrationTestImplementation sourceSets.main.output
+    integrationTestImplementation sourceSets.test.output
+    integrationTestImplementation configurations.testImplementation
+    integrationTestRuntime configurations.testRuntime
+    integrationTestRuntime 'org.aspectj:aspectjweaver:1.9.2'
 }
 
 // ______________________________________________________
@@ -41,7 +47,10 @@ import java.nio.file.Paths
 
 def filePath = Paths.get(rootDir.toString(), 'tmp/carbon.stream.apps.property')
 def flowModules = project(":carbon-crawler-stream:flow").subprojects
+def cloudModules = [':carbon-cloud:config:server', ':carbon-crawler-scdf'].collect { project(it) }
+
 task printFlowProperties {
+    dependsOn flowModules.collect { it.bootInstall.path }
     doLast {
         Files.deleteIfExists(filePath)
         Files.createFile(filePath)
@@ -59,7 +68,7 @@ task printFlowProperties {
             } else if (name.endsWith('source')) {
                 type = 'source'
             } else {
-                println "!!! violation named flow found: $name !!!"
+                println "!!! Naming convention violation flow found: $name !!!"
             }
             def mavenRepoPath = "maven://$group:${name}:$version"
             println "$mavenRepoPath"
@@ -72,6 +81,7 @@ task printFlowProperties {
 }
 
 task setupEnvironment {
+    dependsOn cloudModules.collect { it.build.path }
     doLast {
         exec {
             executable 'sh'
@@ -85,10 +95,8 @@ task integrationTest(type: Test, group: 'verification') {
     classpath = sourceSets.integrationTest.runtimeClasspath
 
     // should install flow modules locally
-    flowModules.each { dependsOn it.bootInstall }
-    dependsOn printFlowProperties
-    dependsOn setupEnvironment
-    dependsOn test
+    dependsOn printFlowProperties, setupEnvironment
+    outputs.upToDateWhen { false }
 
     useJUnitPlatform()
     testLogging {
@@ -98,7 +106,7 @@ task integrationTest(type: Test, group: 'verification') {
 
     systemProperties = [
         // http://d.hatena.ne.jp/yamap_55/20140415/1397563046
-        'carbon.test.integ.deployerUri': 'http://localhost:9393',
+        'carbon.test.integ.deployerUri': 'http://localhost:40008',
         'carbon.test.integ.defFile'    : filePath.toString(),
     ]
 }
