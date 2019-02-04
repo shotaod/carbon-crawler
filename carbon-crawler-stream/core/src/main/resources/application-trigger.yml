@@ -1,7 +1,3 @@
-carbon:
-  stream:
-    trigger:
-      maxMessage: 1
-      timeUnit: seconds
-      fixedDelay: 1
-      initialDelay: 0
+trigger:
+  maxMessage: 1
+  fixedDelay: 5000
