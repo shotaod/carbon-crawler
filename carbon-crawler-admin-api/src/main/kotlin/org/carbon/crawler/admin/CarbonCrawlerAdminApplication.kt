@@ -31,7 +31,7 @@ import org.carbon.crawler.admin.extend.carbon.validation.CarbonValidationModule
 import org.carbon.crawler.admin.extend.cloud.ConfigLoader
 import org.carbon.crawler.admin.extend.ktor.ReservedException
 import org.carbon.crawler.admin.extend.ktor.auth.configure
-import org.carbon.crawler.admin.feature.Exposed
+import org.carbon.crawler.admin.extend.ktor.feature.Exposed
 import org.carbon.crawler.admin.www.v1.query.v1Queries
 import org.carbon.crawler.admin.www.v1.snap.v1Snaps
 import org.slf4j.LoggerFactory
@@ -128,7 +128,7 @@ fun Application.module() {
     }
 }
 
-fun main(args: Array<String>) {
+fun main() {
     with(ConfigLoader.load().crawlerAdminApi) {
         embeddedServer(
             Netty,
