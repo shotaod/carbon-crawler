@@ -25,10 +25,10 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$versions.jackson"
 
     implementation "org.carbon.libs:carbon-validation:$versions.carbon.validation"
-    implementation project(':carbon-composer')
+    implementation "org.carbon.libs:carbon-kompose:$versions.carbon.kompose"
     implementation project(':carbon-crawler-model')
     boms.rdb delegate
-    implementation project(":carbon-cloud:config:client")
+    implementation project(':carbon-cloud:config:client')
 
     testImplementation "io.ktor:ktor-server-test-host:$versions.ktor"
     testImplementation 'com.github.ntrrgc:ts-generator:1.1.1'
