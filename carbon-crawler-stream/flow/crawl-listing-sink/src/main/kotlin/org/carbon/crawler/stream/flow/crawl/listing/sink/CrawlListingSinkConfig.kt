@@ -5,7 +5,7 @@ import org.carbon.crawler.stream.core.config.DataSourceConfig
 import org.carbon.crawler.stream.core.config.WebDriverConfig
 import org.carbon.crawler.stream.core.extend.carbon.ExceptionLogging
 import org.carbon.crawler.stream.core.extend.selenium.DriverFactory
-import org.carbon.crawler.stream.message.TargetHostPayload
+import org.carbon.crawler.stream.message.ExpeditionPayload
 import org.carbon.kompose.Context
 import org.carbon.kompose.kompose1
 import org.springframework.cloud.stream.annotation.EnableBinding
@@ -22,10 +22,10 @@ import org.springframework.context.annotation.Import
 @Configuration
 class CrawlListingSinkConfig(driverFactory: DriverFactory) {
 
-    val contextualized: Context.(TargetHostPayload) -> Unit = { crawlListingSink(driverFactory)(it) }
+    val contextualized: Context.(ExpeditionPayload) -> Unit = { crawlListingSink(driverFactory)(it) }
 
     @StreamListener(Sink.INPUT)
-    fun sink(payload: TargetHostPayload): Unit = kompose1(
+    fun sink(payload: ExpeditionPayload): Unit = kompose1(
         Transaction(logging = true),
         ExceptionLogging(this::class),
         expression = contextualized)(payload)
