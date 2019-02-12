@@ -30,7 +30,7 @@ dependencies {
     boms.rdb delegate
     testImplementation project(':carbon-crawler-stream:core')
     testImplementation project(':carbon-crawler-stream:flow:crawl-listing-sink')
-    testImplementation project(':carbon-crawler-stream:flow:crawl-listing-source')
+    testImplementation project(':carbon-crawler-stream:flow:expedition-iterator-source')
 
     integrationTestImplementation sourceSets.main.output
     integrationTestImplementation sourceSets.test.output
