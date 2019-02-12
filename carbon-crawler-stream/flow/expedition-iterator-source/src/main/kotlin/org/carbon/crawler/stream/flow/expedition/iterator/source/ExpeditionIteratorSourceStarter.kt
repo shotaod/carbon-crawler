@@ -1,4 +1,4 @@
-package org.carbon.crawler.stream.flow.crawl.listing.source
+package org.carbon.crawler.stream.flow.expedition.iterator.source
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
  * @author Soda 2018/08/22.
  */
 @SpringBootApplication
-interface CrawlListingSourceStarter
+interface ExpeditionIteratorSourceStarter
 
 fun main(args: Array<String>) {
-    SpringApplication(CrawlListingSourceStarter::class.java)
+    SpringApplication(ExpeditionIteratorSourceStarter::class.java)
         .run(*args)
 }
