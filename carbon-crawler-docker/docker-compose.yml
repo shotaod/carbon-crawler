@@ -45,6 +45,7 @@ services:
     ports:
       - "40004:4444"
     environment:
+      GRID_TIMEOUT: 60
       GRID_BROWSER_TIMEOUT: 30
   chrome_node:
     image: selenium/node-chrome:3.13.0-argon
