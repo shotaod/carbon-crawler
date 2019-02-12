@@ -4,11 +4,14 @@ import io.kotlintest.matchers.haveSize
 import io.kotlintest.should
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import org.carbon.crawler.model.domain.QueryEntity
-import org.carbon.crawler.model.domain.QueryRepository
-import org.carbon.crawler.model.domain.SnapShotRepository
+import org.carbon.crawler.model.domain.base.Expeditions
+import org.carbon.crawler.model.domain.base.Hosts
+import org.carbon.crawler.model.domain.repo.ExpeditionRepository
+import org.carbon.crawler.model.domain.repo.HostRepository
+import org.carbon.crawler.model.domain.repo.SnapshotRepository
+import org.carbon.crawler.model.domain.shared.all
 import org.carbon.crawler.model.extend.exposed.beginTransaction
-import org.carbon.crawler.model.infra.record.PageTable
+import org.carbon.crawler.model.infra.record.SnapshotTable
 import org.carbon.crawler.stream.core.config.DataSourceConfig
 import org.carbon.crawler.stream.integration.extend.kompose.ServeHtml
 import org.carbon.crawler.stream.integration.extend.matcher.shouldBeFound
@@ -33,40 +36,50 @@ class ListingSinkStreamTest : AbstractStreamTests() {
         // ______________________________________________________
         //
         // @ Given
-        val host = "http://host.docker.internal:40101"
-        val entity = QueryEntity(
-            null,
-            host,
+        val hostUrl = "http://host.docker.internal:40101"
+        val hostEtt = Hosts.new(
+            "http://host.docker.internal:40101",
             "carbon wiki",
-            "this is test host",
-            QueryEntity.Query(
-                null,
-                "list.html",
-                "xpath:///html/body/div/ul/li/a",
+            "this is test host"
+        )
+
+        val expedition = Expeditions.new(
+            hostEtt.id,
+            { nextId ->
+                CrawlRouting(
+                    nextId(),
+                    hostUrl,
+                    "list.html",
+                    "xpath:///html/body/div/ul/li/a"
+                )
+            },
+            { nextId ->
                 listOf(
-                    QueryEntity.DetailQuery(
-                        null,
+                    ScrapingPolicy(
+                        nextId(),
                         "version",
                         "xpath:///html/body/section[1]/pre",
                         "text/text"
                     ),
-                    QueryEntity.DetailQuery(
-                        null,
+                    ScrapingPolicy(
+                        nextId(),
                         "feature",
                         "xpath:///html/body/section[2]/pre",
                         "text/text"
                     ),
-                    QueryEntity.DetailQuery(
-                        null,
+                    ScrapingPolicy(
+                        nextId(),
                         "dependency",
                         "xpath:///html/body/section[3]/pre",
                         "text/text"
                     )
                 )
-            ))
+            }
+        )
 
         beginTransaction {
-            QueryRepository.save(entity)
+            HostRepository.save(hostEtt)
+            ExpeditionRepository.save(expedition)
         }
 
         // ______________________________________________________
@@ -74,10 +87,10 @@ class ListingSinkStreamTest : AbstractStreamTests() {
         // @ When
         val stream = StreamDefinition(
             "crawl-stream",
-            "crawl-listing-source | crawl-listing-sink",
+            "expedition-iterator-source | crawl-listing-sink",
             mapOf(
-                "app.crawl-listing-source.trigger.fixedDelay" to "5000",
-                "app.crawl-listing-source.trigger.maxMessage" to "10"
+                "app.expedition-iterator-source.trigger.fixedDelay" to "10000",
+                "app.expedition-iterator-source.trigger.maxMessage" to "10"
             ))
         deployStream(stream)
 
@@ -89,7 +102,7 @@ class ListingSinkStreamTest : AbstractStreamTests() {
         val sleep = 1000L
         var find = false
         while (!find) {
-            find = beginTransaction { PageTable.selectAll().count() > 0 }
+            find = beginTransaction { SnapshotTable.selectAll().count() > 0 }
             logger.info("wait streaming is started")
             if (cnt++ > maxRetry)
                 throw IllegalStateException("data is not updated, maxRetry: $maxRetry")
@@ -97,7 +110,7 @@ class ListingSinkStreamTest : AbstractStreamTests() {
         }
 
         val entities = beginTransaction {
-            SnapShotRepository.fetch(0, 3)
+            SnapshotRepository.fetchPage(all(0, 3)).items
         }
 
         entities should haveSize(3)
@@ -105,42 +118,42 @@ class ListingSinkStreamTest : AbstractStreamTests() {
         val authEntry = entities.find { it.title == "Carbon | Authentication" }
         authEntry shouldNotBe null
         authEntry!!.title shouldBe "Carbon | Authentication"
-        authEntry.url shouldBe "$host/modules/auth.html"
-        authEntry.attributes.shouldBeFound({ it.key == "version" }) {
+        authEntry.url shouldBe "$hostUrl/modules/auth.html"
+        authEntry.snapshotAttribute.shouldBeFound({ it.key == "version" }) {
             it.value shouldBe "0.1.0-BETA"
         }
-        authEntry.attributes.shouldBeFound({ it.key == "feature" }) {
+        authEntry.snapshotAttribute.shouldBeFound({ it.key == "feature" }) {
             it.value shouldBe "Open-ended Authentication"
         }
-        authEntry.attributes.shouldBeFound({ it.key == "dependency" }) {
+        authEntry.snapshotAttribute.shouldBeFound({ it.key == "dependency" }) {
             it.value shouldBe "carbon-component,carbon-util,carbon-modular,carbon-web"
         }
 
         val persistEntry = entities.find { it.title == "Carbon | Persistent" }
         persistEntry shouldNotBe null
         persistEntry!!.title shouldBe "Carbon | Persistent"
-        persistEntry.url shouldBe "$host/modules/persistent.html"
-        persistEntry.attributes.shouldBeFound({ it.key == "version" }) {
+        persistEntry.url shouldBe "$hostUrl/modules/persistent.html"
+        persistEntry.snapshotAttribute.shouldBeFound({ it.key == "version" }) {
             it.value shouldBe "0.1.0-BETA"
         }
-        persistEntry.attributes.shouldBeFound({ it.key == "feature" }) {
+        persistEntry.snapshotAttribute.shouldBeFound({ it.key == "feature" }) {
             it.value shouldBe "Persistent Facade,SQL Dialect Resolver"
         }
-        persistEntry.attributes.shouldBeFound({ it.key == "dependency" }) {
+        persistEntry.snapshotAttribute.shouldBeFound({ it.key == "dependency" }) {
             it.value shouldBe "carbon-component,carbon-modular"
         }
 
         val webEntry = entities.find { it.title == "Carbon | Web" }
         webEntry shouldNotBe null
         webEntry!!.title shouldBe "Carbon | Web"
-        webEntry.url shouldBe "$host/modules/web.html"
-        webEntry.attributes.shouldBeFound({ it.key == "version" }) {
+        webEntry.url shouldBe "$hostUrl/modules/web.html"
+        webEntry.snapshotAttribute.shouldBeFound({ it.key == "version" }) {
             it.value shouldBe "0.1.0-BETA"
         }
-        webEntry.attributes.shouldBeFound({ it.key == "feature" }) {
+        webEntry.snapshotAttribute.shouldBeFound({ it.key == "feature" }) {
             it.value shouldBe "Modularized & Pluggable Web Framework"
         }
-        webEntry.attributes.shouldBeFound({ it.key == "dependency" }) {
+        webEntry.snapshotAttribute.shouldBeFound({ it.key == "dependency" }) {
             it.value shouldBe "carbon-component,carbon-util,carbon-modular"
         }
     }
