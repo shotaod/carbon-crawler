@@ -1,5 +1,5 @@
 version: '3'
-service:
+services:
   schemaspy:
     image: schemaspy/schemaspy:6.0.0
     volumes:
@@ -17,5 +17,3 @@ service:
       - carbon
       - -p
       - carbonpw
-    depends_on:
-      - rdb.carbon.local
