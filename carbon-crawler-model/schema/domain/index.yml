@@ -1,0 +1,14 @@
+version: 1
+domains:
+  Host:
+    base: host
+  Expedition:
+    base: expedition
+    join1:
+      - crawl_routing
+    joinN:
+      - scraping_policy
+  Snapshot:
+    base: snapshot
+    joinN:
+      - snapshot_attribute
