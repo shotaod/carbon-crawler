@@ -1,0 +1,7 @@
+flyway_schema_history
+snapshot_attribute
+scraping_policy
+crawl_routing
+snapshot
+expedition
+host

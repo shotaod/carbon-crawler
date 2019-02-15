@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="crawlerdb" schema="crawlerdb" type="MySQL - 5.7.25">
+   <tables>
+      <table catalog="crawlerdb" name="crawl_routing" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="true" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="BIGINT"/>
+         <column autoUpdated="false" digits="0" id="1" name="expedition_id" nullable="false" remarks="" size="19" type="BIGINT">
+            <parent catalog="crawlerdb" column="id" foreignKey="crawl_routing_expedition_id_fk" implied="false" onDeleteCascade="false" table="expedition"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="listing_page_path" nullable="false" remarks="" size="1023" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="3" name="listing_link_query" nullable="false" remarks="" size="1023" type="VARCHAR"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="ins_at" nullable="false" remarks="" size="26" type="DATETIME"/>
+         <column autoUpdated="false" digits="0" id="5" name="upd_at" nullable="true" remarks="" size="26" type="DATETIME"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="expedition_id_uk" unique="true">
+            <column ascending="true" name="expedition_id"/>
+         </index>
+      </table>
+      <table catalog="crawlerdb" name="expedition" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="true" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="BIGINT">
+            <child catalog="crawlerdb" column="expedition_id" foreignKey="crawl_routing_expedition_id_fk" implied="false" onDeleteCascade="false" table="crawl_routing"/>
+            <child catalog="crawlerdb" column="expedition_id" foreignKey="scraping_policy_expedition_id_fk" implied="false" onDeleteCascade="false" table="scraping_policy"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="host_id" nullable="false" remarks="" size="19" type="BIGINT">
+            <parent catalog="crawlerdb" column="id" foreignKey="crawl_routing_host_id_fk" implied="false" onDeleteCascade="false" table="host"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="2" name="ins_at" nullable="false" remarks="" size="26" type="DATETIME"/>
+         <column autoUpdated="false" digits="0" id="3" name="upd_at" nullable="true" remarks="" size="26" type="DATETIME"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="host_id_uk" unique="true">
+            <column ascending="true" name="host_id"/>
+         </index>
+      </table>
+      <table catalog="crawlerdb" name="flyway_schema_history" numRows="2" remarks="" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="installed_rank" nullable="false" remarks="" size="10" type="INT"/>
+         <column autoUpdated="false" digits="0" id="1" name="version" nullable="true" remarks="" size="50" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="false" remarks="" size="200" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="3" name="type" nullable="false" remarks="" size="20" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="4" name="script" nullable="false" remarks="" size="1000" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="5" name="checksum" nullable="true" remarks="" size="10" type="INT"/>
+         <column autoUpdated="false" digits="0" id="6" name="installed_by" nullable="false" remarks="" size="100" type="VARCHAR"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="7" name="installed_on" nullable="false" remarks="" size="26" type="TIMESTAMP"/>
+         <column autoUpdated="false" digits="0" id="8" name="execution_time" nullable="false" remarks="" size="10" type="INT"/>
+         <column autoUpdated="false" digits="0" id="9" name="success" nullable="false" remarks="" size="1" type="BIT"/>
+         <primaryKey column="installed_rank" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="installed_rank"/>
+         </index>
+         <index name="flyway_schema_history_s_idx" unique="false">
+            <column ascending="true" name="success"/>
+         </index>
+      </table>
+      <table catalog="crawlerdb" name="host" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="true" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="BIGINT">
+            <child catalog="crawlerdb" column="host_id" foreignKey="crawl_routing_host_id_fk" implied="false" onDeleteCascade="false" table="expedition"/>
+            <child catalog="crawlerdb" column="host_id" foreignKey="snapshot_host_id_fk" implied="false" onDeleteCascade="false" table="snapshot"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="url" nullable="false" remarks="" size="255" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="2" name="title" nullable="false" remarks="" size="255" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="3" name="memo" nullable="true" remarks="" size="65535" type="TEXT"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="ins_at" nullable="false" remarks="" size="26" type="DATETIME"/>
+         <column autoUpdated="false" digits="0" id="5" name="upd_at" nullable="true" remarks="" size="26" type="DATETIME"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="host_url_uk" unique="true">
+            <column ascending="true" name="url"/>
+         </index>
+      </table>
+      <table catalog="crawlerdb" name="scraping_policy" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="true" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="BIGINT"/>
+         <column autoUpdated="false" digits="0" id="1" name="expedition_id" nullable="false" remarks="" size="19" type="BIGINT">
+            <parent catalog="crawlerdb" column="id" foreignKey="scraping_policy_expedition_id_fk" implied="false" onDeleteCascade="false" table="expedition"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="name" nullable="false" remarks="" size="255" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="3" name="query" nullable="false" remarks="" size="1023" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="4" name="type" nullable="false" remarks="" size="63" type="VARCHAR"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="5" name="ins_at" nullable="false" remarks="" size="26" type="DATETIME"/>
+         <column autoUpdated="false" digits="0" id="6" name="upd_at" nullable="true" remarks="" size="26" type="DATETIME"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="scraping_policy_expedition_id_name_uk" unique="true">
+            <column ascending="true" name="expedition_id"/>
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table catalog="crawlerdb" name="snapshot" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="true" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="BIGINT">
+            <child catalog="crawlerdb" column="snapshot_id" foreignKey="snapshot_attribute_snapshot_id_fk" implied="false" onDeleteCascade="false" table="snapshot_attribute"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="host_id" nullable="false" remarks="" size="19" type="BIGINT">
+            <parent catalog="crawlerdb" column="id" foreignKey="snapshot_host_id_fk" implied="false" onDeleteCascade="false" table="host"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="title" nullable="false" remarks="" size="255" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="3" name="url" nullable="false" remarks="" size="255" type="VARCHAR"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="ins_at" nullable="false" remarks="" size="26" type="DATETIME"/>
+         <column autoUpdated="false" digits="0" id="5" name="upd_at" nullable="true" remarks="" size="26" type="DATETIME"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="snapshot_detail_url_uk" unique="true">
+            <column ascending="true" name="url"/>
+         </index>
+         <index name="snapshot_host_id_fk" unique="false">
+            <column ascending="true" name="host_id"/>
+         </index>
+      </table>
+      <table catalog="crawlerdb" name="snapshot_attribute" numRows="0" remarks="" type="TABLE">
+         <column autoUpdated="true" digits="0" id="0" name="id" nullable="false" remarks="" size="19" type="BIGINT"/>
+         <column autoUpdated="false" digits="0" id="1" name="snapshot_id" nullable="false" remarks="" size="19" type="BIGINT">
+            <parent catalog="crawlerdb" column="id" foreignKey="snapshot_attribute_snapshot_id_fk" implied="false" onDeleteCascade="false" table="snapshot"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="key" nullable="false" remarks="" size="255" type="VARCHAR"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="false" remarks="" size="65535" type="TEXT"/>
+         <column autoUpdated="false" digits="0" id="4" name="type" nullable="false" remarks="" size="10" type="CHAR"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="5" name="ins_at" nullable="false" remarks="" size="26" type="DATETIME"/>
+         <column autoUpdated="false" digits="0" id="6" name="upd_at" nullable="true" remarks="" size="26" type="DATETIME"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="snapshot_attribute_uk" unique="true">
+            <column ascending="true" name="snapshot_id"/>
+            <column ascending="true" name="key"/>
+         </index>
+      </table>
+   </tables>
+</database>
