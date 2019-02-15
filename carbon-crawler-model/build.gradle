@@ -1,14 +1,17 @@
 version = '0.1.0-SNAPSHOT'
 
 jar.enabled = true
+bootJar.enabled = false
 
 dependencies {
     implementation "org.jetbrains.exposed:exposed:$versions.exposed"
     implementation "org.apache.tomcat:tomcat-jdbc:$versions.tomcat"
     implementation "mysql:mysql-connector-java:$versions.mysql"
+    implementation "org.carbon.libs:carbon-kompose:$versions.carbon.kompose"
 
-    implementation project(':carbon-composer')
+    implementation "org.seleniumhq.selenium:selenium-api:$versions.selenium"
 
+    testImplementation project(':carbon-cloud:config:client')
+    testImplementation 'org.dbunit:dbunit:2.6.0'
     testImplementation "org.flywaydb:flyway-core:$versions.flyway"
-    testImplementation "com.h2database:h2:$versions.h2"
 }
